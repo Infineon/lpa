@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Cypress Low Power Assistant Middleware Library 1.0: Cypress Low Power Assistant Middleware Library 1.0</title>
+<title>Cypress Low Power Assistant Middleware Library 2.0: Cypress Low Power Assistant Middleware Library 2.0</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><a href="http://www.cypress.com/"><img alt="Logo" src="cypress_logo.png"/></a></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Cypress Low Power Assistant Middleware Library 1.0</div>
+   <div id="projectname">Cypress Low Power Assistant Middleware Library 2.0</div>
   </td>
  </tr>
  </tbody>
@@ -81,7 +81,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 
 <div class="header">
   <div class="headertitle">
-<div class="title">Cypress Low Power Assistant Middleware Library 1.0 </div>  </div>
+<div class="title">Cypress Low Power Assistant Middleware Library 2.0 </div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="section_lpa_overview"></a>
@@ -107,6 +107,7 @@ Features</h2>
 <li><a class="el" href="index.html#group_lpa_p2_host_wake">Wi-Fi Host-wake Signal</a> Provides a way for a WLAN device to wake up the Host MCU from its low-power state.</li>
 <li><a class="el" href="index.html#group_lpa_p2_arp_offload">Wi-Fi Address Resolution Protocol (ARP) Offload</a> Improves the power consumption of your connected system by reducing the time the Host needs to stay awake due to ARP broadcast traffic. In general, the ARP Offload reduces broadcast traffic.</li>
 <li><a class="el" href="index.html#group_lpa_p2_packet_filter">Wi-Fi Packet Filter Offload</a> Allows the host processor to limit which types of packets get passed up to the host processor from the WLAN subsystem. This is useful to keep out unwanted/unneeded packets from the network that might otherwise wake up the host out of a power saving Deep Sleep mode, or prevent it from entering Deep Sleep mode.</li>
+<li><a class="el" href="index.html#group_lpa_p2_tcp_keepalive">Wi-Fi TCP Keep Alive Offload</a> Improves the power consumption of your Host MCU by offloading TCP Keepalive to WLAN Firmware</li>
 </ul>
 </li>
 <li><a class="el" href="index.html#group_lpa_p3">Part 3. Bluetooth Low Power</a> Configures BT low-power features that enable the host to achieve its lowest power function. It also configures the wake host interrupt signal (device to host) and related device integration.</li>
@@ -119,17 +120,25 @@ Features</h2>
 </ul>
 <h1><a class="anchor" id="section_lpa_getting_started"></a>
 Getting Started</h1>
-<p>The Cypress LPA middleware can be used in various software environments including Mbed OS. The quickest way to get started is by using the Code Examples. Cypress Semiconductor continuously extends its portfolio of code examples at the <a href="http://www.cypress.com"><b>Cypress Semiconductor website</b></a> and at the <a href="https://github.com/cypresssemiconductorco"><b>Cypress Semiconductor GitHub</b></a> website. The following Quick Start Guide sections describe several use cases for using the LPA features:</p><ul>
-<li>MCU Low Power <a class="el" href="index.html#group_lpa_p1_qsg">Quick Start Guide</a></li>
+<p>The Cypress LPA middleware can be used in various software environments including Mbed OS and FreeRTOS. The quickest way to get started is by using the Code Examples. Cypress Semiconductor continuously extends its portfolio of code examples at the <a href="http://www.cypress.com"><b>Cypress Semiconductor website</b></a> and at the <a href="https://github.com/cypresssemiconductorco"><b>Cypress Semiconductor GitHub</b></a> website. The following Quick Start Guide sections describe several use cases for using the LPA features:</p><ul>
+<li>MCU Low Power <a class="el" href="index.html#group_lpa_p1_qsg_general">Quick Start Guide</a></li>
 <li>Wi-Fi Host Wake Signal <a class="el" href="index.html#group_lpa_p2_host_wake_qsg">Quick Start Guide</a></li>
 <li>Wi-Fi Address Resolution Protocol (ARP) Offload <a class="el" href="index.html#group_lpa_p2_arp_offload_qsg">Quick Start Guide</a></li>
 <li>Wi-Fi Packet Filter Offload <a class="el" href="index.html#group_lpa_p2_packet_filter_qsg">Quick Start Guide</a></li>
+<li>Wi-Fi TCP Keepalive Offload <a class="el" href="index.html#group_lpa_p2_tcp_keepalive_qsg">Quick Start Guide</a></li>
 <li>Bluetooth Low Power <a class="el" href="index.html#group_lpa_p3_qsg">Quick Start Guide</a></li>
 </ul>
 <p>Refer to the <a class="el" href="index.html#section_lpa_toolchain">Supported Software and Tools</a> section for compatibility information.</p>
 <p>Refer to the <a class="el" href="index.html#group_lpa_changelog">Changelog</a> for the differences between the Middleware versions.</p>
 <p>The LPA efficiency for several use cases is included in the <a class="el" href="index.html#section_lpa_performance">Performance Data</a> section.</p>
 <p>For more details about LPA and ModusToolbox, refer to the <a class="el" href="index.html#section_lpa_more_information">More Information</a> section.</p>
+<h1><a class="anchor" id="section_lpa_Prerequisites"></a>
+Prerequisites</h1>
+<ul>
+<li>A development environment configured for Mbed OS/ FreeRTOS. Refer to the <a class="el" href="index.html#section_lpa_toolchain">Supported Software and Tools</a> section for the required Mbed OS / FreeRTOS version.</li>
+<li>Availability of the CY8CKIT-062S2-43012 pioneer kit (or other kits that supports PSoC 6 power consumption measurement). Execute below command for CY8CKIT-062S2-43012 first time <div class="fragment"><div class="line">python -m pip install --upgrade pip</div><div class="line">pip install mbed-ls --upgrade</div><div class="line">mbedls -m 190B:CY8CKIT_062S2_43012</div></div><!-- fragment --> The CY8CKIT-062S2-43012 kit is recommended, since this section documents measurement instructions for this kit. If other kit is used, refer to its documentation and learn how to measure current consumed.</li>
+<li>DC Power Monitor or Ammeter.</li>
+</ul>
 <h1><a class="anchor" id="group_lpa_definitions"></a>
 Definitions</h1>
 <p>This section lists definitions used throughout this document.</p>
@@ -167,47 +176,24 @@ Part 1. MCU Low Power</h1>
 <p>There are two parameters available: System Idle Power Mode and Deep Sleep Latency.</p>
 <p>The System Idle Power Mode parameter defines the power state that the MCU needs to enter automatically any time the system is idle. Setting it to Active power mode disables power saving and allows the system to perform tasks with less intervention, since there are no transitions to / from CPU Sleep / System Deep Sleep states.</p>
 <p>The Deep Sleep Latency parameter controls if the desired deep sleep time is larger than needed to perform a transition from System Deep Sleep to Active power mode to perform tasks.</p>
-<h2><a class="anchor" id="group_lpa_p1_qsg"></a>
+<h2><a class="anchor" id="group_lpa_p1_qsg_general"></a>
 Quick Start Guide</h2>
-<p>This section provides step-by-step instructions for how to use the MCU Low Power feature with Mbed OS, as well as its impact on the device power consumption.</p>
-<p>Prerequisites:</p><ul>
-<li>A development environment configured for Mbed OS. Refer to the <a class="el" href="index.html#section_lpa_toolchain">Supported Software and Tools</a> section for the required Mbed OS version.</li>
-<li>Availability of the CY8CKIT-062S2-43012 pioneer kit (or other kits that supports PSoC 6 power consumption measurement). The CY8CKIT-062S2-43012 kit is recommended, since this section documents measurement instructions for this kit. If other kit is used, refer to its documentation and learn how to measure current consumed.</li>
-<li>DC Power Monitor or Ammeter.</li>
-</ul>
+<p>This section provides step-by-step instructions for how to use the MCU Low Power feature with Mbed OS and FreeRTOS , as well as its impact on the device power consumption.</p>
 <p>Perform the following steps to evaluate the device power consumption with different MCU Low Power configurations:</p>
+<h3><a class="anchor" id="group_lpa_p1_qsg"></a>
+MBEDOS</h3>
 <ol type="1">
 <li>Import the mbed-os-example-blinky example project and switch to the example directory: <div class="fragment"><div class="line">mbed <span class="keyword">import</span> mbed-os-example-blinky</div><div class="line">cd mbed-os-example-blinky</div></div><!-- fragment --></li>
-<li>As a one-time operation, you might need to execute the following lines as part of enabling the CY8CKIT_062S2_43012 pioneer kit: <div class="fragment"><div class="line">python -m pip install --upgrade pip</div><div class="line">pip install mbed-ls --upgrade</div><div class="line">mbedls -m 190B:CY8CKIT_062S2_43012</div></div><!-- fragment --></li>
-<li>Execute the following command in order to replace Mbed OS, download the LPA middleware, and connectivity utilities: <div class="fragment"><div class="line">rm -rf mbed-os</div><div class="line">mbed add https:<span class="comment">//github.com/ARMmbed/mbed-os/#cf4f12a123c05fcae83fc56d76442015cb8a39e9</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/lpa/</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/connectivity-utilities/#56e7eedb81ec2706fd2b259730b954f58c90e9aa</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/capsense/#6aa6547460365ee39e12c238e177b0552359219b</span></div><div class="line">mbed deploy</div></div><!-- fragment --></li>
+<li>Execute the following command in order to update Mbed OS <div class="fragment"><div class="line">cd mbed-os</div><div class="line">mbed update latest</div></div><!-- fragment --></li>
 <li>Set the desired System Idle Power mode (DeepSleep, Sleep or Active). In Mbed OS, the System Idle Power mode is set to Deep Sleep by default to achieve the best power saving. This step can be done by using the ModusToolbox Device Configurator or by manually updating the code.<ul>
-<li>Perform the following steps in order to configure the MCU Low Power by using the ModusToolbox Device Configurator:<ul>
-<li>Mandatory steps to avoid design.modus file modification in mbed-os folder<ol type="a">
-<li>Copy folder mbed-os-example-blinky/mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/TARGET_CY8CKIT_062S2_43012 to mbed-os-example-blinky folder</li>
-<li>Delete all files in mbed-os-example-blinky/TARGET_CY8CKIT_062S2_43012 except COMPONENT_BSP_DESIGN_MODUS folder and its contents</li>
-<li>Rename mbed-os-example-blinky/TARGET_CY8CKIT_062S2_43012/COMPONENT_BSP_DESIGN_MODUS to mbed-os-example-blinky/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
-<li>Delete design.cyqspi and design.cycapsense file in mbed-os-example-blinky/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
-<li>Add/update mbed_app.json in mbed-os-example-blinky folder with below details (This will tell mbed to ignore the BSP configuration shipped with MbedOS) <div class="fragment"><div class="line">{</div><div class="line">     <span class="stringliteral">&quot;target_overrides&quot;</span>: {</div><div class="line">         <span class="stringliteral">&quot;*&quot;</span>: {</div><div class="line">              <span class="stringliteral">&quot;target.components_remove&quot;</span>: [<span class="stringliteral">&quot;BSP_DESIGN_MODUS&quot;</span>]</div><div class="line">         }</div><div class="line">     }</div><div class="line"> }</div></div><!-- fragment --></li>
-</ol>
-</li>
-<li>Navigate to the ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.0/device-configurator).</li>
-<li>Select File-&gt;Open, navigate to the board's design.modus file, and open it: <em>mbed-os-example-blinky/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS/design.modus</em></li>
-<li>Switch to the System tab and select the Power personality in the Resource pane.</li>
-<li>Go to the Parameters pane and change the System Idle Power Mode parameter to Active/Sleep/DeepSleep.</li>
-<li>Save the configuration to generate the necessary code.</li>
+<li><b>MCU Low power using the ModusToolbox Device Configurator</b> Refer to <a class="el" href="index.html#group_lpa_p1_cc_mt_flow">ModusToolbox Device Configurator Flow</a></li>
+<li><b>MCU Low power Manual configuration</b> Refer to <a class="el" href="index.html#group_lpa_p1_cc_manual_flow">Manual Configuration Flow</a></li>
 </ul>
 </li>
-<li>Perform the following steps in order to configure the MCU Low Power manually:<ul>
-<li>Open the cycfg_system.h file for the desired board: <em>mbed-os-example-blinky/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS/GeneratedSource/cycfg_system.h</em></li>
-<li>Set the CY_CFG_PWR_SYS_IDLE_MODE macro: <div class="fragment"><div class="line"><span class="preprocessor">#define CY_CFG_PWR_SYS_IDLE_MODE CY_CFG_PWR_MODE_DEEPSLEEP</span></div></div><!-- fragment --> with one of the following: <div class="fragment"><div class="line">CY_CFG_PWR_MODE_ACTIVE</div><div class="line">CY_CFG_PWR_MODE_SLEEP</div><div class="line">CY_CFG_PWR_MODE_DEEPSLEEP</div></div><!-- fragment --></li>
-</ul>
+<li>update the main.cpp file with below change to change LED ON time to 5secs along with Psoc Wake setting during LED On state <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;mbed.h&quot;</span></div><div class="line"><span class="preprocessor">#include &quot;platform/mbed_thread.h&quot;</span></div><div class="line"></div><div class="line"><span class="comment">// Blinking rate in milliseconds</span></div><div class="line"><span class="preprocessor">#define BLINKING_RATE_MS        5000</span></div><div class="line"></div><div class="line"><span class="keywordtype">int</span> main()</div><div class="line">{</div><div class="line">    <span class="comment">// Initialise the digital pin LED1 as an output</span></div><div class="line">    DigitalOut led(LED1);</div><div class="line">    <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div><div class="line">       <span class="comment">// Turn on the onboard Led to indicate the thread Active state.</span></div><div class="line">      led = 0;</div><div class="line"></div><div class="line">      <span class="comment">// The Cy_SysLib_Delay() implements a loop that blocks further</span></div><div class="line">      <span class="comment">// code execution for the specified period of time.</span></div><div class="line">      <span class="comment">// This call is used to keep the thread in the Active state long enough</span></div><div class="line">      <span class="comment">// to evaluate the PSoC power consumption in the Active state.</span></div><div class="line">      Cy_SysLib_Delay(BLINKING_RATE_MS);</div><div class="line"></div><div class="line">      <span class="comment">// Turn off the onboard LED to indicate thread Idle state.</span></div><div class="line">      led = 1;</div><div class="line"></div><div class="line">      <span class="comment">// Put the thread into the Idle state to evaluate the PSoC power</span></div><div class="line">      <span class="comment">// consumption in the configured System Idle Power mode state.</span></div><div class="line">      thread_sleep_for(BLINKING_RATE_MS);</div><div class="line">   }</div><div class="line">}</div></div><!-- fragment --></li>
+<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">mbed compile -DMBED_TICKLESS --target CY8CKIT_062S2_43012 --toolchain GCC_ARM --flash</div></div><!-- fragment --><p class="startli"><b>Note</b> If you cannot program the board, make sure the board DAP-Link mode is selected. Refer to the guide of your kit of how to change the mode.</p>
 </li>
-</ul>
-</li>
-<li>Replace the main.cpp file with below code <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;mbed.h&quot;</span></div><div class="line"></div><div class="line"><span class="keywordtype">int</span> main()</div><div class="line">{</div><div class="line">   DigitalOut led(LED1);</div><div class="line">   <span class="comment">// Duration of Active/Idle states in milliseconds.</span></div><div class="line">   <span class="keyword">const</span> <span class="keywordtype">int</span> stateTime = 5000;</div><div class="line">   <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div><div class="line"></div><div class="line">       <span class="comment">// Turn on the onboard Led to indicate the thread Active state.</span></div><div class="line">       led = 0;</div><div class="line"></div><div class="line">       <span class="comment">// The Cy_SysLib_Delay() implements a loop that blocks further</span></div><div class="line">       <span class="comment">// code execution for the specified period of time.</span></div><div class="line">       <span class="comment">// This call is used to keep the thread in the Active state long enough</span></div><div class="line">       <span class="comment">// to evaluate the PSoC power consumption in the Active state.</span></div><div class="line">       Cy_SysLib_Delay(stateTime);</div><div class="line"></div><div class="line">       <span class="comment">// Turn off the onboard LED to indicate thread Idle state.</span></div><div class="line">       led = 1;</div><div class="line"></div><div class="line">       <span class="comment">// Put the thread into the Idle state to evaluate the PSoC power</span></div><div class="line">       <span class="comment">// consumption in the configured System Idle Power mode state.</span></div><div class="line">       wait_ms(stateTime);</div><div class="line">   }</div><div class="line">}</div></div><!-- fragment --></li>
-<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">mbed compile -DMBED_TICKLESS --target CY8CKIT_062S2_43012 --toolchain GCC_ARM --flash --sterm</div></div><!-- fragment --><p class="startli"><b>Note</b> If you cannot program the board, make sure the board DAP-Link mode is selected. Refer to the guide of your kit of how to change the mode.</p>
-</li>
-<li><p class="startli">Check the board operation. Refer to the <a class="el" href="index.html#section_lpa_measurement">How to Measure Power Consumption</a> section for corresponding instructions. Observe the power consumption in different states of the main thread (Active, Idle). The illuminated user LED indicates the Active state.The non-illuminated LED indicates the Idle state. The duration of Active/Idle states can be adjusted by changing the stateTime variable value in the main.cpp file. Refer to the following picture for an example of the DC Power Analyzer output:</p>
+<li><p class="startli">Check the board operation. Refer to the <a class="el" href="index.html#section_lpa_measurement">How to Measure Power Consumption</a> section for corresponding instructions. Observe the power consumption in different states of the main thread (Active, Idle). The illuminated user LED indicates the Active state.The non-illuminated LED indicates the Idle state. The duration of Active/Idle states can be adjusted by changing the BLINKING_RATE_MS macro value in the main.cpp file. Refer to the following picture for an example of the DC Power Analyzer output:</p>
 <p class="startli">i. PSoC6 Active state current average</p>
 <div class="image">
 <img src="mod_blinky_active_inv.jpg" alt="mod_blinky_active_inv.jpg" height="500px"/>
@@ -218,6 +204,19 @@ Quick Start Guide</h2>
 </div>
 </li>
 </ol>
+<h3><a class="anchor" id="group_lpa_p1_qsg_anycloud"></a>
+FREERTOS</h3>
+<ol type="1">
+<li>Checkout empty app and add FreeRTOS library <div class="fragment"><div class="line">git clone https:<span class="comment">//github.com/cypresssemiconductorco/mtb-example-psoc6-empty-app.git</span></div><div class="line">cd mtb-example-psoc6-empty-app</div></div><!-- fragment --></li>
+<li>Add below libs to deps folder for CY8CKIT_062S2_43012 <div class="fragment"><div class="line">abstraction-rtos.lib :  https:<span class="comment">//github.com/cypresssemiconductorco/abstraction-rtos/#latest-v1.X</span></div><div class="line">TARGET_CY8CKIT-062S2-43012.lib : https:<span class="comment">//github.com/cypresssemiconductorco/TARGET_CY8CKIT-062S2-43012/#latest-v1.X</span></div><div class="line">freertos.lib : https:<span class="comment">//github.com/cypresssemiconductorco/freertos/#latest-v10.X</span></div></div><!-- fragment --></li>
+<li>Delete below libs from deps folder <div class="fragment"><div class="line">deps/TARGET_CY8CPROTO-062-4343W.lib</div></div><!-- fragment --></li>
+<li><p class="startli">Add attached (<a href="FreeRTOSConfig.h" rel="stylesheet" type="text/css"><b>FreeRTOSConfig.h</b></a>) to mtb-example-psoc6-empty-app</p>
+<p class="startli">configUSE_TICKLESS_IDLE : This change to support Tickless Deep Sleep mode </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cycfg_system.h&gt;</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_SLEEP) || (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)</span></div><div class="line"><span class="keyword">extern</span> <span class="keywordtype">void</span> vApplicationSleep( uint32_t xExpectedIdleTime );</div><div class="line"><span class="preprocessor">#define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )</span></div><div class="line"><span class="preprocessor">#define configUSE_TICKLESS_IDLE  2</span></div><div class="line"><span class="preprocessor">#endif</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if CY_CFG_PWR_DEEPSLEEP_LATENCY &gt; 0</span></div><div class="line"><span class="preprocessor">#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   CY_CFG_PWR_DEEPSLEEP_LATENCY</span></div><div class="line"><span class="preprocessor">#endif</span></div></div><!-- fragment --></li>
+<li>Update Makefile with below changes <div class="fragment"><div class="line">COMPONENTS=FREERTOS PSOC6HAL LWIP MBEDTLS</div><div class="line">DEFINES+=CY_SD_HOST_CLK_RAMP_UP_TIME_MS_WAKEUP=0</div></div><!-- fragment --></li>
+<li>Replace main.c file with below code <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cy_pdl.h&quot;</span></div><div class="line"><span class="preprocessor">#include &quot;cyhal.h&quot;</span></div><div class="line"><span class="preprocessor">#include &quot;cybsp.h&quot;</span></div><div class="line"><span class="preprocessor">#include &quot;FreeRTOS.h&quot;</span></div><div class="line"><span class="preprocessor">#include &quot;task.h&quot;</span></div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> blinky(<span class="keywordtype">void</span> *args)</div><div class="line">{</div><div class="line">    TickType_t ticks = pdMS_TO_TICKS(5000) ;</div><div class="line"></div><div class="line">    <span class="comment">// Initialize the User LED</span></div><div class="line">    cyhal_gpio_init((cyhal_gpio_t) CYBSP_USER_LED, CYHAL_GPIO_DIR_OUTPUT, CYHAL_GPIO_DRIVE_STRONG, CYBSP_LED_STATE_OFF);</div><div class="line"></div><div class="line">    <span class="keywordflow">while</span> (<span class="keyword">true</span>)</div><div class="line">    {</div><div class="line">        <span class="comment">//Turn ON LED</span></div><div class="line">        cyhal_gpio_write((cyhal_gpio_t)CYBSP_USER_LED, <span class="keyword">false</span>);</div><div class="line">        <span class="comment">//Add Delay for 5 seconds so that MCU doesnot go to Deep Sleep</span></div><div class="line">        cyhal_system_delay_ms(5000);</div><div class="line">        <span class="comment">//Turn OFF LED</span></div><div class="line">        cyhal_gpio_write((cyhal_gpio_t)CYBSP_USER_LED, <span class="keyword">true</span>);</div><div class="line">        vTaskDelay(ticks) ;</div><div class="line">    }</div><div class="line">}</div><div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    cy_rslt_t result;</div><div class="line"></div><div class="line">    <span class="comment">// Initialize the device and board peripherals</span></div><div class="line">    result = cybsp_init() ;</div><div class="line">    <span class="keywordflow">if</span> (result != CY_RSLT_SUCCESS)</div><div class="line">    {</div><div class="line">        CY_ASSERT(0);</div><div class="line">    }</div><div class="line">    __enable_irq();</div><div class="line"></div><div class="line">    xTaskCreate( blinky, <span class="stringliteral">&quot;Blinky Task&quot;</span>, 1024*10,  0,  1,  0);</div><div class="line">    <span class="comment">// Start the FreeRTOS scheduler</span></div><div class="line">    vTaskStartScheduler();</div><div class="line">}</div></div><!-- fragment --></li>
+<li>Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: <div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --></li>
+<li>Check the board operation. Refer to the <a class="el" href="index.html#section_lpa_measurement">How to Measure Power Consumption</a> How to Measure Power Consumption section for corresponding instructions. Observe the power consumption in different states of the main thread (Active, Idle). The illuminated user LED indicates the Active state.The non-illuminated LED indicates the Idle state. The duration of Active/Idle states can be adjusted by changing the ticks value in the blinky function.</li>
+</ol>
 <h2><a class="anchor" id="group_lpa_p1_cc"></a>
 MCU Low Power Configuration Considerations</h2>
 <p>The following are the different flows to configure LPA middleware:</p><ul>
@@ -227,17 +226,42 @@ MCU Low Power Configuration Considerations</h2>
 <p><b>Note</b> If you modify the output of the ModusToolbox Device Configurator, you cannot import it back into the tool.</p>
 <h3><a class="anchor" id="group_lpa_p1_cc_mt_flow"></a>
 ModusToolbox Device Configurator Flow</h3>
-<p>To open the ModusToolbox Device Configurator, right-click on the project in the Project Explorer pane in the ModusToolbox IDE, and select ModusToolbox Configurators &gt; Device Configurator.</p>
-<ol type="1">
+<ul>
+<li><p class="startli">Mandatory steps to avoid design.modus file modification in checkout repo</p>
+<p class="startli"><b>MbedOS</b> <br />
+</p><ol type="1">
+<li>Copy folder mbed-os-example-blinky/mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/TARGET_CY8CKIT_062S2_43012 to mbed-os-example-blinky folder</li>
+<li>Delete all files in mbed-os-example-blinky/TARGET_CY8CKIT_062S2_43012 except COMPONENT_BSP_DESIGN_MODUS folder and its contents</li>
+<li>Rename mbed-os-example-blinky/TARGET_CY8CKIT_062S2_43012/COMPONENT_BSP_DESIGN_MODUS to mbed-os-example-blinky/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
+<li>Delete design.cyqspi and design.cycapsense file in mbed-os-example-blinky/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
+<li>Add/update mbed_app.json in mbed-os-example-blinky folder with below details (This will tell mbed to ignore the BSP configuration shipped with MbedOS) <div class="fragment"><div class="line">{</div><div class="line">     <span class="stringliteral">&quot;target_overrides&quot;</span>: {</div><div class="line">         <span class="stringliteral">&quot;*&quot;</span>: {</div><div class="line">              <span class="stringliteral">&quot;target.components_remove&quot;</span>: [<span class="stringliteral">&quot;BSP_DESIGN_MODUS&quot;</span>]</div><div class="line">         }</div><div class="line">     }</div><div class="line"> }</div></div><!-- fragment --></li>
+<li>If mbed-os branch used is 5.15 or above, please do the below changes as well<ul>
+<li>update mbed_app.json with below line in "target_overrides": <div class="fragment"><div class="line"><span class="stringliteral">&quot;target.components_add&quot;</span>: [<span class="stringliteral">&quot;CUSTOM_DESIGN_MODUS&quot;</span>]</div></div><!-- fragment --></li>
+</ul>
+</li>
+</ol>
+<p class="startli"><b>FreeRTOS</b> <br />
+</p><ol type="1">
+<li>Copy contents of folder mtb-example-psoc6-empty-app/libs/TARGET_CY8CKIT-062S2-43012/COMPONENT_BSP_DESIGN_MODUS to mtb-example-psoc6-empty-app/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT_062S2_43012 folder</li>
+<li>Delete design.cyqspi and design.cycapsense file in mtb-example-psoc6-empty-app/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
+<li>update Makefile in mtb-example-psoc6-empty-app folder with below details (This will tell build to ignore the BSP configuration inside libs folder) <div class="fragment"><div class="line">COMPONENTS+=CUSTOM_DESIGN_MODUS</div><div class="line">DISABLE_COMPONENTS=BSP_DESIGN_MODUS </div></div><!-- fragment --></li>
+</ol>
+</li>
+<li>Navigate to the ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.1/device-configurator).</li>
+<li>Select File-&gt;Open, navigate to the board's design.modus file, and open it: <br />
+ <b>MBEDOS:</b> <em>mbed-os-example-blinky/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS/design.modus</em> <br />
+ <b>FreeRTOS:</b> <em>mtb-example-psoc6-empty-app/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT_062S2_43012/design.modus</em> <br />
+</li>
+<li>If the design.modus file does not open and pops with a error message <em>No device support library path provided </em>, then point to the psoc6pdl folder inside the mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/psoc6pdl/devicesupport.xml file in the window popup. This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.</li>
 <li>Select the Host device tab, and then select the System tab for that device.</li>
 <li>Enable the Power personality (if disabled) and go to the Power Parameters pane to configure the LPA Middleware.</li>
-<li>Configure RTOS related parameters:<ol type="a">
-<li>System Idle Power Mode</li>
+<li>Configure RTOS related parameters:<ol type="1">
+<li>System Idle Power Mode (Active/Sleep/DeepSleep)</li>
 <li>Deep Sleep Latency</li>
 </ol>
 </li>
 <li>Perform File-&gt;Save to generate initialization code.</li>
-</ol>
+</ul>
 <div class="image">
 <img src="Power_Personality.png" alt="Power_Personality.png"/>
 </div>
@@ -307,7 +331,7 @@ Part 2. Wi-Fi Low Power</h1>
 <p>Each offload can be enabled or disabled at build-time.</p>
 <h2><a class="anchor" id="group_lpa_p2_host_wake"></a>
 Wi-Fi Host-wake Signal</h2>
-<p>Host-wake provides a way for a WLAN device to wake up the Host MCU from its low-power state. Host-wake is implemented using a GPIO on the MCU that is connected to the WLAN device. The WLAN device asserts the host-wake GPIO to bring the host MCU out of its low-power state. This interrupt is called an out-of-band (OOB) interrupt.</p>
+<p>Host-wake provides a way for a WLAN device to wake up the Host MCU from its low-power state. Host-wake is implemented using a GPIO on the MCU that is connected to the WLAN device. The WLAN device asserts the host-wake GPIO to bring the host MCU out of its low-power state. This interrupt is called an out-of-band (OOB) interrupt. This configuration is critical for all the WLAN Low power offload like ARP, Packet Filter, TCP Keep alive to wake up Host MCU out of its low power state.</p>
 <p>Refer to the <a class="el" href="index.html#group_lpa_p2_cc">Wi-Fi Low Power Configuration Considerations</a> section to configure the Host-wake pin on the Host. The Host-wake pin polarity is configurable. The WLAN device is configured to re-route the SDIO in-band card interrupt to WL_HOST_WAKE (OOB GPIO interrupt). The following diagram shows connections between the Host and WLAN device:</p>
 <div class="image">
 <img src="HostWakeSignal.png" alt="HostWakeSignal.png" height="150px"/>
@@ -319,28 +343,45 @@ Wi-Fi Host-wake Signal</h2>
 </ul>
 <h3><a class="anchor" id="group_lpa_p2_host_wake_qsg"></a>
 Quick Start Guide</h3>
-<p>This Quick Start Guide demonstrates how to configure and use the WLAN_HOST_WAKE pin for the MCU Low Power feature in the Mbed OS environment. This guide also shows the feature's impact on the system's low power. The mbed-os-example-wifi is used as a base for this guide on the CY8CKIT_062S2_43012 pioneer kit. This section assumes that you have an Mbed OS development environment configured. Refer to <a href="https://os.mbed.com/getting-started/">https://os.mbed.com/getting-started/</a> for instructions about how to do that.</p>
+<p>This Quick Start Guide demonstrates how to configure and use the WLAN_HOST_WAKE pin for the MCU Low Power feature in the Mbed OS environment. This guide also shows the feature's impact on the system's low power.</p>
+<h4><a class="anchor" id="group_lpa_p2_host_wake_qsg_mbedos"></a>
+MBEDOS</h4>
+<p>The mbed-os-example-wifi is used as a base for this guide on the CY8CKIT_062S2_43012 pioneer kit. This section assumes that you have an Mbed OS development environment configured. Refer to <a href="https://os.mbed.com/getting-started/">https://os.mbed.com/getting-started/</a> for instructions about how to do that.</p>
 <p>By default, the WLAN_HOST_WAKE pin is configured for Cypress boards. If you use another board you might need to modify / change the WLAN_HOST_WAKE assignment and verify it is configured properly.</p>
 <p>Perform the following steps:</p>
 <ol type="1">
 <li>Import the mbed-os-example-wifi example project and switch to the example directory: <div class="fragment"><div class="line">mbed <span class="keyword">import</span> mbed-os-example-wifi</div><div class="line">cd mbed-os-example-wifi</div></div><!-- fragment --></li>
-<li>As a one-time operation, you might need to execute the following lines as part of enabling the CY8CKIT_062S2_43012 pioneer kit: <div class="fragment"><div class="line">python -m pip install --upgrade pip</div><div class="line">pip install mbed-ls --upgrade</div><div class="line">mbedls -m 190B:CY8CKIT_062S2_43012</div></div><!-- fragment --></li>
-<li>Execute the following command in order to replace Mbed OS, download the LPA middleware, and connectivity utilities: <div class="fragment"><div class="line">rm -rf mbed-os</div><div class="line">mbed add https:<span class="comment">//github.com/ARMmbed/mbed-os/#cf4f12a123c05fcae83fc56d76442015cb8a39e9</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/lpa/</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/connectivity-utilities/#56e7eedb81ec2706fd2b259730b954f58c90e9aa</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/capsense/#6aa6547460365ee39e12c238e177b0552359219b</span></div><div class="line">mbed deploy</div></div><!-- fragment --></li>
+<li>Execute the following command in order to update Mbed OS, download the LPA middleware : <div class="fragment"><div class="line">cd mbed-os</div><div class="line">mbed update latest</div><div class="line">cd ..</div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/lpa/</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/connectivity-utilities</span></div><div class="line">mbed deploy</div></div><!-- fragment --></li>
 <li>Modify the example for your Wi-Fi SSID parameters:<ul>
 <li>Modify mbed_app.json to update "wifi-ssid" and "wifi-password" values as desired: <div class="fragment"><div class="line">...</div><div class="line">    <span class="stringliteral">&quot;wifi-ssid&quot;</span>: {</div><div class="line">        <span class="stringliteral">&quot;help&quot;</span>: <span class="stringliteral">&quot;WiFi SSID&quot;</span>,</div><div class="line">        <span class="stringliteral">&quot;value&quot;</span>: <span class="stringliteral">&quot;\&quot;SSID\&quot;&quot;</span></div><div class="line">    },</div><div class="line">    <span class="stringliteral">&quot;wifi-password&quot;</span>: {</div><div class="line">        <span class="stringliteral">&quot;help&quot;</span>: <span class="stringliteral">&quot;WiFi Password&quot;</span>,</div><div class="line">        <span class="stringliteral">&quot;value&quot;</span>: <span class="stringliteral">&quot;\&quot;PASSWORD\&quot;&quot;</span></div><div class="line">    }</div><div class="line">...</div></div><!-- fragment --></li>
+<li>Add "MBED" Component to mbed_app.json in target_overrides section which is required for compiling helpers in LPA code <br />
+ "target.components_add": ["MBED"] <div class="fragment"><div class="line">{</div><div class="line">     <span class="stringliteral">&quot;target_overrides&quot;</span>: {</div><div class="line">         <span class="stringliteral">&quot;*&quot;</span>: {</div><div class="line">              <span class="stringliteral">&quot;platform.stdio-convert-newlines&quot;</span>: <span class="keyword">true</span>,</div><div class="line">              <span class="stringliteral">&quot;target.components_add&quot;</span>: [<span class="stringliteral">&quot;MBED&quot;</span>]</div><div class="line">         }</div><div class="line">     }</div><div class="line">}</div></div><!-- fragment --></li>
 <li>Optional: modify main.cpp to update Wi-Fi security settings: <div class="fragment"><div class="line"><span class="keywordtype">int</span> ret = wifi-&gt;connect(MBED_CONF_APP_WIFI_SSID, MBED_CONF_APP_WIFI_PASSWORD, NSAPI_SECURITY_WPA_WPA2);</div></div><!-- fragment --> Modify the last parameter if needed to either: <div class="fragment"><div class="line">NSAPI_SECURITY_NONE</div><div class="line">NSAPI_SECURITY_WEP</div><div class="line">NSAPI_SECURITY_WPA</div><div class="line">NSAPI_SECURITY_WPA2</div><div class="line">NSAPI_SECURITY_WPA_WPA2</div></div><!-- fragment --></li>
 </ul>
 </li>
 <li>Modify main.cpp to go to deep-sleep after connecting to the Wi-Fi Access Point. MBED uses LWIP as the network stack. LWIP has periodic timers (smallest timer ~100ms), which wake up the Host MCU periodically. Do the following to suspend these timers. This is needed to demonstrate/verify that WLAN_HOST_WAKE pin is properly configured, and that the Host MCU does not wake up from any other reason other than OOB from WLAN device due to Network activity.<ul>
 <li>Include WhdSTAInterface.h and network_activity_handler.h: <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;WhdSTAInterface.h&quot;</span></div><div class="line"><span class="preprocessor">#include &quot;network_activity_handler.h&quot;</span></div></div><!-- fragment --></li>
 <li>Add the following declarations: <div class="fragment"><div class="line"><span class="comment">// This macro specifies the interval in milliseconds that the device monitors</span></div><div class="line"><span class="comment">// the network for inactivity. If the network is inactive for duration lesser </span></div><div class="line"><span class="comment">// than INACTIVE_WINDOW_MS in this interval, the MCU does not suspend the network </span></div><div class="line"><span class="comment">// stack and informs the calling function that the MCU wait period timed out </span></div><div class="line"><span class="comment">// while waiting for network to become inactive.</span></div><div class="line"></div><div class="line"><span class="preprocessor">#define INACTIVE_INTERVAL_MS    (300u)</span></div><div class="line"></div><div class="line"><span class="comment">// This macro specifies the continuous duration in milliseconds for which the </span></div><div class="line"><span class="comment">// network has to be inactive. If the network is inactive for this duration, the</span></div><div class="line"><span class="comment">// MCU will suspend the network stack. Now, the MCU will not need to service the</span></div><div class="line"><span class="comment">// network timers which allows it to stay longer in sleep/deepsleep.</span></div><div class="line"></div><div class="line"><span class="preprocessor">#define INACTIVE_WINDOW_MS      (200u)</span></div></div><!-- fragment --></li>
-<li>Modify main.cpp to allow the host MCU to go to deep-sleep and stay in deep-sleep until woken up by an external event. For this, replace the line "wifi-\&gt;disconnect();" with the following code: <div class="fragment"><div class="line"><span class="keywordflow">while</span>(<span class="keyword">true</span>) {</div><div class="line">    wait_net_suspend(static_cast&lt;WhdSTAInterface*&gt;(wifi),</div><div class="line">       osWaitForever, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);</div><div class="line">}</div></div><!-- fragment --></li>
-<li><p class="startli">Copy following files from lpa folder to the same folder as main.cpp,</p><ul>
-<li>lpa/helpers/net_suspend/mbedos/network_activity_handler.cpp</li>
-<li>lpa/helpers/net_suspend/mbedos/network_activity_handler.h</li>
+<li>Modify main.cpp to allow the host MCU to go to deep-sleep and stay in deep-sleep until woken up by an external event. For this, replace the line "wifi-\&gt;disconnect();" with the following code: <div class="fragment"><div class="line"><span class="keywordflow">while</span>(<span class="keyword">true</span>) {</div><div class="line">    <a class="code" href="group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f">wait_net_suspend</a>(static_cast&lt;WhdSTAInterface*&gt;(wifi),</div><div class="line">       osWaitForever, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);</div><div class="line">}</div></div><!-- fragment --></li>
 </ul>
-<p class="startli">These files provide functions to suspends the network stack when there is no network activity and resumes it when there is any network activity.</p>
 </li>
+<li>Verify WLAN_HOST_WAKE pin configurations using device configurator<ul>
+<li>Mandatory steps to avoid design.modus file modification in mbed-os folder<ol type="a">
+<li>Copy folder mbed-os-example-wifi/mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/TARGET_CY8CKIT_062S2_43012 to mbed-os-example-wifi folder</li>
+<li>Delete all files in mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012 except COMPONENT_BSP_DESIGN_MODUS folder and its contents</li>
+<li>Rename mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/COMPONENT_BSP_DESIGN_MODUS to mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
+<li>Delete design.cyqspi and design.cycapsense file in mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
+<li>Add/update mbed_app.json in mbed-os-example-wifi folder with below details (This will tell mbed to ignore the BSP configuration shipped with MbedOS) <div class="fragment"><div class="line">{</div><div class="line">     <span class="stringliteral">&quot;target_overrides&quot;</span>: {</div><div class="line">         <span class="stringliteral">&quot;*&quot;</span>: {</div><div class="line">              <span class="stringliteral">&quot;platform.stdio-convert-newlines&quot;</span>: <span class="keyword">true</span>,</div><div class="line">              <span class="stringliteral">&quot;target.components_remove&quot;</span>: [<span class="stringliteral">&quot;BSP_DESIGN_MODUS&quot;</span>]</div><div class="line">         }</div><div class="line">     }</div><div class="line"> }</div></div><!-- fragment --></li>
+<li>If mbed-os branch used is 5.15 or above, please do the below changes as well<ul>
+<li>update mbed_app.json with below line in "target_overrides": <div class="fragment"><div class="line"><span class="stringliteral">&quot;target.components_add&quot;</span>: [<span class="stringliteral">&quot;CUSTOM_DESIGN_MODUS&quot;</span>]</div></div><!-- fragment --></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Navigate to ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.1/device-configurator).</li>
+<li>Select File-&gt;Open, navigate to the board's design.modus file, and open it: <em>mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS/design.modus</em></li>
+<li>If the design.modus file does not open and pops with a error message <em>No device support library path provided </em>, then point to the psoc6pdl folder inside the mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/psoc6pdl/devicesupport.xml file in the window popup. This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.</li>
+<li>Switch to the "Pins" tab, enable P4[1] pin, specify its name as "CYBSP_WIFI_HOST_WAKE", in the "Parameters" pane change "Interrupt Trigger Type" to "Rising Edge". If you are using a different pioneer kit, refer to its guide for Host&lt;-&gt;Device connection pinout.</li>
 </ul>
 </li>
 <li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">mbed compile -DMBED_TICKLESS -DMBED_CPU_STATS_ENABLED --target CY8CKIT_062S2_43012 --toolchain GCC_ARM --flash --sterm</div></div><!-- fragment --><p class="startli"><b>Note</b> If you cannot program the board, make sure the board DAP-Link mode is selected. Refer to the guide of your kit of how to change the mode.</p>
@@ -348,6 +389,26 @@ Quick Start Guide</h3>
 <p class="startli">When the modified mbed-os-example-wifi starts, the console output lists available Wi-Fi networks. It then connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">Scan:</div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Oct 29 2019 22:00:20 version 13.10.271.215 (r723093) FWID 01-f268ebc9</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2019-10-29 21:50:17</div><div class="line">WHD VERSION      : v1.50.0-rc1 : v1.50.0-rc1 : GCC 7.3 : 2019-10-30 18:42:31 +0530</div><div class="line">Network: airport_5g secured: WPA2 BSSID: 24:A2:E1:f0:50:25 RSSI: -84 Ch: 36</div><div class="line">Network: Broadcom secured: None BSSID: 0:10:18:ee:b5:f7 RSSI: -52 Ch: 36</div><div class="line">Network: test_2nd_cy secured: WPA2 BSSID: F8:32:E4:b0:ff:8c RSSI: -74 Ch: 36</div><div class="line">Network: eero secured: WPA2 BSSID: F8:BB:BF:b2:2:54 RSSI: -33 Ch: 36</div><div class="line">Network: WWD secured: WPA/WPA2 BSSID: 64:A5:C3:64:16:13 RSSI: -77 Ch: 36</div><div class="line">Network: eero secured: WPA/WPA2 BSSID: F8:BB:BF:b1:74:b4 RSSI: -36 Ch: 36</div><div class="line">Network: eero secured: WPA/WPA2 BSSID: F8:BB:BF:69:2b:8 RSSI: -46 Ch: 36</div><div class="line">Network: prke-bsh5g secured: WPA/WPA2 BSSID: 44:4E:6D:45:b0:58 RSSI: -82 Ch: 36</div><div class="line">Network:  secured: Unknown BSSID: F8:BB:BF:b2:2:52 RSSI: -33 Ch: 36</div><div class="line">Network: testap secured: None BSSID: 0:A0:50:30:81:65 RSSI: -64 Ch: 36</div><div class="line">Network: RW1 secured: WPA2 BSSID: C8:8:73:3c:87:2c RSSI: -75 Ch: 40</div><div class="line">Network: CYFI secured: WPA2 BSSID: B0:B8:67:3b:ac:70 RSSI: -86 Ch: 44</div><div class="line">Network: CYFI secured: WPA2 BSSID: 80:8D:B7:69:77:30 RSSI: -70 Ch: 44</div><div class="line">Network: CYFI_GUEST secured: None BSSID: 80:8D:B7:69:77:31 RSSI: -70 Ch: 44</div><div class="line">Network: CYFI_ZOOM secured: WPA2 BSSID: 80:8D:B7:69:77:32 RSSI: -70 Ch: 44</div><div class="line">15 networks available.</div><div class="line"></div><div class="line">Connecting to SSID...</div><div class="line">Success</div><div class="line"></div><div class="line">MAC: d4:4d:a4:a0:02:a4</div><div class="line">IP: 192.168.1.12</div><div class="line">Netmask: 255.255.255.0</div><div class="line">Gateway: 192.168.1.1</div><div class="line">RSSI: -29</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
 <li><p class="startli">PSoC 6 Host is in System Deep Sleep. Only WLAN OOB can wake Host up in this situation. Check the board operation. Use a PC to connect to the same Wi-Fi Access Point as the PSoC 6 board.</p>
 <p class="startli">Send a "ping" command to the board and observe in the serial terminal that the PSoC 6 MCU wakes up each command: </p><div class="fragment"><div class="line">C:\&gt;ping 192.168.1.12</div><div class="line"></div><div class="line">Pinging 192.168.1.12 with 32 bytes of data:</div><div class="line">Reply from 192.168.1.12: bytes=32 time=738ms TTL=255</div><div class="line">Reply from 192.168.1.12: bytes=32 time=662ms TTL=255</div><div class="line">Reply from 192.168.1.12: bytes=32 time=727ms TTL=255</div><div class="line">Reply from 192.168.1.12: bytes=32 time=468ms TTL=255</div><div class="line"></div><div class="line">Ping statistics <span class="keywordflow">for</span> 192.168.1.12:</div><div class="line">    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),</div><div class="line">Approximate round trip times in milli-seconds:</div><div class="line">Minimum = 468ms, Maximum = 738ms, Average = 648ms</div><div class="line"></div><div class="line">&lt;Terminal logs &gt;</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 8906ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:57, rx_total:329, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2260, cmd53_read:1028, cmd53_write:634</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:120, sdio_intrs:312, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --><p> Ping traffic causes WLAN OOB periodically wakes up the host, oob_intrs displayed in the serial terminal output shows the number of WLAN OOB interrupts receieved.</p>
+</li>
+</ol>
+<h4><a class="anchor" id="group_lpa_p2_host_wake_qsg_anycloud"></a>
+FREERTOS</h4>
+<ol type="1">
+<li>Checkout Wi-Fi Example app <div class="fragment"><div class="line">git clone https:<span class="comment">//github.com/cypresssemiconductorco/mtb-example-anycloud-wlan-lowpower.git</span></div><div class="line">cd mtb-example-anycloud-wlan-lowpower</div></div><!-- fragment --></li>
+<li><p class="startli">Make sure below FreeRTOSConfig.h changes are present:</p>
+<p class="startli">configUSE_TICKLESS_IDLE : This change to support Tickless Deep Sleep mode </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cycfg_system.h&gt;</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_SLEEP) || (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)</span></div><div class="line"><span class="keyword">extern</span> <span class="keywordtype">void</span> vApplicationSleep( uint32_t xExpectedIdleTime );</div><div class="line"><span class="preprocessor">#define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )</span></div><div class="line"><span class="preprocessor">#define configUSE_TICKLESS_IDLE  2</span></div><div class="line"><span class="preprocessor">#endif</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if CY_CFG_PWR_DEEPSLEEP_LATENCY &gt; 0</span></div><div class="line"><span class="preprocessor">#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   CY_CFG_PWR_DEEPSLEEP_LATENCY</span></div><div class="line"><span class="preprocessor">#endif</span></div></div><!-- fragment --></li>
+<li>Modify the example for your Wi-Fi SSID parameters in app_config.h <div class="fragment"><div class="line"><span class="preprocessor">#define WIFI_SSID                         &quot;SSID&quot;</span></div><div class="line"><span class="preprocessor">#define WIFI_PASSWORD                     &quot;PASSWORD&quot;</span></div><div class="line"><span class="preprocessor">#define WIFI_SECURITY                     CY_WCM_SECURITY_WPA2_MIXED_PSK</span></div></div><!-- fragment --></li>
+<li>Make sure below Makefile changes are present. This is required for MCU Deep Sleep to work properly <div class="fragment"><div class="line">DEFINES+=CY_SD_HOST_CLK_RAMP_UP_TIME_MS_WAKEUP=0</div></div><!-- fragment --></li>
+<li>Verify WLAN_HOST_WAKE pin configurations using device configurator<ul>
+<li>Navigate to ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.1/device-configurator).</li>
+<li>Select File-&gt;Open, navigate to the board's design.modus file, and open it: <em>mtb-example-anycloud-wlan-lowpower/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT-062S2-43012/design.modus</em></li>
+<li>If the design.modus file does not open and pops with a error message <em>No device support library path provided </em>, then point to the psoc6pdl folder inside the mtb-example-anycloud-wlan-lowpower/libs/psoc6pdl/devicesupport.xml file in the window popup. This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.</li>
+<li>Switch to the "Pins" tab, enable P4[1] pin, specify its name as "CYBSP_WIFI_HOST_WAKE", in the "Parameters" pane change "Interrupt Trigger Type" to "Rising Edge". If you are using a different pioneer kit, refer to its guide for Host&lt;-&gt;Device connection pinout.</li>
+</ul>
+</li>
+<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --><p class="startli">When the modified mtb-example-connectivity-wlan-lowpower starts, the console output lists available Wi-Fi networks. It then connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">===============================================================</div><div class="line">CE230106 - ModusToolbox Connectivity Example: WLAN Lowpower</div><div class="line">===============================================================</div><div class="line"></div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Jan 27 2020 21:57:29 version 13.10.271.236 (5a526db) FWID 01-61e2b002</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2020-01-27 21:54:33</div><div class="line">WHD VERSION      : v1.80.0 : v1.80.0 : GCC 7.2 : 2020-03-10 04:09:17 -0500</div><div class="line">Info:Connecting to AP</div><div class="line">IP Address 10.0.0.201 assigned</div><div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div><div class="line">Info:Beacon period = 100, DTIM period = 1</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:64, rx_total:71, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2286, cmd53_read:366, cmd53_write:559</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line">Network is active. Resuming network stack</div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
+<li><p class="startli">PSoC 6 Host is in System Deep Sleep. Only WLAN OOB can wake Host up in this situation. Check the board operation. Use a PC to connect to the same Wi-Fi Access Point as the PSoC 6 board.</p>
+<p class="startli">Send a "ping" command to the board and observe in the serial terminal that the PSoC 6 MCU wakes up each command: </p><div class="fragment"><div class="line">C:\&gt;ping -n 3 10.0.0.201</div><div class="line">Pinging 10.0.0.201 with 32 bytes of data:</div><div class="line">Reply from 10.0.0.201: bytes=32 time=274ms TTL=255</div><div class="line">Reply from 10.0.0.201: bytes=32 time=393ms TTL=255</div><div class="line">Reply from 10.0.0.201: bytes=32 time=396ms TTL=255</div><div class="line"></div><div class="line">Ping statistics <span class="keywordflow">for</span> 10.0.0.201:</div><div class="line">    Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),</div><div class="line">Approximate round trip times in milli-seconds:</div><div class="line">    Minimum = 274ms, Maximum = 396ms, Average = 354ms</div><div class="line"></div><div class="line">&lt;Terminal logs &gt;</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 443ms</div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:91, rx_total:97, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2314, cmd53_read:488, cmd53_write:607</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:93, sdio_intrs:187, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter Deep sleep power mode</div></div><!-- fragment --><p> Ping traffic causes WLAN OOB periodically wakes up the host, oob_intrs displayed in the serial terminal output shows the number of WLAN OOB interrupts received.</p>
 </li>
 </ol>
 <h2><a class="anchor" id="group_lpa_p2_arp_offload"></a>
@@ -394,27 +455,25 @@ Host IP Snoop</h3>
 <p>When enabled, the Snoop facility watches for ARP Responses from the Host to the Network, and caches them in the WLAN Device Host IP Table. The size of this table is 8 entries, which allows for the Device to support multiple IP addresses.</p>
 <h3><a class="anchor" id="group_lpa_p2_arp_offload_qsg"></a>
 Quick Start Guide</h3>
-<p>This Quick Start Guide demonstrates of how to configure and use the ARP offload feature in the Mbed OS environment and its impact on the system power consumption. The mbed-os-example-wifi is used as a base for this guide on the CY8CKIT_062S2_43012 pioneer kit. This section assumes that you have an Mbed OS development environment configured. Refer to <a href="https://os.mbed.com/getting-started/">https://os.mbed.com/getting-started/</a> for instructions about how to do that.</p>
+<p>This Quick Start Guide demonstrates of how to configure and use the ARP offload feature in the Mbed OS, FreeRTOS environment and its impact on the system power consumption.</p>
+<h4><a class="anchor" id="group_lpa_p2_arp_offload_qsg_mbedos"></a>
+MBEDOS</h4>
+<p>The mbed-os-example-wifi is used as a base for this guide on the CY8CKIT_062S2_43012 pioneer kit. This section assumes that you have an Mbed OS development environment configured. Refer to <a href="https://os.mbed.com/getting-started/">https://os.mbed.com/getting-started/</a> for instructions about how to do that.</p>
 <p>The following steps are required to set up the mbed-os-example-wifi example and enable the ARP offload feature:</p>
 <ol type="1">
 <li>Import the mbed-os-example-wifi example project and switch to the example directory: <div class="fragment"><div class="line">mbed <span class="keyword">import</span> mbed-os-example-wifi</div><div class="line">cd mbed-os-example-wifi</div></div><!-- fragment --></li>
-<li>As a one-time operation, you might need to execute the following lines as part of enabling the CY8CKIT_062S2_43012 pioneer kit: <div class="fragment"><div class="line">python -m pip install --upgrade pip</div><div class="line">pip install mbed-ls --upgrade</div><div class="line">mbedls -m 190B:CY8CKIT_062S2_43012</div></div><!-- fragment --></li>
-<li>Execute the following command in order to replace Mbed OS, download the LPA middleware, and connectivity utilities: <div class="fragment"><div class="line">rm -rf mbed-os</div><div class="line">mbed add https:<span class="comment">//github.com/ARMmbed/mbed-os/#cf4f12a123c05fcae83fc56d76442015cb8a39e9</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/lpa/</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/connectivity-utilities/#56e7eedb81ec2706fd2b259730b954f58c90e9aa</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/capsense/#6aa6547460365ee39e12c238e177b0552359219b</span></div><div class="line">mbed deploy</div></div><!-- fragment --></li>
+<li>Execute the following command in order to replace Mbed OS, download the LPA middleware and connectivity utilities: <div class="fragment"><div class="line">cd mbed-os</div><div class="line">mbed update latest</div><div class="line">cd ..</div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/lpa/</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/connectivity-utilities/</span></div><div class="line">mbed deploy</div></div><!-- fragment --></li>
 <li>Modify the example for your Wi-Fi SSID parameters:<ul>
 <li>Modify mbed_app.json to update "wifi-ssid" and "wifi-password" values as desired: <div class="fragment"><div class="line">...</div><div class="line">    <span class="stringliteral">&quot;wifi-ssid&quot;</span>: {</div><div class="line">        <span class="stringliteral">&quot;help&quot;</span>: <span class="stringliteral">&quot;WiFi SSID&quot;</span>,</div><div class="line">        <span class="stringliteral">&quot;value&quot;</span>: <span class="stringliteral">&quot;\&quot;SSID\&quot;&quot;</span></div><div class="line">    },</div><div class="line">    <span class="stringliteral">&quot;wifi-password&quot;</span>: {</div><div class="line">        <span class="stringliteral">&quot;help&quot;</span>: <span class="stringliteral">&quot;WiFi Password&quot;</span>,</div><div class="line">        <span class="stringliteral">&quot;value&quot;</span>: <span class="stringliteral">&quot;\&quot;PASSWORD\&quot;&quot;</span></div><div class="line">    }</div><div class="line">...</div></div><!-- fragment --></li>
+<li>Add "MBED" Component to mbed_app.json in target_overrides section which is required for compiling helpers in LPA code <br />
+ "target.components_add": ["MBED"] <div class="fragment"><div class="line">{</div><div class="line">     <span class="stringliteral">&quot;target_overrides&quot;</span>: {</div><div class="line">         <span class="stringliteral">&quot;*&quot;</span>: {</div><div class="line">              <span class="stringliteral">&quot;platform.stdio-convert-newlines&quot;</span>: <span class="keyword">true</span>,</div><div class="line">              <span class="stringliteral">&quot;target.components_add&quot;</span>: [<span class="stringliteral">&quot;MBED&quot;</span>]</div><div class="line">         }</div><div class="line">     }</div><div class="line">}</div></div><!-- fragment --></li>
 <li>Optional: modify main.cpp to update Wi-Fi security settings: <div class="fragment"><div class="line"><span class="keywordtype">int</span> ret = wifi-&gt;connect(MBED_CONF_APP_WIFI_SSID, MBED_CONF_APP_WIFI_PASSWORD, NSAPI_SECURITY_WPA_WPA2);</div></div><!-- fragment --> Modify the last parameter if needed to either: <div class="fragment"><div class="line">NSAPI_SECURITY_NONE</div><div class="line">NSAPI_SECURITY_WEP</div><div class="line">NSAPI_SECURITY_WPA</div><div class="line">NSAPI_SECURITY_WPA2</div><div class="line">NSAPI_SECURITY_WPA_WPA2</div></div><!-- fragment --></li>
 </ul>
 </li>
 <li>Modify main.cpp to go to deep-sleep after connecting to the Wi-Fi Access Point. MBED uses LWIP as the network stack. LWIP has periodic timers (smallest timer ~100ms), which wake up the Host MCU periodically. Do the following to suspend these timers, so the Host MCU can be in deep-sleep for a longer time. This is needed to demonstrate / verify ARP offload is not waking up the Host MCU.<ul>
 <li>Include WhdSTAInterface.h and network_activity_handler.h: <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;WhdSTAInterface.h&quot;</span></div><div class="line"><span class="preprocessor">#include &quot;network_activity_handler.h&quot;</span></div></div><!-- fragment --></li>
 <li>Add the following declarations: <div class="fragment"><div class="line"><span class="comment">// This macro specifies the interval in milliseconds that the device monitors</span></div><div class="line"><span class="comment">// the network for inactivity. If the network is inactive for duration lesser</span></div><div class="line"><span class="comment">// than INACTIVE_WINDOW_MS in this interval, the MCU does not suspend the network</span></div><div class="line"><span class="comment">// stack and informs the calling function that the MCU wait period timed out</span></div><div class="line"><span class="comment">// while waiting for network to become inactive.</span></div><div class="line"></div><div class="line"><span class="preprocessor">#define INACTIVE_INTERVAL_MS    (300u)</span></div><div class="line"></div><div class="line"><span class="comment">// This macro specifies the continuous duration in milliseconds for which the</span></div><div class="line"><span class="comment">// network has to be inactive. If the network is inactive for this duration, the</span></div><div class="line"><span class="comment">// MCU will suspend the network stack. Now, the MCU will not need to service the</span></div><div class="line"><span class="comment">// network timers which allows it to stay longer in sleep/deepsleep.</span></div><div class="line"></div><div class="line"><span class="preprocessor">#define INACTIVE_WINDOW_MS      (200u)</span></div></div><!-- fragment --></li>
-<li>Modify main.cpp to allow the host MCU to go to deep-sleep and stay in deep-sleep until woken up by an external event. For this, replace the line "wifi-\&gt;disconnect();" with the following code: <div class="fragment"><div class="line"><span class="keywordflow">while</span>(<span class="keyword">true</span>) {</div><div class="line">    wait_net_suspend(static_cast&lt;WhdSTAInterface*&gt;(wifi),</div><div class="line">       osWaitForever, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);</div><div class="line">}</div></div><!-- fragment --></li>
-<li><p class="startli">Copy following files from lpa folder to the same folder as main.cpp,</p><ul>
-<li>lpa/helpers/net_suspend/mbedos/network_activity_handler.cpp</li>
-<li>lpa/helpers/net_suspend/mbedos/network_activity_handler.h</li>
-</ul>
-<p class="startli">These files provide functions to suspends the network stack when there is no network activity and resumes it when there is any network activity.</p>
-</li>
+<li>Modify main.cpp to allow the host MCU to go to deep-sleep and stay in deep-sleep until woken up by an external event. For this, replace the line "wifi-\&gt;disconnect();" with the following code: <div class="fragment"><div class="line"><span class="keywordflow">while</span>(<span class="keyword">true</span>) {</div><div class="line">    <a class="code" href="group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f">wait_net_suspend</a>(static_cast&lt;WhdSTAInterface*&gt;(wifi),</div><div class="line">      osWaitForever, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);</div><div class="line">}</div></div><!-- fragment --></li>
 </ul>
 </li>
 <li>Configure the ARP offload. The easiest way to configure ARP offload is to use the ModusToolbox Device Configurator.<ul>
@@ -424,11 +483,16 @@ Quick Start Guide</h3>
 <li>Rename mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/COMPONENT_BSP_DESIGN_MODUS to mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
 <li>Delete design.cyqspi and design.cycapsense file in mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
 <li>Add/update mbed_app.json in mbed-os-example-wifi folder with below details (This will tell mbed to ignore the BSP configuration shipped with MbedOS) <div class="fragment"><div class="line">{</div><div class="line">     <span class="stringliteral">&quot;target_overrides&quot;</span>: {</div><div class="line">         <span class="stringliteral">&quot;*&quot;</span>: {</div><div class="line">              <span class="stringliteral">&quot;platform.stdio-convert-newlines&quot;</span>: <span class="keyword">true</span>,</div><div class="line">              <span class="stringliteral">&quot;target.components_remove&quot;</span>: [<span class="stringliteral">&quot;BSP_DESIGN_MODUS&quot;</span>]</div><div class="line">         }</div><div class="line">     }</div><div class="line"> }</div></div><!-- fragment --></li>
+<li>If mbed-os branch used is 5.15 or above, please do the below changes as well<ul>
+<li>update mbed_app.json with below line in "target_overrides": <div class="fragment"><div class="line"><span class="stringliteral">&quot;target.components_add&quot;</span>: [<span class="stringliteral">&quot;CUSTOM_DESIGN_MODUS&quot;</span>]</div></div><!-- fragment --></li>
+</ul>
+</li>
 </ol>
 </li>
-<li>Navigate to ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.0/device-configurator).</li>
+<li>Navigate to ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.1/device-configurator).</li>
 <li>Select File-&gt;Open, navigate to the board's design.modus file, and open it: <em>mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS/design.modus</em></li>
-<li>Switch to the "Pins" tab, enable P4[1] pin, specify its name as "CYBSP_WIFI_HOST_WAKE", in the "Parameters" pane change "Interrupt Trigger Type" to "Failing Edge". If you are using a different pioneer kit, refer to its guide for Host&lt;-&gt;Device connection pinout.</li>
+<li>If the design.modus file does not open and pops with a error message <em>No device support library path provided </em>, then point to the psoc6pdl folder inside the mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/psoc6pdl/devicesupport.xml file in the window popup. This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.</li>
+<li>Switch to the "Pins" tab, enable P4[1] pin, specify its name as "CYBSP_WIFI_HOST_WAKE", in the "Parameters" pane change "Interrupt Trigger Type" to "Rising Edge". If you are using a different pioneer kit, refer to its guide for Host&lt;-&gt;Device connection pinout.</li>
 <li>Switch to the connectivity device "CYW943012WKWBG" tab (in case the CY8CKIT_062S2_43012 board is used).</li>
 <li>Enable Power-&gt;Wi-Fi.</li>
 <li>In "Wi-Fi - Parameters" pane enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
@@ -464,6 +528,44 @@ Quick Start Guide</h3>
 <img src="arp_nooffload_inv.jpg" alt="arp_nooffload_inv.jpg" height="500px"/>
 </div>
 </li>
+</ol>
+<h4><a class="anchor" id="group_lpa_p2_arp_offload_qsg_anycloud"></a>
+FREERTOS</h4>
+<p>The following steps are required to set up the wifi-low-power example and enable the ARP offload feature:</p>
+<ol type="1">
+<li>Checkout Wi-Fi Example app <div class="fragment"><div class="line">git clone https:<span class="comment">//github.com/cypresssemiconductorco/mtb-example-anycloud-wlan-lowpower.git</span></div><div class="line">cd mtb-example-anycloud-wlan-lowpower</div></div><!-- fragment --></li>
+<li><p class="startli">Make sure below FreeRTOSConfig.h changes are present:</p>
+<p class="startli">configUSE_TICKLESS_IDLE : This change to support Tickless Deep Sleep mode </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cycfg_system.h&gt;</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_SLEEP) || (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)</span></div><div class="line"><span class="keyword">extern</span> <span class="keywordtype">void</span> vApplicationSleep( uint32_t xExpectedIdleTime );</div><div class="line"><span class="preprocessor">#define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )</span></div><div class="line"><span class="preprocessor">#define configUSE_TICKLESS_IDLE  2</span></div><div class="line"><span class="preprocessor">#endif</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if CY_CFG_PWR_DEEPSLEEP_LATENCY &gt; 0</span></div><div class="line"><span class="preprocessor">#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   CY_CFG_PWR_DEEPSLEEP_LATENCY</span></div><div class="line"><span class="preprocessor">#endif</span></div></div><!-- fragment --></li>
+<li>Modify the example for your Wi-Fi SSID parameters in app_config.h <div class="fragment"><div class="line"><span class="preprocessor">#define WIFI_SSID                         &quot;SSID&quot;</span></div><div class="line"><span class="preprocessor">#define WIFI_PASSWORD                     &quot;PASSWORD&quot;</span></div><div class="line"><span class="preprocessor">#define WIFI_SECURITY                     CY_WCM_SECURITY_WPA2_MIXED_PSK</span></div></div><!-- fragment --></li>
+<li>Make sure below Makefile changes are present. This is required for MCU Deep Sleep to work properly <div class="fragment"><div class="line">DEFINES+=CY_SD_HOST_CLK_RAMP_UP_TIME_MS_WAKEUP=0</div></div><!-- fragment --></li>
+<li>Configure the ARP offload. The easiest way to configure ARP offload is to use the ModusToolbox Device Configurator.<ul>
+<li>Navigate to ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.1/device-configurator).</li>
+<li>Select File-&gt;Open, navigate to the board's design.modus file, and open it: <em>mtb-example-anycloud-wlan-lowpower/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT-062S2-43012/design.modus</em></li>
+<li>If the design.modus file does not open and pops with a error message <em>No device support library path provided </em>, then point to the psoc6pdl folder inside the mtb-example-anycloud-wlan-lowpower/libs/psoc6pdl/devicesupport.xml file in the window popup. This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.</li>
+<li>Switch to the "Pins" tab, enable P4[1] pin, specify its name as "CYBSP_WIFI_HOST_WAKE", in the "Parameters" pane change "Interrupt Trigger Type" to "Rising Edge". If you are using a different pioneer kit, refer to its guide for Host&lt;-&gt;Device connection pinout.</li>
+<li>Switch to the connectivity device "CYW943012WKWBG" tab (in case the CY8CKIT_062S2_43012 board is used).</li>
+<li>Enable Power-&gt;Wi-Fi.</li>
+<li>In "Wi-Fi - Parameters" pane enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
+<li>Enable ARP offload.</li>
+<li>Set "ARP offload Feature(s)" to "Peer Auto Reply".</li>
+<li>Enable "Snoop Host IP From Traffic When ARP Offload Enabled".</li>
+<li>Set "ARP Offload Cache Entries Expire after (s)" to 1200.</li>
+<li>Save the configuration to generate the necessary code.</li>
+</ul>
+</li>
+<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --><p class="startli">When the modified mtb-example-connectivity-wlan-lowpower starts, the console output lists available Wi-Fi networks. It then connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">===============================================================</div><div class="line">CE230106 - ModusToolbox Connectivity Example: WLAN Lowpower</div><div class="line">===============================================================</div><div class="line"></div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Jan 27 2020 21:57:29 version 13.10.271.236 (5a526db) FWID 01-61e2b002</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2020-01-27 21:54:33</div><div class="line">WHD VERSION      : v1.80.0 : v1.80.0 : GCC 7.2 : 2020-03-10 04:09:17 -0500</div><div class="line">Info:Connecting to AP</div><div class="line">IP Address 10.0.0.201 assigned</div><div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div><div class="line">Info:Beacon period = 100, DTIM period = 1</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:64, rx_total:71, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2286, cmd53_read:366, cmd53_write:559</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line">Network is active. Resuming network stack</div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
+<li>Check the board operation. Use a PC to connect to the same Wi-Fi Access Point as the PSoC 6 board.<ul>
+<li>Send a "ping" command to the board and observe in the serial terminal that the PSoC 6 MCU wakes up each command: <div class="fragment"><div class="line">C:\&gt;ping -n 3 10.0.0.201</div><div class="line"></div><div class="line">Pinging 10.0.0.201 with 32 bytes of data:</div><div class="line">Reply from 10.0.0.201: bytes=32 time=319ms TTL=255</div><div class="line">Reply from 10.0.0.201: bytes=32 time=233ms TTL=255</div><div class="line">Reply from 10.0.0.201: bytes=32 time=151ms TTL=255</div><div class="line"></div><div class="line">Ping statistics <span class="keywordflow">for</span> 10.0.0.201:</div><div class="line">  Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),</div><div class="line">Approximate round trip times in milli-seconds:</div><div class="line">  Minimum = 151ms, Maximum = 319ms, Average = 234ms</div><div class="line"></div><div class="line">&lt;Terminal logs &gt;</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 2456ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:174, rx_total:198, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2638, cmd53_read:1001, cmd53_write:796</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:199, sdio_intrs:401, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line">Network is active. Resuming network stack</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
+<li><p class="startli">Send an "arping" command as follows and observe that the PSoC 6 MCU is in Deep Sleep mode. </p><div class="fragment"><div class="line">C:\Users\pucn\Downloads&gt;arp-ping.exe -n 3 10.0.0.201</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 10.0.0.201 in 113.078ms</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 10.0.0.201 in 1115.498ms</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 10.0.0.201 in 1113.863ms</div><div class="line"></div><div class="line">Ping statistics <span class="keywordflow">for</span> 10.0.0.201/arp</div><div class="line">   3 probes sent.</div><div class="line">   3 successful, 0 failed.</div><div class="line">Approximate trip times in milli-seconds:</div><div class="line">   Minimum = 113.078ms, Maximum = 1115.498ms, Average = 780.813ms</div></div><!-- fragment --><p class="startli">Use any available ARPping tool. As an example:</p><ul>
+<li>Windows: <a href="https://www.elifulkerson.com/projects/arp-ping.php">https://www.elifulkerson.com/projects/arp-ping.php</a></li>
+<li>Mac : <a href="http://macappstore.org/arping/">http://macappstore.org/arping/</a></li>
+<li>linux : sudo apt install arping; arping [ip address]</li>
+</ul>
+<p class="startli">Since the WLAN device’s ARP cache is empty on the initial ARP request from the peer, it looks up the IP details from the host and updates its ARP cache. This causes the host to wake up because of network activity between the host MCU and the WLAN device. On subsequent ARP requests from the peer, the host remains asleep. The WLAN device continues to respond to the ARP request as it has the ARP data available in its ARP cache.</p>
+</li>
+</ul>
+</li>
+<li>Disable the ARP Offload feature and observe that the PSoC 6 Host wakes up on each request. Launch the ModusToolbox Device Configurator and open the appropriate design.modus file. Select the "CYW943012WKWBG" tab, select Power-&gt;Wi-Fi personality, and disable ARP offload by de-selecting the check box next to "ARP offload". Save the configuration. Then, build and program the application. With ARP offload disabled, the Host MCU (PSoC 6) will wake for every ARP request.</li>
 </ol>
 <h2><a class="anchor" id="group_lpa_p2_packet_filter"></a>
 Wi-Fi Packet Filter Offload</h2>
@@ -539,27 +641,25 @@ When Active (Sleep vs Wake)</h3>
 <p>In both cases, the host would awake from its battery saving System Deep Sleep just to drop a packet. It is not hard to imagine scenarios where traffic your application doesn't want or doesn't care about ends up penalizing your battery usage by constantly waking the host from System Deep Sleep. Alternatively, these unwanted packets can also prevent the host from entering System Deep Sleep in the first place. The host has an idle sleep threshold. When the host has been idle longer than that threshold, it will put itself to sleep. Processing unwanted packets (even just dropping them) will cause the host to come out of idle and prevent it from reaching the idle sleep threshold, preventing the host from entering sleep. In both cases, traffic patterns keep the processor awake, burning power.</p>
 <h3><a class="anchor" id="group_lpa_p2_packet_filter_qsg"></a>
 Quick Start Guide</h3>
-<p>This Quick Start Guide demonstrates of how to configure and use the Packet Filter feature in the Mbed OS environment and its impact on the system power consumption. The mbed-os-example-wifi is used as a base for this guide on the CY8CKIT_062S2_43012 pioneer kit. This section assumes that a user has an Mbed OS development environment configured. Refer to <a href="https://os.mbed.com/getting-started/">https://os.mbed.com/getting-started/</a> to setup Mbed OS develop environment.</p>
+<p>This Quick Start Guide demonstrates of how to configure and use the Packet Filter feature in the Mbed OS/ FreeRTOS environment and its impact on the system power consumption.</p>
+<h4><a class="anchor" id="group_lpa_p2_pf_offload_qsg_mbedos"></a>
+MBEDOS</h4>
+<p>The mbed-os-example-wifi is used as a base for this guide on the CY8CKIT_062S2_43012 pioneer kit. This section assumes that a user has an Mbed OS development environment configured. Refer to <a href="https://os.mbed.com/getting-started/">https://os.mbed.com/getting-started/</a> to setup Mbed OS develop environment.</p>
 <p>The following steps are required to setup the mbed-os-example-wifi example with enabling the Packet Filter feature:</p>
 <ol type="1">
 <li>Import the mbed-os-example-wifi example project and switch to the example directory: <div class="fragment"><div class="line">mbed <span class="keyword">import</span> mbed-os-example-wifi</div><div class="line">cd mbed-os-example-wifi</div></div><!-- fragment --></li>
-<li>As a one-time operation, you might need to execute the following lines as part of enabling the CY8CKIT_062S2_43012 pioneer kit: <div class="fragment"><div class="line">python -m pip install --upgrade pip</div><div class="line">pip install mbed-ls --upgrade</div><div class="line">mbedls -m 190B:CY8CKIT_062S2_43012</div></div><!-- fragment --></li>
-<li>Execute the following command in order to replace Mbed OS, download the LPA middleware, and connectivity utilities: <div class="fragment"><div class="line">rm -rf mbed-os</div><div class="line">mbed add https:<span class="comment">//github.com/ARMmbed/mbed-os/#cf4f12a123c05fcae83fc56d76442015cb8a39e9</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/lpa/</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/connectivity-utilities/#56e7eedb81ec2706fd2b259730b954f58c90e9aa</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/capsense/#6aa6547460365ee39e12c238e177b0552359219b</span></div><div class="line">mbed deploy</div></div><!-- fragment --></li>
+<li>Execute the following command in order to replace Mbed OS, download the LPA middleware and connectivity utilities: <div class="fragment"><div class="line">cd mbed-os</div><div class="line">mbed update latest</div><div class="line">cd ..</div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/lpa/</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/connectivity-utilities/</span></div><div class="line">mbed deploy</div></div><!-- fragment --></li>
 <li>Modify the example for your Wi-Fi SSID parameters:<ul>
 <li>Modify mbed_app.json to update "wifi-ssid" and "wifi-password" values as desired: <div class="fragment"><div class="line">...</div><div class="line">    <span class="stringliteral">&quot;wifi-ssid&quot;</span>: {</div><div class="line">        <span class="stringliteral">&quot;help&quot;</span>: <span class="stringliteral">&quot;WiFi SSID&quot;</span>,</div><div class="line">        <span class="stringliteral">&quot;value&quot;</span>: <span class="stringliteral">&quot;\&quot;SSID\&quot;&quot;</span></div><div class="line">    },</div><div class="line">    <span class="stringliteral">&quot;wifi-password&quot;</span>: {</div><div class="line">        <span class="stringliteral">&quot;help&quot;</span>: <span class="stringliteral">&quot;WiFi Password&quot;</span>,</div><div class="line">        <span class="stringliteral">&quot;value&quot;</span>: <span class="stringliteral">&quot;\&quot;PASSWORD\&quot;&quot;</span></div><div class="line">    }</div><div class="line">...</div></div><!-- fragment --></li>
+<li>Add "MBED" Component to mbed_app.json in target_overrides section which is required for compiling helpers in LPA code <br />
+ "target.components_add": ["MBED"] <div class="fragment"><div class="line">{</div><div class="line">     <span class="stringliteral">&quot;target_overrides&quot;</span>: {</div><div class="line">         <span class="stringliteral">&quot;*&quot;</span>: {</div><div class="line">              <span class="stringliteral">&quot;platform.stdio-convert-newlines&quot;</span>: <span class="keyword">true</span>,</div><div class="line">              <span class="stringliteral">&quot;target.components_add&quot;</span>: [<span class="stringliteral">&quot;MBED&quot;</span>]</div><div class="line">         }</div><div class="line">     }</div><div class="line">}</div></div><!-- fragment --></li>
 <li>Optional: modify main.cpp to update Wi-Fi security settings: <div class="fragment"><div class="line"><span class="keywordtype">int</span> ret = wifi-&gt;connect(MBED_CONF_APP_WIFI_SSID, MBED_CONF_APP_WIFI_PASSWORD, NSAPI_SECURITY_WPA_WPA2);</div></div><!-- fragment --> Modify the last parameter if needed to either: <div class="fragment"><div class="line">NSAPI_SECURITY_NONE</div><div class="line">NSAPI_SECURITY_WEP</div><div class="line">NSAPI_SECURITY_WPA</div><div class="line">NSAPI_SECURITY_WPA2</div><div class="line">NSAPI_SECURITY_WPA_WPA2</div></div><!-- fragment --></li>
 </ul>
 </li>
 <li>Modify main.cpp to go to deep-sleep after connecting to the Wi-Fi Access Point. MBED uses LWIP as the network stack. LWIP has periodic timers (smallest timer ~100ms), which wake up the Host MCU periodically. Do the following to suspend these timers, so the Host MCU can be in deep-sleep for a longer time. This is needed to demonstrate / verify Packet Filter(s) are not waking up the Host MCU.<ul>
 <li>Include WhdSTAInterface.h and network_activity_handler.h: <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;WhdSTAInterface.h&quot;</span></div><div class="line"><span class="preprocessor">#include &quot;network_activity_handler.h&quot;</span></div></div><!-- fragment --></li>
 <li>Add the following declarations: <div class="fragment"><div class="line"><span class="comment">// This macro specifies the interval in milliseconds that the device monitors</span></div><div class="line"><span class="comment">// the network for inactivity. If the network is inactive for duration lesser</span></div><div class="line"><span class="comment">// than INACTIVE_WINDOW_MS in this interval, the MCU does not suspend the network</span></div><div class="line"><span class="comment">// stack and informs the calling function that the MCU wait period timed out</span></div><div class="line"><span class="comment">// while waiting for network to become inactive.</span></div><div class="line"></div><div class="line"><span class="preprocessor">#define INACTIVE_INTERVAL_MS    (300u)</span></div><div class="line"></div><div class="line"><span class="comment">// This macro specifies the continuous duration in milliseconds for which the</span></div><div class="line"><span class="comment">// network has to be inactive. If the network is inactive for this duration, the</span></div><div class="line"><span class="comment">// MCU will suspend the network stack. Now, the MCU will not need to service the</span></div><div class="line"><span class="comment">// network timers which allows it to stay longer in sleep/deepsleep.</span></div><div class="line"></div><div class="line"><span class="preprocessor">#define INACTIVE_WINDOW_MS      (200u)</span></div></div><!-- fragment --></li>
-<li>Modify main.cpp to allow the host MCU to go to deep-sleep and stay in deep-sleep until woken up by an external event. For this, replace the line "wifi-\&gt;disconnect();" with the following code: <div class="fragment"><div class="line"><span class="keywordflow">while</span>(<span class="keyword">true</span>) {</div><div class="line">    wait_net_suspend(static_cast&lt;WhdSTAInterface*&gt;(wifi),</div><div class="line">       osWaitForever, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);</div><div class="line">}</div></div><!-- fragment --></li>
-<li><p class="startli">Copy following files from lpa folder to the same folder as main.cpp,</p><ul>
-<li>lpa/helpers/net_suspend/mbedos/network_activity_handler.cpp</li>
-<li>lpa/helpers/net_suspend/mbedos/network_activity_handler.h</li>
-</ul>
-<p class="startli">These files provide functions to suspends the network stack when there is no network activity and resumes it when there is any network activity.</p>
-</li>
+<li>Modify main.cpp to allow the host MCU to go to deep-sleep and stay in deep-sleep until woken up by an external event. For this, replace the line "wifi-\&gt;disconnect();" with the following code: <div class="fragment"><div class="line"><span class="keywordflow">while</span>(<span class="keyword">true</span>) {</div><div class="line">    <a class="code" href="group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f">wait_net_suspend</a>(static_cast&lt;WhdSTAInterface*&gt;(wifi),</div><div class="line">       osWaitForever, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);</div><div class="line">}</div></div><!-- fragment --></li>
 </ul>
 </li>
 <li>Configure Packet Filters, the preferred way to is to use ModusToolbox IDE.<ul>
@@ -569,11 +669,16 @@ Quick Start Guide</h3>
 <li>Rename mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/COMPONENT_BSP_DESIGN_MODUS to mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
 <li>Delete design.cyqspi and design.cycapsense file in mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
 <li>Add/update mbed_app.json in mbed-os-example-wifi folder with below details (This will tell mbed to ignore the BSP configuration shipped with MbedOS) <div class="fragment"><div class="line">{</div><div class="line">     <span class="stringliteral">&quot;target_overrides&quot;</span>: {</div><div class="line">         <span class="stringliteral">&quot;*&quot;</span>: {</div><div class="line">              <span class="stringliteral">&quot;platform.stdio-convert-newlines&quot;</span>: <span class="keyword">true</span>,</div><div class="line">              <span class="stringliteral">&quot;target.components_remove&quot;</span>: [<span class="stringliteral">&quot;BSP_DESIGN_MODUS&quot;</span>]</div><div class="line">         }</div><div class="line">     }</div><div class="line"> }</div></div><!-- fragment --></li>
+<li>If mbed-os branch used is 5.15 or above, please do the below changes as well<ul>
+<li>update mbed_app.json with below line in "target_overrides": <div class="fragment"><div class="line"><span class="stringliteral">&quot;target.components_add&quot;</span>: [<span class="stringliteral">&quot;CUSTOM_DESIGN_MODUS&quot;</span>]</div></div><!-- fragment --></li>
+</ul>
+</li>
 </ol>
 </li>
-<li>Navigate to ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.0/device-configurator).</li>
+<li>Navigate to ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.1/device-configurator).</li>
 <li>Select File-&gt;Open, navigate to the board's design.modus file, and open it: <em>mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS/design.modus</em></li>
-<li>Switch to the "Pins" tab, enable P4[1] pin, specify its name as "CYBSP_WIFI_HOST_WAKE", in the "Parameters" pane change "Interrupt Trigger Type" to "Failing Edge". If you are using a different pioneer kit, refer to its guide for Host&lt;-&gt;Device connection pinout.</li>
+<li>If the design.modus file does not open and pops with a error message <em>No device support library path provided </em>, then point to the psoc6pdl folder inside the mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/psoc6pdl/devicesupport.xml file in the window popup. This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.</li>
+<li>Switch to the "Pins" tab, enable P4[1] pin, specify its name as "CYBSP_WIFI_HOST_WAKE", in the "Parameters" pane change "Interrupt Trigger Type" to "Rising Edge". If you are using a different pioneer kit, refer to its guide for Host&lt;-&gt;Device connection pinout.</li>
 <li>Switch to the connectivity device "CYW943012WKWBG" tab (in case the CY8CKIT_062S2_43012 board is used).</li>
 <li>Enable Power-&gt;Wi-Fi.</li>
 <li>In "Wi-Fi - Parameters" pane enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
@@ -587,23 +692,153 @@ Quick Start Guide</h3>
 <p class="startli">When the modified mbed-os-example-wifi starts, the console output lists available Wi-Fi networks. It then connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">Scan:</div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Oct 29 2019 22:00:20 version 13.10.271.215 (r723093) FWID 01-f268ebc9</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2019-10-29 21:50:17</div><div class="line">WHD VERSION      : v1.50.0-rc1 : v1.50.0-rc1 : GCC 7.3 : 2019-10-30 18:42:31 +0530</div><div class="line">Network: airport_5g secured: WPA2 BSSID: 24:A2:E1:f0:50:25 RSSI: -84 Ch: 36</div><div class="line">Network: Broadcom secured: None BSSID: 0:10:18:ee:b5:f7 RSSI: -52 Ch: 36</div><div class="line">Network: test_2nd_cy secured: WPA2 BSSID: F8:32:E4:b0:ff:8c RSSI: -74 Ch: 36</div><div class="line">Network: eero secured: WPA2 BSSID: F8:BB:BF:b2:2:54 RSSI: -33 Ch: 36</div><div class="line">Network: WWD secured: WPA/WPA2 BSSID: 64:A5:C3:64:16:13 RSSI: -77 Ch: 36</div><div class="line">Network: eero secured: WPA/WPA2 BSSID: F8:BB:BF:b1:74:b4 RSSI: -36 Ch: 36</div><div class="line">Network: eero secured: WPA/WPA2 BSSID: F8:BB:BF:69:2b:8 RSSI: -46 Ch: 36</div><div class="line">Network: prke-bsh5g secured: WPA/WPA2 BSSID: 44:4E:6D:45:b0:58 RSSI: -82 Ch: 36</div><div class="line">Network:  secured: Unknown BSSID: F8:BB:BF:b2:2:52 RSSI: -33 Ch: 36</div><div class="line">Network: testap secured: None BSSID: 0:A0:50:30:81:65 RSSI: -64 Ch: 36</div><div class="line">Network: RW1 secured: WPA2 BSSID: C8:8:73:3c:87:2c RSSI: -75 Ch: 40</div><div class="line">Network: CYFI secured: WPA2 BSSID: B0:B8:67:3b:ac:70 RSSI: -86 Ch: 44</div><div class="line">Network: CYFI secured: WPA2 BSSID: 80:8D:B7:69:77:30 RSSI: -70 Ch: 44</div><div class="line">Network: CYFI_GUEST secured: None BSSID: 80:8D:B7:69:77:31 RSSI: -70 Ch: 44</div><div class="line">Network: CYFI_ZOOM secured: WPA2 BSSID: 80:8D:B7:69:77:32 RSSI: -70 Ch: 44</div><div class="line">15 networks available.</div><div class="line"></div><div class="line">Connecting to SSID...</div><div class="line">Success</div><div class="line"></div><div class="line">MAC: d4:4d:a4:a0:02:a4</div><div class="line">IP: 192.168.1.12</div><div class="line">Netmask: 255.255.255.0</div><div class="line">Gateway: 192.168.1.1</div><div class="line">RSSI: -29</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
 <li>Check the board operation. Use a PC to connect to the same Wi-Fi Access Point as the PSoC 6 board.<ul>
 <li>Send "ping" command to the board and observe in serial terminal that it does not wake up the PSoC 6 device since there is no "keep" packet filter for ICMP pings, there is no response for the pings: <div class="fragment"><div class="line">C:\&gt;ping 192.168.1.12</div><div class="line"> </div><div class="line">Pinging 192.168.1.12 with 32 bytes of data:</div><div class="line">Request timed out.</div><div class="line">Request timed out.</div><div class="line"> </div><div class="line">Ping statistics <span class="keywordflow">for</span> 192.168.1.12:</div><div class="line">    Packets: Sent = 2, Received = 0, Lost = 2 (100% loss),</div></div><!-- fragment --></li>
-<li>Send an "arping" command as follows and observe that the PSoC 6 MCU is in Deep Sleep mode. Use any available ARPping tool. As an example:<ul>
+<li><p class="startli">Send an "arping" command as follows and observe that the PSoC 6 MCU is in Deep Sleep mode. Use any available ARPping tool. As an example:</p><ul>
 <li>Windows: <a href="https://www.elifulkerson.com/projects/arp-ping.php">https://www.elifulkerson.com/projects/arp-ping.php</a></li>
 <li>Mac : <a href="http://macappstore.org/arping/">http://macappstore.org/arping/</a></li>
-<li>linux : sudo apt install arping; arping [ip address]</li>
+<li>linux : sudo apt install arping; arping [ip address] <div class="fragment"><div class="line">C:\&gt;arp-ping.exe 192.168.1.12</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 192.168.1.12 in 1127.934ms</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 192.168.1.12 in 1116.976ms</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 192.168.1.12 in 1124.160ms</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 192.168.1.12 in 1119.439ms</div><div class="line"></div><div class="line">Ping statistics <span class="keywordflow">for</span> 192.168.1.12/arp</div><div class="line">  4 probes sent.</div><div class="line">  4 successful, 0 failed.</div><div class="line">Approximate trip times in milli-seconds:</div><div class="line">  Minimum = 1116.976ms, Maximum = 1127.934ms, Average = 1122.127ms</div></div><!-- fragment --></li>
+</ul>
+<p class="startli">Observe that PSoC 6 device wakes up each command since there is "keep" packet filter for ARP pings, the ARP pings are responded back: </p><div class="fragment"><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 396ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:51, rx_total:405, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:4525, cmd53_read:3086, cmd53_write:1064</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:611, sdio_intrs:2067, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
 </ul>
 </li>
-</ul>
-</li>
-</ol>
-<div class="fragment"><div class="line">C:\&gt;arp-ping.exe 192.168.1.12</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 192.168.1.12 in 1127.934ms</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 192.168.1.12 in 1116.976ms</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 192.168.1.12 in 1124.160ms</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 192.168.1.12 in 1119.439ms</div><div class="line"></div><div class="line">Ping statistics <span class="keywordflow">for</span> 192.168.1.12/arp</div><div class="line">   4 probes sent.</div><div class="line">   4 successful, 0 failed.</div><div class="line">Approximate trip times in milli-seconds:</div><div class="line">   Minimum = 1116.976ms, Maximum = 1127.934ms, Average = 1122.127ms</div></div><!-- fragment --><p>Observe that PSoC 6 device wakes up each command since there is "keep" packet filter for ARP pings, the ARP pings are responded back: </p><div class="fragment"><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 396ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:51, rx_total:405, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:4525, cmd53_read:3086, cmd53_write:1064</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:611, sdio_intrs:2067, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --><p>Verify the packet Filter is working as desired. Refer to the <a class="el" href="index.html#section_lpa_measurement">How to Measure Power Consumption</a> section for corresponding instructions. The following oscilloscope screen capture shows current measurement with the Packet Filter enabled</p>
-<p>i. ARP Ping : This wakes up the host as packet filter for ARP is configured</p>
+<li><p class="startli">Verify the packet Filter is working as desired. Refer to the <a class="el" href="index.html#section_lpa_measurement">How to Measure Power Consumption</a> section for corresponding instructions. The following oscilloscope screen capture shows current measurement with the Packet Filter enabled</p>
+<p class="startli">i. ARP Ping : This wakes up the host as packet filter for ARP is configured</p>
 <div class="image">
 <img src="packet_filter_arp_ping.png" alt="packet_filter_arp_ping.png" height="500px"/>
 </div>
-<p>ii. Ping : This doesnot wakeup the host as ICMP packet is not configured as packet filter type </p><div class="image">
+<p class="startli">ii. Ping : This doesnot wakeup the host as ICMP packet is not configured as packet filter type </p><div class="image">
 <img src="packet_filter_ping.png" alt="packet_filter_ping.png" height="500px"/>
 </div>
+</li>
+</ol>
+<h4><a class="anchor" id="group_lpa_p2_pf_offload_qsg_anycloud"></a>
+FREERTOS</h4>
+<p>The following steps are required to setup the wifi-low-power example with enabling the Packet Filter feature:</p>
+<ol type="1">
+<li>Checkout Wi-Fi Example app <div class="fragment"><div class="line">git clone https:<span class="comment">//github.com/cypresssemiconductorco/mtb-example-anycloud-wlan-lowpower.git</span></div><div class="line">cd mtb-example-anycloud-wlan-lowpower</div></div><!-- fragment --></li>
+<li><p class="startli">Make sure below FreeRTOSConfig.h changes are present:</p>
+<p class="startli">configUSE_TICKLESS_IDLE : This change to support Tickless Deep Sleep mode </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cycfg_system.h&gt;</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_SLEEP) || (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)</span></div><div class="line"><span class="keyword">extern</span> <span class="keywordtype">void</span> vApplicationSleep( uint32_t xExpectedIdleTime );</div><div class="line"><span class="preprocessor">#define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )</span></div><div class="line"><span class="preprocessor">#define configUSE_TICKLESS_IDLE  2</span></div><div class="line"><span class="preprocessor">#endif</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if CY_CFG_PWR_DEEPSLEEP_LATENCY &gt; 0</span></div><div class="line"><span class="preprocessor">#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   CY_CFG_PWR_DEEPSLEEP_LATENCY</span></div><div class="line"><span class="preprocessor">#endif</span></div></div><!-- fragment --></li>
+<li>Modify the example for your Wi-Fi SSID parameters in app_config.h <div class="fragment"><div class="line"><span class="preprocessor">#define WIFI_SSID                         &quot;SSID&quot;</span></div><div class="line"><span class="preprocessor">#define WIFI_PASSWORD                     &quot;PASSWORD&quot;</span></div><div class="line"><span class="preprocessor">#define WIFI_SECURITY                     CY_WCM_SECURITY_WPA2_MIXED_PSK</span></div></div><!-- fragment --></li>
+<li>Make sure below Makefile changes are present. This is required for MCU Deep Sleep to work properly <div class="fragment"><div class="line">DEFINES+=CY_SD_HOST_CLK_RAMP_UP_TIME_MS_WAKEUP=0</div></div><!-- fragment --></li>
+<li>Configure Packet Filters, the preferred way to is to use ModusToolbox IDE.<ul>
+<li>Navigate to ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.1/device-configurator).</li>
+<li>Select File-&gt;Open, navigate to the board's design.modus file, and open it: <em>mtb-example-anycloud-wlan-lowpower/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT-062S2-43012/design.modus</em></li>
+<li>If the design.modus file does not open and pops with a error message <em>No device support library path provided </em>, then point to the psoc6pdl folder inside the mtb-example-anycloud-wlan-lowpower/libs/psoc6pdl/devicesupport.xml file in the window popup. This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.</li>
+<li>Switch to the "Pins" tab, enable P4[1] pin, specify its name as "CYBSP_WIFI_HOST_WAKE", in the "Parameters" pane change "Interrupt Trigger Type" to "Rising Edge". If you are using a different pioneer kit, refer to its guide for Host&lt;-&gt;Device connection pinout.</li>
+<li>Switch to the connectivity device "CYW943012WKWBG" tab (in case the CY8CKIT_062S2_43012 board is used).</li>
+<li>Enable Power-&gt;Wi-Fi.</li>
+<li>In "Wi-Fi - Parameters" pane enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
+<li>Disable ARP offload.</li>
+<li>Enable "Add minimal set of keep filters", these filters allow ARP, DNS, DHCP and 802.11x security packets to wake up the Host, and are needed to connect to WiFi Access point, any other WiFi packets are dropped by WLAN chip and not forwarded to the Host MCU (PSoC6)</li>
+<li>Save the configuration to generate the necessary code.</li>
+</ul>
+</li>
+<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --><p class="startli">When the modified mtb-example-connectivity-wlan-lowpower starts, the console output lists available Wi-Fi networks. It then connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">\code</div><div class="line">===============================================================</div><div class="line">CE230106 - ModusToolbox Connectivity Example: WLAN Lowpower</div><div class="line">===============================================================</div><div class="line"></div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Jan 27 2020 21:57:29 version 13.10.271.236 (5a526db) FWID 01-61e2b002</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2020-01-27 21:54:33</div><div class="line">WHD VERSION      : v1.80.0 : v1.80.0 : GCC 7.2 : 2020-03-10 04:09:17 -0500</div><div class="line">Info:Connecting to AP</div><div class="line">IP Address 10.0.0.201 assigned</div><div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div><div class="line">Info:Beacon period = 100, DTIM period = 1</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:64, rx_total:71, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2286, cmd53_read:366, cmd53_write:559</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line">Network is active. Resuming network stack</div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
+<li>Check the board operation. Use a PC to connect to the same Wi-Fi Access Point as the PSoC 6 board.<ul>
+<li>Send a "ping" command to the board and observe in the serial terminal that the PSoC 6 MCU wakes up each command: <div class="fragment"><div class="line">C:\&gt;ping -n 3 10.0.0.201</div><div class="line"></div><div class="line">Pinging 10.0.0.201 with 32 bytes of data:</div><div class="line">Request timed out.</div><div class="line">Request timed out.</div><div class="line">Request timed out.</div><div class="line"></div><div class="line">Ping statistics <span class="keywordflow">for</span> 10.0.0.201:</div><div class="line">    Packets: Sent = 3, Received = 0, Lost = 3 (100% loss),</div></div><!-- fragment --></li>
+<li><p class="startli">Send an "arping" command as follows and observe that the PSoC 6 MCU is in Deep Sleep mode. Use any available ARPping tool. As an example:</p><ul>
+<li>Windows: <a href="https://www.elifulkerson.com/projects/arp-ping.php">https://www.elifulkerson.com/projects/arp-ping.php</a></li>
+<li>Mac : <a href="http://macappstore.org/arping/">http://macappstore.org/arping/</a></li>
+<li>linux : sudo apt install arping; arping [ip address] <div class="fragment"><div class="line">C:\&gt;arp-ping.exe -n 3 10.0.0.201</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 10.0.0.201 in 113.209ms</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 10.0.0.201 in 125.789ms</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 10.0.0.201 in 1114.333ms</div><div class="line"></div><div class="line">Ping statistics <span class="keywordflow">for</span> 10.0.0.201/arp</div><div class="line">    3 probes sent.</div><div class="line">    3 successful, 0 failed.</div><div class="line">Approximate trip times in milli-seconds:</div><div class="line">    Minimum = 113.209ms, Maximum = 1114.333ms, Average = 451.111ms</div></div><!-- fragment --></li>
+</ul>
+<p class="startli">Observe that PSoC 6 device wakes up each command since there is "keep" packet filter for ARP pings, the ARP pings are responded back: </p><div class="fragment"><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 2456ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:174, rx_total:198, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2638, cmd53_read:1001, cmd53_write:796</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:199, sdio_intrs:401, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line">Network is active. Resuming network stack</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
+</ul>
+</li>
+<li>Verify the packet Filter is working as desired. Refer to the <a class="el" href="index.html#section_lpa_measurement">How to Measure Power Consumption</a> section for corresponding instructions.</li>
+</ol>
+<h2><a class="anchor" id="group_lpa_p2_tcp_keepalive"></a>
+Wi-Fi TCP Keep Alive Offload</h2>
+<p>TCP Keepalive Offload part of the Low Power Assistant is designed to improve the power consumption of your connected system by reducing the time the Host needs to stay awake to support TCP Keepalive Request. This document describes how to enable TCP Keep alive Offload and configure 4 different sockets for TCP keepalive that can be incorporated into your project from <a href="https://github.com/cypresssemiconductorco/lpa"><b>Cypress GitHub LPA Middleware</b></a>.</p>
+<p>TCP Keepalive maintains idle TCP connections by periodically passing packets between the client and server. If either the client or server does not respond to a packet, the connection is considered inactive and is terminated. This helps in pruning dead connections. Typically TCP Keepalives are sent every 45 or 60 seconds on an idle TCP connection, and the connection is dropped after 3 sequential ACKs are missed. This means Host MCU has to wake up periodically to send TCP Keepalive packet to maintain TCP connection during idle state.</p>
+<p>TCP Keepalive Offload helps in moving this functionality to WLAN firmware so that Host MCU doesnot need to wake up periodically to send/receive TCP Keepalive packets. This functionality is offloaded only when Host MCU goes to sleep and network stack is suspended</p>
+<div class="image">
+<img src="TCP_Keepalive_basic_graph.png" alt="TCP_Keepalive_basic_graph.png" height="500px"/>
+</div>
+<h3><a class="anchor" id="group_lpa_p2_tcp_keepalive_qsg"></a>
+Quick Start Guide</h3>
+<p>This Quick Start Guide demonstrates of how to configure and use the TCP Keep alive offload feature in the Mbed OS &amp; FreeRTOS environment and its impact on the system power consumption.</p>
+<h4><a class="anchor" id="group_lpa_p2_tcp_keepalive_qsg_mbedos"></a>
+MBEDOS</h4>
+<p>The mbed-os-example-wifi is used as a base for this guide on the CY8CKIT_062S2_43012 pioneer kit. This section assumes that you have an Mbed OS development environment configured. Refer to <a href="https://os.mbed.com/getting-started/">https://os.mbed.com/getting-started/</a> for instructions about how to do that.</p>
+<p>The following steps are required to set up the mbed-os-example-wifi example and enable the TCP Keepalive offload feature:</p>
+<ol type="1">
+<li>Import the mbed-os-example-wifi example project and switch to the example directory: <div class="fragment"><div class="line">mbed <span class="keyword">import</span> mbed-os-example-wifi</div><div class="line">cd mbed-os-example-wifi</div></div><!-- fragment --></li>
+<li>Execute the following command in order to replace Mbed OS, download the LPA middleware and connectivity utilities: <div class="fragment"><div class="line">cd mbed-os</div><div class="line">mbed update latest</div><div class="line">cd ..</div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/lpa/</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/connectivity-utilities/</span></div><div class="line">mbed deploy</div></div><!-- fragment --></li>
+<li>Modify the example for your Wi-Fi SSID parameters:<ul>
+<li>Modify mbed_app.json to update "wifi-ssid" and "wifi-password" values as desired: <div class="fragment"><div class="line">...</div><div class="line">    <span class="stringliteral">&quot;wifi-ssid&quot;</span>: {</div><div class="line">        <span class="stringliteral">&quot;help&quot;</span>: <span class="stringliteral">&quot;WiFi SSID&quot;</span>,</div><div class="line">        <span class="stringliteral">&quot;value&quot;</span>: <span class="stringliteral">&quot;\&quot;SSID\&quot;&quot;</span></div><div class="line">    },</div><div class="line">    <span class="stringliteral">&quot;wifi-password&quot;</span>: {</div><div class="line">        <span class="stringliteral">&quot;help&quot;</span>: <span class="stringliteral">&quot;WiFi Password&quot;</span>,</div><div class="line">        <span class="stringliteral">&quot;value&quot;</span>: <span class="stringliteral">&quot;\&quot;PASSWORD\&quot;&quot;</span></div><div class="line">    }</div><div class="line">...</div></div><!-- fragment --></li>
+<li>Add "MBED" Component to mbed_app.json in target_overrides section which is required for compiling helpers in LPA code <br />
+ "target.components_add": ["MBED"] <div class="fragment"><div class="line">{</div><div class="line">     <span class="stringliteral">&quot;target_overrides&quot;</span>: {</div><div class="line">         <span class="stringliteral">&quot;*&quot;</span>: {</div><div class="line">              <span class="stringliteral">&quot;platform.stdio-convert-newlines&quot;</span>: <span class="keyword">true</span>,</div><div class="line">              <span class="stringliteral">&quot;target.components_add&quot;</span>: [<span class="stringliteral">&quot;MBED&quot;</span>]</div><div class="line">         }</div><div class="line">     }</div><div class="line">}</div></div><!-- fragment --></li>
+</ul>
+</li>
+<li>Replace main.cpp with this (<a href="main.txt" rel="stylesheet" type="text/css"><b>main.txt</b></a>) which is configuring TCP Keepalive offload based on the configurator parameters (Copy main.txt as main.cpp)<ul>
+<li>Optional: modify main.cpp to update Wi-Fi security settings: <div class="fragment"><div class="line"><span class="keywordtype">int</span> ret = wifi-&gt;connect(MBED_CONF_APP_WIFI_SSID, MBED_CONF_APP_WIFI_PASSWORD, NSAPI_SECURITY_WPA_WPA2);</div></div><!-- fragment --> Modify the last parameter if needed to either: <div class="fragment"><div class="line">NSAPI_SECURITY_NONE</div><div class="line">NSAPI_SECURITY_WEP</div><div class="line">NSAPI_SECURITY_WPA</div><div class="line">NSAPI_SECURITY_WPA2</div><div class="line">NSAPI_SECURITY_WPA_WPA2</div></div><!-- fragment --></li>
+</ul>
+</li>
+<li>Configure the TCP Keepalive offload. The easiest way to configure TCP Keepalive offload is to use the ModusToolbox Device Configurator.<ul>
+<li>Mandatory steps to avoid design.modus file modification in mbed-os folder<ol type="a">
+<li>Copy folder mbed-os-example-wifi/mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/TARGET_CY8CKIT_062S2_43012 to mbed-os-example-wifi folder</li>
+<li>Delete all files in mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012 except COMPONENT_BSP_DESIGN_MODUS folder and its contents</li>
+<li>Rename mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/COMPONENT_BSP_DESIGN_MODUS to mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
+<li>Delete design.cyqspi and design.cycapsense file in mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
+<li>Add/update mbed_app.json in mbed-os-example-wifi folder with below details (This will tell mbed to ignore the BSP configuration shipped with MbedOS) <div class="fragment"><div class="line">{</div><div class="line">     <span class="stringliteral">&quot;target_overrides&quot;</span>: {</div><div class="line">         <span class="stringliteral">&quot;*&quot;</span>: {</div><div class="line">              <span class="stringliteral">&quot;platform.stdio-convert-newlines&quot;</span>: <span class="keyword">true</span>,</div><div class="line">              <span class="stringliteral">&quot;target.components_remove&quot;</span>: [<span class="stringliteral">&quot;BSP_DESIGN_MODUS&quot;</span>]</div><div class="line">         }</div><div class="line">     }</div><div class="line"> }</div></div><!-- fragment --></li>
+<li>If mbed-os branch used is 5.15 or above, please do the below changes as well<ul>
+<li>update mbed_app.json with below line in "target_overrides": <div class="fragment"><div class="line"><span class="stringliteral">&quot;target.components_add&quot;</span>: [<span class="stringliteral">&quot;CUSTOM_DESIGN_MODUS&quot;</span>]</div></div><!-- fragment --></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Navigate to ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.1/device-configurator).</li>
+<li>Select File-&gt;Open, navigate to the board's design.modus file, and open it: <em>mbed-os-example-wifi/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS/design.modus</em></li>
+<li>If the design.modus file does not open and pops with a error message <em>No device support library path provided </em>, then point to the psoc6pdl folder inside the mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/psoc6pdl/devicesupport.xml file in the window popup. This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.</li>
+<li>Switch to the "Pins" tab, enable P4[1] pin, specify its name as "CYBSP_WIFI_HOST_WAKE", in the "Parameters" pane change "Interrupt Trigger Type" to "Rising Edge". If you are using a different pioneer kit, refer to its guide for Host&lt;-&gt;Device connection pinout.</li>
+<li>Switch to the connectivity device "CYW943012WKWBG" tab (in case the CY8CKIT_062S2_43012 board is used).</li>
+<li>Enable Power-&gt;Wi-Fi.</li>
+<li>In "Wi-Fi - Parameters" pane enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
+<li>Enable TCP Keep Alive Offload.</li>
+<li>Configure Interval, Retry Interval, Retry Count</li>
+<li>Configure Source port, Destination port, Destination IP address (TCP server)</li>
+<li>Save the configuration to generate the necessary code.</li>
+</ul>
+</li>
+<li>Use a PC to connect to the same Wi-Fi Access Point as the PSoC 6 board. Run <a href="tcp_echo_server.py" rel="stylesheet" type="text/css"><b>tcp_echo_server.py</b></a> in that PC to act as TCP Server <div class="fragment"><div class="line">python tcp_echo_server.py --port 3360</div></div><!-- fragment --></li>
+<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">mbed compile -DMBED_TICKLESS -DMBED_CPU_STATS_ENABLED --target CY8CKIT_062S2_43012 --toolchain GCC_ARM --flash --sterm</div></div><!-- fragment --><p class="startli"><b>Note</b> If you cannot program the board, make sure the board DAP-Link mode is selected. Refer to the guide of your kit of how to change the mode.</p>
+<p class="startli">MBED_CPU_STATS_ENABLED : This helps to understand how much time MCU remained in sleep state</p>
+<p class="startli">When the modified mbed-os-example-wifi starts, the console output lists available Wi-Fi networks. It then connects to the specified above Wi-Fi Access Point, connects to TCP server using the configurator settings and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">Scan:</div><div class="line">WLAN MAC Address : DC:EF:CA:00:36:3B</div><div class="line">WLAN Firmware    : wl0: Sep  5 2019 23:24:33 version 7.45.98.92 (r722362 CY) FWID 01-f7128517</div><div class="line">WLAN CLM         : API: 12.2 Data: 9.10.39 Compiler: 1.29.4 ClmImport: 1.36.3 Creation: 2019-09-05 23:10:00</div><div class="line">WHD VERSION      : v1.50.0-rc1 : v1.50.0-rc1 : GCC 7.3 : 2019-10-30 18:42:31 +0530</div><div class="line">Network: eero secured: WPA2 BSSID: F8:BB:BF:b1:74:b3 RSSI: -67 Ch: 1</div><div class="line">Network: eero secured: WPA2 BSSID: F8:BB:BF:69:2b:6 RSSI: -65 Ch: 1</div><div class="line">Network:  secured: None BSSID: F8:BB:BF:b2:2:55 RSSI: -71 Ch: 1</div><div class="line">Network:  secured: Unknown BSSID: F8:BB:BF:b2:2:51 RSSI: -72 Ch: 1</div><div class="line">Network: eero secured: Unknown BSSID: F8:BB:BF:b2:2:53 RSSI: -69 Ch: 1</div><div class="line">Network: TPUT2G secured: None BSSID: A0:63:91:d1:45:55 RSSI: -85 Ch: 1</div><div class="line">Network: SilverFox secured: WPA2 BSSID: AC:22:B:ce:f9:10 RSSI: -41 Ch: 1</div><div class="line">Network: ape secured: WPA2 BSSID: 24:A2:E1:f0:50:24 RSSI: -84 Ch: 1</div><div class="line">Network: 2GAP secured: None BSSID: 0:90:4C:12:d2:7 RSSI: -90 Ch: 1</div><div class="line">Network: test_2nd_cy secured: WPA2 BSSID: F8:32:E4:b0:ff:88 RSSI: -69 Ch: 1</div><div class="line">Network: r6300 secured: WPA2 BSSID: 4:A1:51:19:e:e RSSI: -70 Ch: 4</div><div class="line">Network: 1STLEE_CH6 secured: WPA2 BSSID: 0:10:18:ee:b6:ea RSSI: -69 Ch: 6</div><div class="line">Network: prasanna-acrg secured: None BSSID: 0:10:18:e2:e9:b1 RSSI: -67 Ch: 6</div><div class="line">Network: CYFI secured: Unknown BSSID: B0:B8:67:3b:27:e0 RSSI: -54 Ch: 6</div><div class="line">Network: steveo_test_2g secured: WPA2 BSSID: 84:1B:5E:e5:63:a5 RSSI: -60 Ch: 6</div><div class="line">15 networks available.</div><div class="line"></div><div class="line">Connecting to testtko...</div><div class="line">Success</div><div class="line"></div><div class="line">MAC: dc:ef:ca:00:36:3b</div><div class="line">IP: 192.168.1.16</div><div class="line">Netmask: 255.255.255.0</div><div class="line">Gateway: 192.168.1.1</div><div class="line">RSSI: -31</div><div class="line"></div><div class="line">TKO is enabled via configurator</div><div class="line">Set LWIP keepalive: Interval 20, Retry Interval 3, keepalive value 20</div><div class="line">Socket[0]: Created connection to IP 192.168.1.13, local port 3353, remote port 3360</div><div class="line">Socket[1]: ERROR -3004, Unable to connect:  IP 0.0.0.0, local port 0, remote port 0</div><div class="line">Socket[2]: ERROR -3004, Unable to connect:  IP 0.0.0.0, local port 0, remote port 0</div><div class="line">Socket[3]: ERROR -3004, Unable to connect:  IP 0.0.0.0, local port 0, remote port 0</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
+</ol>
+<p><b>TCP Keepalive device configurator reference:</b></p>
+<div class="image">
+<img src="TCPKA_deviceConfigurator.png" alt="TCPKA_deviceConfigurator.png" height="700px"/>
+</div>
+<p>Verify the TCP Keepalive offload is working as desired.Refer to the <a class="el" href="index.html#section_lpa_measurement">How to Measure Power Consumption</a> section for corresponding instructions. The following oscilloscope screen capture shows current measurement with</p>
+<p><b>TCP Keepalive Offload enabled with 3 seconds interval configuration:</b> </p><div class="image">
+<img src="tcp_keepalive_enabled.png" alt="tcp_keepalive_enabled.png" height="500px"/>
+</div>
+<h4><a class="anchor" id="group_lpa_p2_tcp_keepalive_qsg_anycloud"></a>
+FREERTOS</h4>
+<p>The following steps are required to setup the wifi-low-power tcp keepalive offload example and enable the TCP Keepalive offload feature.</p>
+<ol type="1">
+<li>Checkout Wi-Fi TCP Keepalive offload Example app <div class="fragment"><div class="line">git clone https:<span class="comment">//github.com/cypresssemiconductorco/mtb-example-anycloud-offload-tcp-keepalive.git</span></div><div class="line">cd mtb-example-anycloud-offload-tcp-keepalive</div></div><!-- fragment --></li>
+<li><p class="startli">Make sure below FreeRTOSConfig.h changes are present:</p>
+<p class="startli">configUSE_TICKLESS_IDLE : This change to support Tickless Deep Sleep mode </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cycfg_system.h&gt;</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_SLEEP) || (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)</span></div><div class="line"><span class="keyword">extern</span> <span class="keywordtype">void</span> vApplicationSleep( uint32_t xExpectedIdleTime );</div><div class="line"><span class="preprocessor">#define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )</span></div><div class="line"><span class="preprocessor">#define configUSE_TICKLESS_IDLE  2</span></div><div class="line"><span class="preprocessor">#endif</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if CY_CFG_PWR_DEEPSLEEP_LATENCY &gt; 0</span></div><div class="line"><span class="preprocessor">#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   CY_CFG_PWR_DEEPSLEEP_LATENCY</span></div><div class="line"><span class="preprocessor">#endif</span></div></div><!-- fragment --></li>
+<li>Modify the example for your Wi-Fi SSID parameters in app_config.h <div class="fragment"><div class="line"><span class="preprocessor">#define WIFI_SSID                         &quot;SSID&quot;</span></div><div class="line"><span class="preprocessor">#define WIFI_PASSWORD                     &quot;PASSWORD&quot;</span></div><div class="line"><span class="preprocessor">#define WIFI_SECURITY                     CY_WCM_SECURITY_WPA2_MIXED_PSK</span></div></div><!-- fragment --></li>
+<li>Make sure below Makefile changes are present. This is required for MCU Deep Sleep to work properly <div class="fragment"><div class="line">DEFINES+=CY_SD_HOST_CLK_RAMP_UP_TIME_MS_WAKEUP=0</div></div><!-- fragment --></li>
+<li>Configure the TCP Keepalive offload. The easiest way to configure TCP Keepalive offload is to use the ModusToolbox Device Configurator.<ul>
+<li>Navigate to ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.1/device-configurator).</li>
+<li>Select File-&gt;Open, navigate to the board's design.modus file, and open it: <em>mtb-example-anycloud-offload-tcp-keepalive/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT-062S2-43012/design.modus</em></li>
+<li>If the design.modus file does not open and pops with a error message <em>No device support library path provided </em>, then point to the psoc6pdl folder inside the mtb-example-anycloud-offload-tcp-keepalive/libs//psoc6pdl/devicesupport.xml file in the window popup. This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.</li>
+<li>Switch to the "Pins" tab, enable P4[1] pin, specify its name as "CYBSP_WIFI_HOST_WAKE", in the "Parameters" pane change "Interrupt Trigger Type" to "Rising Edge". If you are using a different pioneer kit, refer to its guide for Host&lt;-&gt;Device connection pinout.</li>
+<li>Switch to the connectivity device "CYW943012WKWBG" tab (in case the CY8CKIT_062S2_43012 board is used).</li>
+<li>Enable Power-&gt;Wi-Fi.</li>
+<li>In "Wi-Fi - Parameters" pane enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
+<li>Enable TCP Keep Alive Offload.</li>
+<li>Configure Interval, Retry Interval, Retry Count</li>
+<li>Configure Source port, Destination port, Destination IP address (TCP server)</li>
+<li>Save the configuration to generate the necessary code.</li>
+</ul>
+</li>
+<li>Use a PC to connect to the same Wi-Fi Access Point as the PSoC 6 board. Run <a href="tcp_echo_server.py" rel="stylesheet" type="text/css"><b>tcp_echo_server.py</b></a> in that PC to act as TCP Server <div class="fragment"><div class="line">python tcp_echo_server.py --port 3360</div></div><!-- fragment --></li>
+<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --><p class="startli">When the modified mtb-example-connectivity-offload-tcp-keepalive starts, the console output lists available Wi-Fi networks. It then connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">=============================================================</div><div class="line">ModusToolbox Connectivity Example: WLAN TCP Keepalive Offload</div><div class="line">=============================================================</div><div class="line"></div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Jan 27 2020 21:57:29 version 13.10.271.236 (5a526db) FWID 01-61e2b002</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2020-01-27 21:54:33</div><div class="line">WHD VERSION      : v1.80.0 : v1.80.0 : GCC 7.2 : 2020-03-10 04:09:17 -0500</div><div class="line">Wi-Fi initialization is successful</div><div class="line">Join to AP: SSID</div><div class="line">IP Address 192.168.43.11 assigned</div><div class="line">Successfully joined wifi network SSID</div><div class="line">Taking TCP Keepalive configuration from the Generated sources.</div><div class="line">TCP remote IP Address f2ba8c0  remote port:3360</div><div class="line">TCP Connection Established Successfully ctx:8011050</div><div class="line">Socket[0]: Created connection to IP 192.168.43.15, local port 3353, remote port 3360</div><div class="line">Skipped TCP socket connection <span class="keywordflow">for</span> socket <span class="keywordtype">id</span>[1]. Check the TCP Keepalive configuration.</div><div class="line">Skipped TCP socket connection <span class="keywordflow">for</span> socket <span class="keywordtype">id</span>[2]. Check the TCP Keepalive configuration.</div><div class="line">Skipped TCP socket connection <span class="keywordflow">for</span> socket <span class="keywordtype">id</span>[3]. Check the TCP Keepalive configuration.</div><div class="line">Low power task created</div><div class="line">whd_tko_toggle: Successfully enabled</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
+<li>Verify the TCP Keepalive offload is working as desired.Refer to the <a class="el" href="index.html#section_lpa_measurement">How to Measure Power Consumption</a> section for corresponding instructions.</li>
+</ol>
 <h2><a class="anchor" id="group_lpa_p2_cc"></a>
 Wi-Fi Low Power Configuration Considerations</h2>
 <p>The following are the different flows to configure LPA middleware:</p><ul>
@@ -641,6 +876,25 @@ Limitations</h3>
 <li>The maximum number of filters is ultimately dictated by free memory on the Wi-Fi chipset. More memory will allow more filters. Different Wi-Fi chips running FW from different branches will likely have slightly different maximum numbers of filters. It is possible to add 20 filters on a CY8CKIT_062S2_43012 kit without any issue.</li>
 <li>Network stack suspend/resume functionality which is called in main.cpp function which enables Host MCU to remain in deep sleep for more duration (wake up only for external event) has a 32-Bit LP-Ticker support limitation in MbedOS (Maximum sleep-time possible is 36 hours(1.5 days). This means Host MCU will wake up without interrupt from external event after 36 hrs and then immediately goes back to sleep. This has very less power impact.</li>
 </ol>
+<h3><a class="anchor" id="group_lpa_p2_ipv6_filter"></a>
+IPv6 Packet Filter for MCU Deep Sleep</h3>
+<ul>
+<li>MCU will wake for IPv6 packets intermittently, So add packet filter for IPv6 packets to avoid unnecessary wakeup. <br />
+ How to configure packet Filter for IPv6 packets: <br />
+<ul>
+<li>Navigate to ModusToolbox installation folder and launch the ModusToolbox Device Configurator (&lt;install_dir&gt;/tools_2.1/device-configurator).</li>
+<li>Select File-&gt;Open, navigate to the board's design.modus file, and open it:</li>
+<li>Switch to the connectivity device "CYW943012WKWBG" tab (in case the CY8CKIT_062S2_43012 board is used).</li>
+<li>Enable Power-&gt;Wi-Fi.</li>
+<li>In "Wi-Fi - Parameters" pane enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
+<li>Select Enable Packet Filter Configuration 0</li>
+<li>Select Filter Type as "Ether Type"</li>
+<li>Select Action as "Discard"</li>
+<li>Configure Ethertype as "0x86dd"</li>
+<li>Save the configuration to generate the necessary code</li>
+</ul>
+</li>
+</ul>
 <h3><a class="anchor" id="group_lpa_p2_cc_parameters"></a>
 Configuration Parameters</h3>
 <p>The following parameters and their mapping to macros are available:</p>
@@ -789,6 +1043,41 @@ Configuration Parameters</h3>
 <li>0-255 </li>
 </ul>
 </td></tr>
+<tr>
+<td>TCP Keepalive Offload Configuration &lt;N&gt; </td><td>Interval </td><td>Enter desired Keepalive Request interval in seconds </td><td><ul>
+<li>20 (default)</li>
+<li>0-65535 </li>
+</ul>
+</td></tr>
+<tr>
+<td>TCP Keepalive Offload Configuration &lt;N&gt; </td><td>Retry Interval </td><td>Keepalive retry interval in seconds if Keepalive ack is not received </td><td><ul>
+<li>3 (default)</li>
+<li>0-65535 </li>
+</ul>
+</td></tr>
+<tr>
+<td>TCP Keepalive Offload Configuration &lt;N&gt; </td><td>Retry Count </td><td>Retry count in seconds if Keepalive ack is not received </td><td><ul>
+<li>3 (default)</li>
+<li>0-65535 </li>
+</ul>
+</td></tr>
+<tr>
+<td>TCP Keepalive Offload Configuration &lt;N&gt; </td><td>Source port </td><td>TCP Keepalive Source port number </td><td><ul>
+<li>0 (default)</li>
+<li>0-65535 </li>
+</ul>
+</td></tr>
+<tr>
+<td>TCP Keepalive Offload Configuration &lt;N&gt; </td><td>Destination port </td><td>TCP Keepalive Destination port number </td><td><ul>
+<li>0 (default)</li>
+<li>0-65535 </li>
+</ul>
+</td></tr>
+<tr>
+<td>TCP Keepalive Offload Configuration &lt;N&gt; </td><td>Destination IP address </td><td>TCP Keepalive Destination IP address  </td><td><ul>
+<li>0.0.0.0 (default) </li>
+</ul>
+</td></tr>
 </table>
 <h1><a class="anchor" id="group_lpa_p3"></a>
 Part 3. Bluetooth Low Power</h1>
@@ -806,13 +1095,26 @@ Part 3. Bluetooth Low Power</h1>
 <p>Another use case for the BT LPA personality is to disable low-power mode, even though all the pins are properly connected and configured. In this case, the BT LPA personality should specify Low Power, but leave the Pins unconnected in the personality. This results in Low Power being disabled.</p>
 <h2><a class="anchor" id="group_lpa_p3_qsg"></a>
 Quick Start Guide</h2>
-<p>This Quick Start Guide demonstrates configuring and using the BT Low Power feature in the Mbed OS environment, as well as its impact on the system low power. As a base for this guide, the mbed-os-example-ble-Beacon example is used. This section assumes that you have an Mbed OS development environment configured. Refer to <a href="https://os.mbed.com/getting-started/">https://os.mbed.com/getting-started/</a> for instructions about how to do that.</p>
+<p>This Quick Start Guide demonstrates configuring and using the BT Low Power feature in the Mbed OS/ FreeRTOS environment, as well as its impact on the system low power.</p>
+<h3><a class="anchor" id="group_lpa_p3_qsg_mbedos"></a>
+MBEDOS</h3>
+<p>As a base for this guide, the mbed-os-example-ble-Beacon example is used. This section assumes that you have an Mbed OS development environment configured. Refer to <a href="https://os.mbed.com/getting-started/">https://os.mbed.com/getting-started/</a> for instructions about how to do that.</p>
 <p>Steps to create the mbed-os-example-ble-Beacon application and configure the BT low power feature.</p>
 <ol type="1">
-<li>Import the mbed-os-example-wifi example project and switch to the example directory: <div class="fragment"><div class="line">mbed <span class="keyword">import</span> http:<span class="comment">//os.mbed.com/teams/mbed-os-examples/code/mbed-os-example-ble-Beacon/</span></div><div class="line">cd mbed-os-example-ble-Beacon</div></div><!-- fragment --></li>
-<li>As a one-time operation, you might need to execute the following lines as part of enabling the CY8CKIT_062S2_43012 pioneer kit: <div class="fragment"><div class="line">python -m pip install --upgrade pip</div><div class="line">pip install mbed-ls --upgrade</div><div class="line">mbedls -m 190B:CY8CKIT_062S2_43012</div></div><!-- fragment --></li>
-<li>Execute the following command in order to replace Mbed OS, download the LPA middleware, and connectivity utilities: <div class="fragment"><div class="line">rm -rf mbed-os</div><div class="line">mbed add https:<span class="comment">//github.com/ARMmbed/mbed-os/#cf4f12a123c05fcae83fc56d76442015cb8a39e9</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/lpa/</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/connectivity-utilities/#56e7eedb81ec2706fd2b259730b954f58c90e9aa</span></div><div class="line">mbed add https:<span class="comment">//github.com/cypresssemiconductorco/capsense/#6aa6547460365ee39e12c238e177b0552359219b</span></div><div class="line">mbed deploy</div></div><!-- fragment --></li>
+<li>Import the mbed-os-example-wifi example project and switch to the example directory: <div class="fragment"><div class="line">mbed <span class="keyword">import</span> http:<span class="comment">//os.mbed.com/teams/mbed-os-examples/code/mbed-os-example-ble-Beacon</span></div><div class="line">cd mbed-os-example-ble-Beacon</div></div><!-- fragment --></li>
+<li>Execute the following command in order to replace Mbed OS, download the LPA middleware: <div class="fragment"><div class="line">cd mbed-os</div><div class="line">mbed update latest</div><div class="line">cd ..</div></div><!-- fragment --></li>
+<li>update main.cpp in source folder with below change to update Company code <div class="fragment"><div class="line">uint16_t comp_id      = 0x0131;</div></div><!-- fragment --></li>
 <li><p class="startli">Build the project and program the board. The Cypress Board's BT Powersave is configured and enabled by default. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">mbed compile -DMBED_TICKLESS --target CY8CKIT_062S2_43012 --toolchain GCC_ARM --flash</div></div><!-- fragment --><p class="startli"><b>Note</b> If you cannot program the board, make sure the board DAP-Link mode is selected. Refer to the guide of your kit of how to change the mode.</p>
+</li>
+</ol>
+<ol type="1">
+<li><p class="startli">Open Ble scanner app in phone, Filter by mac address displayed on the serial port for this device. Click <em>bond</em> on the app</p><ul>
+<li>CySmart BLE APP : <a href="https://play.google.com/store/apps/details?id=com.cypress.cysmart&hl=en_US">https://play.google.com/store/apps/details?id=com.cypress.cysmart&amp;hl=en_US</a></li>
+<li>nRF Connect for Mobile :(<a href="https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en_US">https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&amp;hl=en_US</a>)</li>
+</ul>
+<div class="image">
+<img src="ble_app_reference.jpg" alt="ble_app_reference.jpg" height="300px"/>
+</div>
 </li>
 <li><p class="startli">Check the board operation. Refer to the <a class="el" href="index.html#section_lpa_measurement">How to Measure Power Consumption</a> section for corresponding instructions. Following images show current measurement</p>
 <p class="startli">i. Current measurement when BT is not associated</p>
@@ -824,6 +1126,38 @@ Quick Start Guide</h2>
 <img src="ble_beacon_connected.jpg" alt="ble_beacon_connected.jpg" height="500px"/>
 </div>
 </li>
+<li><p class="startli">To disable the BT Low Power feature or to change the BT_HOST_WAKE / BT_DEV_WAKE pins, Cypress recommends using the ModusToolbox Device Configurator. Use the appropriate connectivity device tab (for the CY8CKIT_062S2_43012 board it is CYW943012WKWBG). Click the checkbox next to Power-&gt;BT to enable/disable BT low power. Follow the instructions in sections "Host wake up signal" and "Device wake up signal" to modify the BT_HOST_WAKE and BT_DEV_WAKE pins and their polarity, respectively.</p>
+<p class="startli"><b>BT Low power Disable Configurator reference</b></p><ul>
+<li>Select BT Wake-Up configurations enable checkbox and don't configure Host Wake up signal &amp; Device Wake up Signal for Low power disable verification</li>
+</ul>
+<div class="image">
+<img src="ble_Lowpower_disable_configurator.png" alt="ble_Lowpower_disable_configurator.png" height="500px"/>
+</div>
+<p class="startli"><b>BT Low power disable current graph</b></p>
+<div class="image">
+<img src="ble_Lowpower_disable.png" alt="ble_Lowpower_disable.png" height="500px"/>
+</div>
+</li>
+<li>BLE Device details can be changed by modifying below variables in main.cpp <div class="fragment"><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> uint8_t uuid[] = { 0xE2, 0x0A, 0x39, 0xF4, 0x73, 0xF5, 0x4B, 0xC4,</div><div class="line">                                        0xA1, 0x2F, 0x17, 0xD1, 0xAD, 0x07, 0xA9, 0x61 };</div><div class="line">uint16_t major_number = 1122;</div><div class="line">uint16_t minor_number = 3344;</div><div class="line">uint16_t tx_power     = 0xC8;</div><div class="line">uint16_t comp_id      = 0x004C;</div></div><!-- fragment --></li>
+</ol>
+<h3><a class="anchor" id="group_lpa_p3_qsg_anycloud"></a>
+FREERTOS</h3>
+<p>mtb-example-wifi-provisioner-using-ble is used as base for this guide.</p>
+<p>Steps to create the mtb-example-wifi-provisioner-using-ble application and configure the BT low power feature.</p>
+<ol type="1">
+<li>Clone the example repo and switch to the example directory: <div class="fragment"><div class="line">git clone https:<span class="comment">//github.com/cypresssemiconductorco/mtb-example-wifi-provisioner-using-ble.git</span></div><div class="line">cd mtb-example-wifi-provisioner-<span class="keyword">using</span>-ble</div></div><!-- fragment --></li>
+<li>Add below lib to deps folder for CY8CKIT_062S2_43012 and delete TARGET_CY8CPROTO-062-4343W.lib <div class="fragment"><div class="line">TARGET_CY8CKIT-062S2-43012.lib : https:<span class="comment">//github.com/cypresssemiconductorco/TARGET_CY8CKIT-062S2-43012/#latest-v1.X</span></div></div><!-- fragment --></li>
+<li><p class="startli">Update FreeRTOSConfig.h with below changes to enable MCU Deep Sleep Functionality</p>
+<p class="startli">configUSE_TICKLESS_IDLE : This change to support Tickless Deep Sleep mode </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cycfg_system.h&gt;</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_SLEEP) || (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)</span></div><div class="line"><span class="keyword">extern</span> <span class="keywordtype">void</span> vApplicationSleep( uint32_t xExpectedIdleTime );</div><div class="line"><span class="preprocessor">#define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )</span></div><div class="line"><span class="preprocessor">#define configUSE_TICKLESS_IDLE  2</span></div><div class="line"><span class="preprocessor">#endif</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if CY_CFG_PWR_DEEPSLEEP_LATENCY &gt; 0</span></div><div class="line"><span class="preprocessor">#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   CY_CFG_PWR_DEEPSLEEP_LATENCY</span></div><div class="line"><span class="preprocessor">#endif</span></div></div><!-- fragment --></li>
+<li>Make sure below Makefile changes are present. This is required for MCU Deep Sleep to work properly <div class="fragment"><div class="line">DEFINES+=CY_SD_HOST_CLK_RAMP_UP_TIME_MS_WAKEUP=0</div></div><!-- fragment --></li>
+<li>Make sure below changes are present in app_bt_cfg.c which controls BT Host wake and device wake from device configurator <div class="fragment"><div class="line">.controller_config =</div><div class="line"> {</div><div class="line">        .bt_power_pin      = CYBSP_BT_POWER,</div><div class="line">        .sleep_mode =</div><div class="line">    {</div><div class="line">        <span class="comment">// For ModusToolBox BT LPA configuration</span></div><div class="line"><span class="preprocessor">        #if defined(CYCFG_BT_LP_ENABLED)</span></div><div class="line">            .sleep_mode_enabled   = CYCFG_BT_LP_ENABLED,</div><div class="line">            .device_wakeup_pin    = CYCFG_BT_DEV_WAKE_GPIO,</div><div class="line">            .host_wakeup_pin      = CYCFG_BT_HOST_WAKE_GPIO,</div><div class="line">            .device_wake_polarity = CYCFG_BT_DEV_WAKE_POLARITY,</div><div class="line">            .host_wake_polarity   = CYCFG_BT_HOST_WAKE_IRQ_EVENT</div><div class="line"><span class="preprocessor">        #else</span></div><div class="line">         .sleep_mode_enabled   = <span class="keyword">true</span>,</div><div class="line">         .device_wakeup_pin    = CYBSP_BT_DEVICE_WAKE,</div><div class="line">         .host_wakeup_pin      = CYBSP_BT_HOST_WAKE,</div><div class="line">         .device_wake_polarity = CYBT_WAKE_ACTIVE_LOW,</div><div class="line">         .host_wake_polarity   = CYBT_WAKE_ACTIVE_LOW</div><div class="line"><span class="preprocessor">        #endif</span></div><div class="line">     }</div><div class="line"> },</div></div><!-- fragment --></li>
+<li>Build the project and program the board. The Cypress Board's BT Powersave is configured and enabled by default. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: <div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --></li>
+<li>Open Ble scanner app in phone, Filter by mac address displayed on the serial port for this device. Click <em>bond</em> on the app<ul>
+<li>CySmart BLE APP : <a href="https://play.google.com/store/apps/details?id=com.cypress.cysmart&hl=en_US">https://play.google.com/store/apps/details?id=com.cypress.cysmart&amp;hl=en_US</a></li>
+<li>nRF Connect for Mobile :(<a href="https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en_US">https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&amp;hl=en_US</a>)</li>
+</ul>
+</li>
+<li>Check the board operation. Refer to the <a class="el" href="index.html#section_lpa_measurement">How to Measure Power Consumption</a> section for corresponding instructions.</li>
 <li>To disable the BT Low Power feature or to change the BT_HOST_WAKE / BT_DEV_WAKE pins, Cypress recommends using the ModusToolbox Device Configurator. Use the appropriate connectivity device tab (for the CY8CKIT_062S2_43012 board it is CYW943012WKWBG). Click the checkbox next to Power-&gt;BT to enable/disable BT low power. Follow the instructions in sections "Host wake up signal" and "Device wake up signal" to modify the BT_HOST_WAKE and BT_DEV_WAKE pins and their polarity, respectively.</li>
 </ol>
 <h2><a class="anchor" id="group_lpa_p3_cc"></a>
@@ -835,15 +1169,32 @@ BT Low Power Configuration Considerations</h2>
 <p><b>Note</b> If you modify the output of the ModusToolbox Device Configurator, you cannot import it back to the tool.</p>
 <h3><a class="anchor" id="group_lpa_p3_cc_mt_flow"></a>
 ModusToolbox Device Configurator Flow</h3>
-<p>Mandatory steps to avoid design.modus file modification in mbed-os folder</p><ul>
+<p>Mandatory steps to avoid design.modus file modification inside checkout repo</p>
+<p><b>mbedos</b> </p>
+<ul>
 <li>Copy folder mbed-os-example-ble-Beacon/mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/TARGET_CY8CKIT_062S2_43012 to mbed-os-example-ble-Beacon folder</li>
 <li>Delete all files in mbed-os-example-ble-Beacon/TARGET_CY8CKIT_062S2_43012 except COMPONENT_BSP_DESIGN_MODUS folder and its contents</li>
 <li>Rename mbed-os-example-ble-Beacon/TARGET_CY8CKIT_062S2_43012/COMPONENT_BSP_DESIGN_MODUS to mbed-os-example-ble-Beacon/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
 <li>Delete design.cyqspi and design.cycapsense file in mbed-os-example-ble-Beacon/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
-<li>Add/update mbed_app.json in mbed-os-example-ble-Beacon folder with below details (This will tell mbed to ignore the BSP configuration shipped with MbedOS). Make sure to add board specific target.components.remove field under target_overrides <div class="fragment"><div class="line">{</div><div class="line">     <span class="stringliteral">&quot;target_overrides&quot;</span>: {</div><div class="line">          <span class="stringliteral">&quot;CY8CKIT_062S2_43012&quot;</span>: {</div><div class="line">              <span class="stringliteral">&quot;target.components_remove&quot;</span>: [<span class="stringliteral">&quot;BSP_DESIGN_MODUS&quot;</span>]</div><div class="line">         }</div><div class="line">     }</div><div class="line"> }</div></div><!-- fragment --> To open the ModusToolbox Device Configurator, right-click on the project in the Project Explorer pane in the ModusToolbox IDE, and select ModusToolbox Configurators &gt; Device Configurator.</li>
+<li>Add/update mbed_app.json in mbed-os-example-ble-Beacon folder with below details (This will tell mbed to ignore the BSP configuration shipped with MbedOS). Make sure to add board specific target.components.remove field under target_overrides <div class="fragment"><div class="line">{</div><div class="line">     <span class="stringliteral">&quot;target_overrides&quot;</span>: {</div><div class="line">          <span class="stringliteral">&quot;CY8CKIT_062S2_43012&quot;</span>: {</div><div class="line">              <span class="stringliteral">&quot;target.components_remove&quot;</span>: [<span class="stringliteral">&quot;BSP_DESIGN_MODUS&quot;</span>]</div><div class="line">         }</div><div class="line">     }</div><div class="line"> }</div></div><!-- fragment --></li>
+<li>If mbed-os branch used is 5.15 or above, please do the below changes as well<ul>
+<li>update mbed_app.json with below line in "target_overrides": <div class="fragment"><div class="line"><span class="stringliteral">&quot;target.components_add&quot;</span>: [<span class="stringliteral">&quot;CUSTOM_DESIGN_MODUS&quot;</span>]</div></div><!-- fragment --></li>
 </ul>
+</li>
+</ul>
+<p><b>FreeRTOS</b> </p>
 <ol type="1">
-<li>Open <em>mbed-os-example-ble-Beacon/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS/design.modus</em></li>
+<li>Copy contents of folder mtb-example-wifi-provisioner-using-ble/libs/TARGET_CY8CKIT-062S2-43012/COMPONENT_BSP_DESIGN_MODUS to mtb-example-wifi-provisioner-using-ble/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT_062S2_43012 folder</li>
+<li>Delete design.cyqspi and design.cycapsense file in mtb-example-wifi-provisioner-using-ble/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS</li>
+<li>update Makefile in mtb-example-wifi-provisioner-using-ble folder with below details (This will tell build to ignore the BSP configuration inside libs folder) <div class="fragment"><div class="line">COMPONENTS+=CUSTOM_DESIGN_MODUS</div><div class="line">DISABLE_COMPONENTS=BSP_DESIGN_MODUS </div></div><!-- fragment --></li>
+</ol>
+<p>To open the ModusToolbox Device Configurator, right-click on the project in the Project Explorer pane in the ModusToolbox IDE, and select ModusToolbox Configurators &gt; Device Configurator.</p>
+<ol type="1">
+<li><b>MBEDOS</b> : Open <em>mbed-os-example-ble-Beacon/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS/design.modus</em> <br />
+ <b>FREERTOS</b> : Open <em>mtb-example-wifi-provisioner-using-ble/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT_062S2_43012/design.modus</em><ul>
+<li>If the design.modus file does not open and pops with a error message <em>No device support library path provided </em>, then point to the psoc6pdl folder inside the mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/psoc6pdl/devicesupport.xml file in the window popup. This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.</li>
+</ul>
+</li>
 <li>Select Wi-Fi Radio device tab (for example, CYW4343WKUBG).</li>
 <li>Enable the BT resource and go to the BT Parameters pane to configure the LPA Middleware.</li>
 <li>Enable BT Wake Configuration.</li>
@@ -959,6 +1310,10 @@ MCU Idle power mode set to Deep Sleep for both use cases  </td></tr>
 With LPA: ICMP ping packets filtered<br />
 MCU Idle power mode set to Deep Sleep for both use cases  </td></tr>
 <tr>
+<td>Wi-Fi TCP Keepalive Offload QSG </td><td>mbed-os-example-wifi </td><td>19.5mA </td><td>3.3mA </td><td>Without LPA: TCP Keepalive offload not enabled<br />
+With LPA: TCP Keepalive offload enabled<br />
+MCU Idle power mode set to Deep Sleep for both use cases  </td></tr>
+<tr>
 <td>BT Low Power QSG </td><td>mbed-os-example-ble-Beacon </td><td>12.5mA </td><td>80.5uA </td><td>BT Not associated<br />
 Without LPA: BT low power not enabled<br />
 With LPA: BT low power enabled<br />
@@ -969,6 +1324,53 @@ Without LPA: BT low power not enabled<br />
 With LPA: BT low power enabled<br />
 MCU Idle power mode set to Deep Sleep for both use cases  </td></tr>
 </table>
+<h1><a class="anchor" id="section_lpa_hostwake"></a>
+Wi-Fi Host Wake Configuration</h1>
+<h2><a class="anchor" id="section_lpa_hostwake_CY8CKIT_062_WIFI_BT"></a>
+CY8CKIT_062_WIFI_BT</h2>
+<ul>
+<li>On the PSoC6 MCU Pins tab of the Device Configurator tool , Enable the Host wake pin P2[7] and name it CYBSP_WIFI_HOST_WAKE.</li>
+<li>In the Parameters pane, change the following.<ul>
+<li>Drive Mode: Analog High-Z. Input buffer off.</li>
+<li>Initial Drive State: High(1).</li>
+<li>Interrupt Trigger Type: Rising Edge.</li>
+</ul>
+</li>
+<li>Go to WiFi tab, set Host Device Interrupt Pin to CYBSP_WIFI_HOST_WAKE.</li>
+</ul>
+<div class="image">
+<img src="hostwake_config_4343_062_kit.png" alt="hostwake_config_4343_062_kit.png" height="400px"/>
+</div>
+<h2><a class="anchor" id="section_lpa_hostwake_CY8CKIT_062S2_43012"></a>
+CY8CKIT_062S2_43012</h2>
+<ul>
+<li>On the PSoC6 MCU Pins tab of the Device Configurator tool , Enable the Host wake pin P4[1] and name it CYBSP_WIFI_HOST_WAKE.</li>
+<li>In the Parameters pane, change the following.<ul>
+<li>Drive Mode: Analog High-Z. Input buffer off.</li>
+<li>Initial Drive State: High(1).</li>
+<li>Interrupt Trigger Type: Rising Edge.</li>
+</ul>
+</li>
+<li>Go to WiFi tab, set Host Device Interrupt Pin to CYBSP_WIFI_HOST_WAKE.</li>
+</ul>
+<div class="image">
+<img src="hostwake_config_43012_062S2_kit.png" alt="hostwake_config_43012_062S2_kit.png" height="400px"/>
+</div>
+<h2><a class="anchor" id="section_lpa_hostwake_CY8CPROTO_062_4343W"></a>
+CY8CPROTO_062_4343W</h2>
+<ul>
+<li>On the PSoC6 MCU Pins tab of the Device Configurator tool , Enable the Host wake pin P0[4] and name it CYBSP_WIFI_HOST_WAKE.</li>
+<li>In the Parameters pane, change the following.<ul>
+<li>Drive Mode: Analog High-Z. Input buffer off.</li>
+<li>Initial Drive State: High(1).</li>
+<li>Interrupt Trigger Type: Rising Edge.</li>
+</ul>
+</li>
+<li>Go to WiFi tab, set Host Device Interrupt Pin to CYBSP_WIFI_HOST_WAKE.</li>
+</ul>
+<div class="image">
+<img src="hostwake_config_4343W_062_kit.png" alt="hostwake_config_4343W_062_kit.png" height="400px"/>
+</div>
 <h1><a class="anchor" id="section_lpa_toolchain"></a>
 Supported Software and Tools</h1>
 <p>This version of the LPA Middleware was validated for compatibility with the following Software and Tools:</p>
@@ -976,15 +1378,15 @@ Supported Software and Tools</h1>
 <tr>
 <th>Software and Tools </th><th>Version  </th></tr>
 <tr>
-<td>ModusToolbox Software Environment </td><td>2.0  </td></tr>
+<td>ModusToolbox Software Environment </td><td>2.1  </td></tr>
 <tr>
-<td>- ModusToolbox Device Configurator </td><td>2.0  </td></tr>
+<td>- ModusToolbox Device Configurator </td><td>2.1  </td></tr>
 <tr>
-<td>- Power Personality in Device Configurator </td><td>2.0  </td></tr>
+<td>- Power Personality in Device Configurator </td><td>1.2  </td></tr>
 <tr>
-<td>- Wi-Fi Personality in Device Configurator </td><td>2.0  </td></tr>
+<td>- Wi-Fi Personality in Device Configurator </td><td>1.0  </td></tr>
 <tr>
-<td>- BT Personality in Device Configurator </td><td>2.0  </td></tr>
+<td>- BT Personality in Device Configurator </td><td>1.0  </td></tr>
 <tr>
 <td>GCC Compiler </td><td>7.2.1  </td></tr>
 <tr>
@@ -992,7 +1394,9 @@ Supported Software and Tools</h1>
 <tr>
 <td>ARM Compiler 6 </td><td>6.11  </td></tr>
 <tr>
-<td>MBED OS </td><td>5.14.2  </td></tr>
+<td>MBED OS </td><td>&gt; 5.15.2  </td></tr>
+<tr>
+<td>FreeRTOS </td><td>10.0.1  </td></tr>
 </table>
 <h1><a class="anchor" id="group_lpa_misra"></a>
 MISRA-C Compliance</h1>
@@ -1000,17 +1404,15 @@ MISRA-C Compliance</h1>
 <h1><a class="anchor" id="group_lpa_errata"></a>
 Errata</h1>
 <p>This section lists the known problems with the LPA middleware.</p>
-<table class="doxtable">
-<tr>
-<th>Cypress ID</th><th>Known Issue</th><th>Workaround </th></tr>
-<tr>
-<td>1395 </td><td>Host application will not be notified of the join status when Station is roaming or AP config change such as DHCP pool etc.. </td><td>Needs reboot and associate to AP again  </td></tr>
-</table>
 <h1><a class="anchor" id="group_lpa_changelog"></a>
 Changelog</h1>
 <table class="doxtable">
 <tr>
 <th>Version</th><th>Changes</th><th>Reason for Change </th></tr>
+<tr>
+<td rowspan="2">2.0 </td><td>Add LPA Support to FreeRTOS - AnyCloud SDK release  </td><td>Add LPA to AnyCloud SDK   </td></tr>
+<tr>
+<td>Add TCP Keepalive offload support  </td><td>Feature enhancement  </td></tr>
 <tr>
 <td>1.0 </td><td>The initial version </td><td></td></tr>
 </table>
@@ -1020,21 +1422,34 @@ More Information</h1>
 <ul>
 <li><a href="https://github.com/cypresssemiconductorco/lpa"><b>Cypress GitHub LPA Middleware</b></a></li>
 <li><a href="https://www.cypress.com/products/modustoolbox-software-environment"><b>ModusToolbox Software Environment, Quick Start Guide, Documentation, and Videos</b></a></li>
-<li><a href="https://github.com/cypresssemiconductorco"><b>LPA Middleware Code Example for MBED OS</b></a></li>
+<li><a href="https://github.com/cypresssemiconductorco/mbed-os-example-wlan-lowpower"><b>LPA Middleware Code Example for MBED OS </b></a></li>
+<li><a href="https://github.com/cypresssemiconductorco/mtb-example-anycloud-wlan-lowpower"><b>LPA Middleware Code Example for FREERTOS </b></a></li>
 <li><a href="https://github.com/cypresssemiconductorco"><b>LPA Middleware Code Examples at GITHUB</b></a></li>
 <li><a href="https://www.cypress.com/ModusToolboxDeviceConfig"><b>ModusToolbox Device Configurator Tool Guide</b></a></li>
 <li><a href="https://www.cypress.com/documentation/technical-reference-manuals/psoc-6-mcu-psoc-63-ble-architecture-technical-reference"><b>PSoC 6 Technical Reference Manual</b></a></li>
 <li><a href="http://www.cypress.com/ds218787"><b>PSoC 63 with BLE Datasheet Programmable System-on-Chip datasheet</b></a></li>
 <li><a href="http://www.cypress.com"><b>Cypress Semiconductor</b></a></li>
 </ul>
-<p><b>Note</b> Links to other software component's documentation (middleware and PDL) point to Cypress GitHub and the latest available version of the software. To get documentation for a specific version, download it from GitHub and unzip the component archive. The documentation is available in the docs folder. </p>
+<p><b>Note</b> Links to other software component's documentation (middleware and PDL) point to Cypress GitHub and the latest available version of the software. To get documentation for a specific version, download it from GitHub and unzip the component archive. The documentation is available in the docs folder.</p>
+<h1><a class="anchor" id="apis"></a>
+LPA API</h1>
+<p>LPA API's are documented below</p>
+<h2><a class="anchor" id="section_apis"></a>
+Utilities</h2>
+<p>LPA utility API's used by LPA middle-ware</p>
+<p> 
+<ul>
+<li><a href="group__lpautilities.html">LPA Utility API</a></li>
+</ul>
+<br>
+ </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part
 <div id="nav-path" class="navpath">
     <ul>
         <li class="footer">
-            Generated for <b>Cypress Low Power Assistant Middleware Library 1.0</b> by <b>Cypress Semiconductor Corporation</b>.
+            Generated for <b>Cypress Low Power Assistant Middleware Library 2.0</b> by <b>Cypress Semiconductor Corporation</b>.
             All rights reserved.
         </li>
     </ul>

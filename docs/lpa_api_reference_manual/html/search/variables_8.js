@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['mask',['mask',['../structwhd__packet__filter__t.html#a05ff99aa8054c4542c3e8152e4254c45',1,'whd_packet_filter_t']]],
-  ['mask_5fsize',['mask_size',['../structwhd__packet__filter__t.html#a91ab470b1e2d24104e4710ca35ec7585',1,'whd_packet_filter_t']]]
+  ['name',['name',['../structarp__ol__t.html#a5c5d17fd2782ce52a39ebe95c985a849',1,'arp_ol_t::name()'],['../structol__desc__t.html#aa710e639017abd5fa8b0bf08f255935f',1,'ol_desc_t::name()']]]
 ];

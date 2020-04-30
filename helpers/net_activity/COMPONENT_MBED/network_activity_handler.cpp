@@ -3,11 +3,11 @@
 *
 * Version: 1.0
 *
-* Description: This file implements the functinos needed to suspend
-* network stack and wait till external event or timeout.
+* Description: This file implements the functions needed to suspend
+* network stack and wait till external event or timeout for MBED OS
 *
 ********************************************************************************
-* Copyright 2019 Cypress Semiconductor Corporation
+* Copyright 2020 Cypress Semiconductor Corporation
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,6 +33,13 @@
  ******************************************************/
 
 #define IDLE_POWER_MODE_STRING_LEN (32)
+#define PACKET_PAYLOAD             (1500)
+#define HARDCODED_STR   "Some random stuff"
+
+/******************************************************
+ *                   Global Declarations
+ ******************************************************/
+uint8_t tcp_databuf[PACKET_PAYLOAD];
 
 /******************************************************
  *                   Enumerations
@@ -96,68 +103,6 @@ static void print_whd_bus_stats(WhdSTAInterface *wifi);
 static cy_rslt_t register_emac_activity_callback(WhdSTAInterface *wifi);
 
 /*******************************************************************************
-* Function Name: on_emac_activity
-********************************************************************************
-*
-* Summary: This is the callback that is called on detecting emac activity. It
-* sets the bits of a flag indicating TX event or RX event.
-*
-*
-* Parameters:
-* bool is_tx_activity: used to determine which bit of flag is to be set. If true,
-* TX bit in the flag is set. Else, RX bit is set.
-*
-*******************************************************************************/
-static void on_emac_activity(bool is_rx_activity);
-
-/*******************************************************************************
-* Function Name: suspend_ns
-********************************************************************************
-*
-* Summary:
-* This function suspends the network stack by taking a lock on the TCP/IP stack.
-*
-* Return: int32_t: contains status of suspending the network stack.
-*
-*******************************************************************************/
-static int32_t suspend_ns(void);
-
-/*******************************************************************************
-* Function Name: resume_ns
-********************************************************************************
-*
-* Summary:
-* This function suspends the network stack by unlocking the TCP/IP stack.
-*
-* Return: int32_t: contains status of resuming the network stack.
-*
-*******************************************************************************/
-static int32_t resume_ns(void);
-
-/*******************************************************************************
-* Function Name: wait_net_inactivity
-********************************************************************************
-*
-* Summary:
-* In this function the network is monitored for inactivity in an interval of
-* length inactive_interval_ms. If the network is inactive for a continuous
-* duration specified by inactive_window_ms, the network is declared as inactive
-* and the corresponding network state value is returned.
-*
-* Parameters:
-* uint32_t inactive_interval_ms: The interval for which the network is monitored
-* for inactivity.
-* uint32_t inactive_window_ms: The continuous duration for which network has to
-* be inactive in inactive_interval_ms.
-*
-* Return:
-* int32_t: contains status of network inactivity.
-*
-*******************************************************************************/
-static int32_t wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inactive_window_ms);
-
-
-/*******************************************************************************
 * Function Name: network_state_handler
 ********************************************************************************
 *
@@ -188,6 +133,7 @@ static bool s_ns_suspended;
     activity.
 */
 cy_event_t lp_wait_net_event;
+cy_mutex_t lp_mutex;
 
 /* This variable is used to track total time spent in deep sleep */
 us_timestamp_t dsleep_nw_suspend_time;
@@ -242,6 +188,15 @@ static cy_rslt_t register_emac_activity_callback(WhdSTAInterface *wifi)
     if (CY_RSLT_SUCCESS != result)
     {
         NW_INFO(("Failed to initialize Wait for Network Activity event.\r\n"));
+        return result;
+    }
+
+    result  = cy_rtos_init_mutex(&lp_mutex);
+
+    if ( CY_RSLT_SUCCESS != result )
+    {
+       	NW_INFO(("Failed to initialize Mutex \n"));
+       	return result;
     }
     else
     {
@@ -253,13 +208,13 @@ static cy_rslt_t register_emac_activity_callback(WhdSTAInterface *wifi)
     return result;
 }
 
-static void on_emac_activity(bool is_rx_activity)
+void on_emac_activity(bool is_rx_activity)
 {
     cy_rtos_setbits_event(&lp_wait_net_event,
         (uint32_t)(is_rx_activity ? RX_EVENT_FLAG : TX_EVENT_FLAG), true);
 }
 
-static int32_t suspend_ns(void)
+int32_t suspend_ns(void)
 {
     int32_t state;
 
@@ -277,7 +232,7 @@ static int32_t suspend_ns(void)
     return state;
 }
 
-static int32_t resume_ns(void)
+int32_t resume_ns(void)
 {
     int32_t state;
 
@@ -295,7 +250,7 @@ static int32_t resume_ns(void)
     return state;
 }
 
-static int32_t wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inactive_window_ms)
+int32_t wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inactive_window_ms)
 {
     cy_time_t lp_start_time;
     cy_time_t lp_end_time;
@@ -347,8 +302,7 @@ static int32_t wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inact
     return state;
 }
 
-
-int32_t wait_net_suspend(WhdSTAInterface *wifi, uint32_t wait_ms,
+int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms,
         uint32_t network_inactive_interval_ms,
         uint32_t network_inactive_window_ms)
 
@@ -358,6 +312,7 @@ int32_t wait_net_suspend(WhdSTAInterface *wifi, uint32_t wait_ms,
     us_timestamp_t start, end;
     char idle_power_mode[IDLE_POWER_MODE_STRING_LEN];
     static bool emac_activity_callback_registered = false;
+    WhdSTAInterface *wifi = (WhdSTAInterface *) net_intf;
 
     if (false == emac_activity_callback_registered)
     {
@@ -377,6 +332,7 @@ int32_t wait_net_suspend(WhdSTAInterface *wifi, uint32_t wait_ms,
         if (ST_SUCCESS == state)
         {
             get_idle_power_mode(idle_power_mode, sizeof(idle_power_mode));
+            wifi->net_suspended();
             NW_INFO(("\nNetwork Stack Suspended, MCU will enter %s power mode\n", idle_power_mode));
             sleep_manager_unlock_deep_sleep();
             flags = (RX_EVENT_FLAG | TX_EVENT_FLAG);
@@ -394,15 +350,18 @@ int32_t wait_net_suspend(WhdSTAInterface *wifi, uint32_t wait_ms,
             }
 
             end = mbed_uptime();
+            cy_rtos_get_mutex(&lp_mutex, wait_ms);
             sleep_manager_lock_deep_sleep();
+            wifi->net_resuming();
             /* Resume the network stack.
              * State data (e.g. caches) may be adjusted here so that the stack resumes properly.
             */
             NW_INFO(("Resuming Network Stack, Network stack was suspended for %llums\n", (end-start)/1000));
             dsleep_nw_suspend_time += end-start;
             print_whd_bus_stats(wifi);
-            state = resume_ns();
+            resume_ns();
             network_state_handler(state);
+            cy_rtos_set_mutex(&lp_mutex);
         }
     }
 
@@ -432,4 +391,123 @@ static void network_state_handler(cy_rslt_t state)
         default:
             break;
     }
+}
+
+int cy_tcp_create_socket_connection ( void *netif_if, void **global_socket, const char *remote_ip, uint16_t remote_port, uint16_t local_port,
+		                              cy_tko_ol_cfg_t *tko_ol_cfg, int socket_keepalive_enable )
+{
+    int response;
+    int data_length = 0;
+    nsapi_error_t ns_ret;
+    int32_t cfg_interval;
+    int32_t retry_interval;
+    int32_t enable = 1;
+    TCPSocket *socket_ptr = NULL;
+    SocketAddress src_sockaddress;
+    SocketAddress remote_sockaddress;
+    WhdSTAInterface *wifi_intf = (WhdSTAInterface *)netif_if;
+    NetworkInterface *networkInterface;
+
+    networkInterface = (NetworkInterface *)wifi_intf;
+
+    if ( wifi_intf == NULL )
+    {
+    	printf("Network Interface is not up !\n");
+    	return NSAPI_ERROR_NO_CONNECTION;
+    }
+
+    *global_socket = new TCPSocket();
+    socket_ptr = (TCPSocket *)*global_socket;
+
+    if ( socket_ptr == NULL )
+    {
+    	printf("TCP socket create failed\n");
+    	return NSAPI_ERROR_NO_SOCKET;
+    }
+
+    /* Create TCP Socket */
+    response = socket_ptr->open((NetworkInterface *)wifi_intf);
+    if (response != NSAPI_ERROR_OK) {
+    	delete socket_ptr;
+    	*global_socket = NULL;
+    	return response;
+    }
+
+    networkInterface->get_ip_address(&src_sockaddress);
+    src_sockaddress.set_port(local_port);
+
+    /* Bind socket to local port */
+    response = socket_ptr->bind(src_sockaddress);
+    if (response != NSAPI_ERROR_OK) {
+            printf("socket.bind() failed: %d\n", response);
+            socket_ptr->close();
+            delete socket_ptr;
+            *global_socket = NULL;
+            return response;
+    }
+
+    remote_sockaddress.set_ip_address((const char*)remote_ip);
+    remote_sockaddress.set_port(remote_port);
+
+    /* Establish TCP Connection */
+    socket_ptr->set_timeout(-1);
+    response = socket_ptr->connect(remote_sockaddress);
+    if (response != NSAPI_ERROR_OK) {
+    	socket_ptr->close();
+    	delete socket_ptr;
+    	*global_socket = NULL;
+        return response;
+    }
+
+    /* Use socket level tko, while host is awake */
+    cfg_interval = tko_ol_cfg->interval * 1000;    /* keep_idle, After this much idle time, send Packet */
+    retry_interval = tko_ol_cfg->retry_interval * 1000;    /* keep_intvl, if don't get ack retry in this many seconds */
+
+    if ( socket_keepalive_enable)
+    {
+        ns_ret = socket_ptr->setsockopt(NSAPI_SOCKET, NSAPI_KEEPIDLE, &cfg_interval, sizeof(cfg_interval));
+        if (ns_ret != NSAPI_ERROR_OK) {
+          printf("KEEPIDLE failed %d, abandon\n", ns_ret);
+          socket_ptr->close();
+          delete socket_ptr;
+          *global_socket = NULL;
+          return ns_ret;
+        }
+
+        ns_ret = socket_ptr->setsockopt(NSAPI_SOCKET, NSAPI_KEEPINTVL, &retry_interval, sizeof(retry_interval));
+        if (ns_ret != NSAPI_ERROR_OK) {
+          printf("KEEPINTVL failed %d, abandon\n", ns_ret);
+          socket_ptr->close();
+          delete socket_ptr;
+          *global_socket = NULL;
+          return ns_ret;
+        }
+
+        ns_ret = socket_ptr->setsockopt(NSAPI_SOCKET, NSAPI_KEEPALIVE, &enable, sizeof(enable));
+        if (ns_ret != NSAPI_ERROR_OK) {
+          printf("KEEPALIVE failed %d, abandon\n", ns_ret);
+          socket_ptr->close();
+          delete socket_ptr;
+          *global_socket = NULL;
+          return ns_ret;
+        }
+    }
+    printf("Set LWIP keepalive: Interval %d, Retry Interval %d, keepalive enable/disable %d\n",
+    		cfg_interval, retry_interval, enable);
+
+    if (1) {
+        int len = strlen(HARDCODED_STR);
+        memcpy(tcp_databuf, HARDCODED_STR, len);
+        data_length = socket_ptr->send(tcp_databuf, len);
+        if (len != data_length) {
+            printf("Could only send %d of %d bytes on socket: %s\n", data_length, len, tcp_databuf);
+        }
+    }
+
+    if (0) {
+        memset(tcp_databuf, 0, sizeof(tcp_databuf));
+        data_length = socket_ptr->recv(tcp_databuf, PACKET_PAYLOAD );
+        printf("Got %d bytes form socket: %s\n", data_length, tcp_databuf);
+    }
+    return response;
 }

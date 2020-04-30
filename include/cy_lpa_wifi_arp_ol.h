@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2019, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -22,6 +22,8 @@
 
 /* We have a non-hardware build that we need to handle - "OLM_NO_HARDWARE" defined in app/olm-sanity/Makefile */
 #if defined(OLM_NO_HARDWARE)
+#include <stdint.h>
+
 /* Defines so main.c can build for building without hardware */
 #ifndef ARP_MULTIHOMING_MAX
 #define ARP_MULTIHOMING_MAX     (8)

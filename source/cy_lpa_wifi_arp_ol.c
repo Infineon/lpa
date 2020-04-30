@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2019, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -22,14 +22,16 @@
 #include "cy_lpa_wifi_ol.h"
 #include "cy_lpa_wifi_ol_priv.h"
 #include "cy_lpa_wifi_arp_ol.h"
-#include "cy_whd_arp_api.h"
 
 #if !defined(OLM_NO_HARDWARE)
-#include "nw_helper.h"
+#include "cy_nw_helper.h"
+#include "cy_nw_lpa_helper.h"
 #include "ip4string.h"
 #include "cy_worker_thread.h"
 #include "whd_wifi_api.h"
 #include "cyabs_rtos.h"
+#else 
+#include "cy_whd_stubs.h"
 #endif
 
 #ifdef __cplusplus
@@ -76,7 +78,7 @@ const ol_fns_t arp_ol_fns =
  *****************************************************************************/
 #if !defined(OLM_NO_HARDWARE)
 /* structure for sal callback info */
-static nw_ip_status_change_callback_t arp_ol_cb;
+static cylpa_nw_ip_status_change_callback_t arp_ol_cb;
 
 /* timer for waiting for DHCP to get moving after a link up */
 static cy_timer_t delay_dhcp_timer;
@@ -119,10 +121,10 @@ static int dhcp_retry_count = CY_ARPOL_DHCP_RETRY_COUNT;
 
 static void arp_ol_nw_ip_change_work(void *arg)
 {
-    nw_ip_address_t addr;
-    nw_ip_interface_t iface;
+    cy_nw_ip_address_t addr;
+    cy_nw_ip_interface_t iface;
     volatile arp_ol_t *arp_ol = (arp_ol_t *)arg;
-    bool ok;
+    bool ok = true;
 
     /* We know we are in Power on State if we get here
      */
@@ -131,9 +133,9 @@ static void arp_ol_nw_ip_change_work(void *arg)
         OL_LOG_ARP(LOG_OLA_LVL_ERR, "arp_ol_nw_ip_change_work() Bad Args.\n");
         return;
     }
-    iface = (nw_ip_interface_t)arp_ol->ol_info_ptr->ip;
+    iface = (cy_nw_ip_interface_t)arp_ol->ol_info_ptr->ip;
 
-    ok = nw_ip_get_ipv4_address(iface, &addr);
+    ok = cy_nw_ip_get_ipv4_address(iface, &addr);
     OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "%s() iface:%p get ipv4 ok?%d ipv4: %d.%d.%d.%d\n", __func__, iface, ok,
                (int)( (addr.ip.v4 >>  0) & 0xFF ), (int)( (addr.ip.v4 >>  8) & 0xFF ),
                (int)( (addr.ip.v4 >> 16) & 0xFF ), (int)( (addr.ip.v4 >> 24) & 0xFF ) );
@@ -199,6 +201,7 @@ static void arp_ol_nw_ip_change_work(void *arg)
                     if (delay_dhcp_timer != 0)
                     {
                         cy_rtos_deinit_timer(&delay_dhcp_timer);
+                        delay_dhcp_timer = 0;
                     }
                     cy_rtos_init_timer(&delay_dhcp_timer, CY_TIMER_TYPE_ONCE, arp_ol_nw_ip_change_timer_callback,
                                        (cy_timer_callback_arg_t)arp_ol);
@@ -217,11 +220,12 @@ static void arp_ol_nw_ip_change_timer_callback(cy_timer_callback_arg_t arg)
 {
     arp_ol_t *arp_ol = (arp_ol_t *)arg;
     cy_rtos_deinit_timer(&delay_dhcp_timer);
+    delay_dhcp_timer = 0;
     if ( (arp_ol == NULL) || (arp_ol->ol_info_ptr == NULL) || (arp_ol->ol_info_ptr->worker == NULL) )
     {
         return;
     }
-    cy_defer_work(arp_ol->ol_info_ptr->worker, arp_ol_nw_ip_change_work, (void *)arg);
+    cy_worker_thread_enqueue(arp_ol->ol_info_ptr->worker, arp_ol_nw_ip_change_work, (void *)arg);
 }
 
 /*******************************************************************************
@@ -239,7 +243,7 @@ static void arp_ol_nw_ip_change_timer_callback(cy_timer_callback_arg_t arg)
 * Pointer to arp_ol_t structure.
 *
 *******************************************************************************/
-static void arp_ol_nw_ip_change_callback(nw_ip_interface_t iface, void *arg)
+static void arp_ol_nw_ip_change_callback(cy_nw_ip_interface_t iface, void *arg)
 {
 
     arp_ol_t *arp_ol = (arp_ol_t *)arg;
@@ -262,6 +266,7 @@ static void arp_ol_nw_ip_change_callback(nw_ip_interface_t iface, void *arg)
     if (delay_dhcp_timer != 0)
     {
         cy_rtos_deinit_timer(&delay_dhcp_timer);
+        delay_dhcp_timer = 0;
     }
     cy_rtos_init_timer(&delay_dhcp_timer, CY_TIMER_TYPE_ONCE, arp_ol_nw_ip_change_timer_callback,
                        (cy_timer_callback_arg_t)arp_ol);
@@ -321,7 +326,7 @@ static int arp_ol_init(void *ol, ol_info_t *ol_info, const void *cfg)
      * - registered in the PM change callback below
      * - only used if SNOOP is off
      */
-    nw_ip_initialize_status_change_callback(&arp_ol_cb, arp_ol_nw_ip_change_callback, arp_ol);
+    cylpa_nw_ip_initialize_status_change_callback(&arp_ol_cb, arp_ol_nw_ip_change_callback, arp_ol);
 #endif /* !defined(OLM_NO_HARDWARE) */
 
     /* Clear out all ARP Offload features */
@@ -364,11 +369,12 @@ static void arp_ol_deinit(void *ol)
 
 #if !defined(OLM_NO_HARDWARE)
     /* Un-register the ip change callback with sal api */
-    nw_ip_unregister_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &arp_ol_cb );
+    cylpa_nw_ip_unregister_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &arp_ol_cb );
     /* deinit timer if needed */
     if (delay_dhcp_timer != 0)
     {
         cy_rtos_deinit_timer(&delay_dhcp_timer);
+        delay_dhcp_timer = 0;
     }
 #endif /* !defined(OLM_NO_HARDWARE) */
 
@@ -432,15 +438,14 @@ static void arp_ol_pm(void *ol, ol_pm_st_t st)
 #if defined(MBED_CONF_APP_OLM_TEST)
         if (arp_ol_test_enable_net_callback == 0)
         {
-            nw_ip_unregister_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &arp_ol_cb );
+            cylpa_nw_ip_unregister_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &arp_ol_cb );
         }
         else
 #endif
         {
-            nw_ip_register_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &arp_ol_cb );
+        	cylpa_nw_ip_register_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &arp_ol_cb );
         }
 #endif /* !defined(OLM_NO_HARDWARE) */
-
         /* check that AGENT is on if HOST_AUTO_REPLY or PEER_AUTO_REPLY is on */
         if ( (enable_flags & (CY_ARP_OL_HOST_AUTO_REPLY_ENABLE | CY_ARP_OL_PEER_AUTO_REPLY_ENABLE) ) != 0 )
         {

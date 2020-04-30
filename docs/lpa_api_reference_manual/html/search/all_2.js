@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['cfg',['cfg',['../structol__desc__t.html#ae2465ecd5a2e0acd0dc6977405542194',1,'ol_desc_t::cfg()'],['../structpf__ol__t.html#a914b22be2a3c8240fecd61895f36c0b7',1,'pf_ol_t::cfg()']]],
+  ['cfg',['cfg',['../structol__desc__t.html#ae2465ecd5a2e0acd0dc6977405542194',1,'ol_desc_t::cfg()'],['../structpf__ol__t.html#a914b22be2a3c8240fecd61895f36c0b7',1,'pf_ol_t::cfg()'],['../structtko__ol__t.html#ab9645b98cf75b8e3c694f20e7dbd0cc3',1,'tko_ol_t::cfg()']]],
   ['config',['config',['../structarp__ol__t.html#a80b1b8f2693769dc8a768d4ecbd06ee4',1,'arp_ol_t']]],
   ['cy_5farp_5fol_5fagent_5fenable',['CY_ARP_OL_AGENT_ENABLE',['../group__group__lpa__macros__arp.html#ga5bc600bcba9b88cc6cb3d77051bd79e3',1,'cy_lpa_wifi_arp_ol.h']]],
   ['cy_5farp_5fol_5fall_5ffeature_5fenable',['CY_ARP_OL_ALL_FEATURE_ENABLE',['../group__group__lpa__macros__arp.html#ga6f7e6049ae8609ce02f6792763de56aa',1,'cy_lpa_wifi_arp_ol.h']]],
@@ -26,5 +26,8 @@ var searchData=
   ['cy_5fpf_5fprotocol_5ftcp',['CY_PF_PROTOCOL_TCP',['../group__group__lpa__enums.html#gga582cb12b9a55b2e2476e0078cce70624ae0d2eae113cd1a14a2606e08a1bc4712',1,'cy_lpa_wifi_pf_ol.h']]],
   ['cy_5fpf_5fprotocol_5fudp',['CY_PF_PROTOCOL_UDP',['../group__group__lpa__enums.html#gga582cb12b9a55b2e2476e0078cce70624a148cb7b5ffe061dcf0f2e0156ce16573',1,'cy_lpa_wifi_pf_ol.h']]],
   ['cy_5fpn_5fdirection_5ft',['cy_pn_direction_t',['../group__group__lpa__enums.html#ga0093febf4de86e258f6c65668742c050',1,'cy_lpa_wifi_pf_ol.h']]],
-  ['cypress_20low_20power_20assistant_20middleware_20library_201_2e0',['Cypress Low Power Assistant Middleware Library 1.0',['../index.html',1,'']]]
+  ['cy_5ftcp_5fcreate_5fsocket_5fconnection',['cy_tcp_create_socket_connection',['../group__lpautilities.html#gab1bdee5b863d063b2cfb1dc693f8b685',1,'network_activity_handler.h']]],
+  ['cy_5ftko_5fol_5fcfg_5ft',['cy_tko_ol_cfg_t',['../structcy__tko__ol__cfg__t.html',1,'']]],
+  ['cy_5ftko_5fol_5fconnect_5ft',['cy_tko_ol_connect_t',['../structcy__tko__ol__connect__t.html',1,'']]],
+  ['cypress_20low_20power_20assistant_20middleware_20library_202_2e0',['Cypress Low Power Assistant Middleware Library 2.0',['../index.html',1,'']]]
 ];

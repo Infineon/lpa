@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2019, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -22,7 +22,7 @@ extern "C" {
 #endif
 
 #include "cy_lpa_wifi_ol_common.h" /* for ol_info_t */
-
+#define OLM_LOG_ENABLED 1
 
 /*******************************************************************************
 * LPA Data Structures
@@ -85,15 +85,13 @@ extern void olm_deinit_ols(olm_t *olm);
 
 /** \} */
 
-
-#if defined(MBED_CONF_APP_OLM_TEST)
-
 /* Offload Assistant Log Level enums */
 typedef enum
 {
     LOG_OLA_OLM = 0,
     LOG_OLA_ARP,
     LOG_OLA_PF,
+    LOG_OLA_TKO,
 
     /* add new Offload Log Assist components here */
 
@@ -113,6 +111,8 @@ typedef enum
     LOG_OLA_LVL_MAX_INDEX   /* not for use */
 
 } LOG_OFFLOAD_ASSIST_LEVEL_T;
+
+#if defined (OLM_LOG_ENABLED)
 
 /*
  * OL_LOG Debug verbosity settings
@@ -158,6 +158,7 @@ extern int ol_logging(LOG_OFFLOAD_ASSIST_T assist, LOG_OFFLOAD_ASSIST_LEVEL_T le
 #define OL_LOG_OLM(...) ol_logging(LOG_OLA_OLM, __VA_ARGS__)    /**< ex: OL_LOG_ARP(LOG_OLA_LVL_NOTICE, "ARP OL IP: %s\n", ip_string); */
 #define OL_LOG_ARP(...) ol_logging(LOG_OLA_ARP, __VA_ARGS__)    /**< ex: OL_LOG_ARP(LOG_OLA_LVL_NOTICE, "ARP OL IP: %s\n", ip_string); */
 #define OL_LOG_PF(...) ol_logging(LOG_OLA_PF, __VA_ARGS__)      /**< ex: OL_LOG_PF(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
+#define OL_LOG_TKO(...) ol_logging(LOG_OLA_TKO, __VA_ARGS__)    /**< ex: OL_LOG_TKO(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
 
 #else   /* next section is NOT defined(MBED_CONF_APP_OLM_TEST) */
 
@@ -169,8 +170,9 @@ extern int ol_logging(LOG_OFFLOAD_ASSIST_T assist, LOG_OFFLOAD_ASSIST_LEVEL_T le
 #define OL_LOG_OLM(...)
 #define OL_LOG_ARP(...)
 #define OL_LOG_PF(...)
+#define OL_LOG_TKO(...)
 
-#endif  /* defined(MBED_CONF_APP_OLM_TEST) */
+#endif  /* defined(OLM_LOG_ENABLED) */
 
 #ifdef __cplusplus
 }

@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2019, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -22,13 +22,13 @@
 #include "cy_lpa_wifi_ol_priv.h"
 
 #if !defined(OLM_NO_HARDWARE)
+#if defined(__MBED__)
 #include "mbed_toolchain.h"
+#endif
 #include "cy_worker_thread.h"
 #endif
 
-#if defined(MBED_CONF_APP_OLM_TEST)
 #include <stdarg.h>
-#endif
 
 static const ol_desc_t null_ol_list = {NULL, NULL, NULL, NULL};
 
@@ -69,8 +69,13 @@ extern "C" {
 #if !defined(OLM_NO_HARDWARE)
 static cy_worker_thread_info_t olm_worker_thread;
 
+#if defined(__MBED__)
 /* Define a stack buffer so we don't require a malloc when creating our worker thread Aligned on 8-byte boundary! */
 MBED_ALIGN(CY_RTOS_ALIGNMENT) static uint8_t olm_worker_thread_stack[OLM_WORKER_THREAD_STACK_SIZE];
+#else
+/* Define a stack buffer so we don't require a malloc when creating our worker thread Aligned on 8-byte boundary! */
+__attribute__((aligned(CY_RTOS_ALIGNMENT))) static uint8_t olm_worker_thread_stack[OLM_WORKER_THREAD_STACK_SIZE];
+#endif /* __MBED__ */
 
 static cy_worker_thread_params_t olm_thread_params =
 {
@@ -80,10 +85,11 @@ static cy_worker_thread_params_t olm_thread_params =
      * EventQueue->time_left first call returns -1,  indicated completed
      * EventQueue->time_left second call returns  0, indicating event is already due to be dispatched or is currently executing.
      */
-    .priority = CY_WORKER_THREAD_PRIORITY_NORMAL,
+    .priority = CY_RTOS_PRIORITY_NORMAL,
     .stack_size = sizeof(olm_worker_thread_stack),
     .stack = olm_worker_thread_stack,
-    .name = "OLM Worker"
+    .name = "OLM Worker",
+    .num_entries = 0
 };
 #endif  /* !defined(OLM_NO_HARDWARE) */
 
@@ -127,13 +133,13 @@ void olm_init(olm_t *olm, const ol_desc_t *ol_list)
     olm->ol_list = ol_list ? ol_list : &null_ol_list;
 
 #if !defined(OLM_NO_HARDWARE)
-    if (olm_worker_thread.tag != CY_WORKER_VALID_TAG)
+    if (olm_worker_thread.state != CY_WORKER_THREAD_VALID)
     {
-        cy_create_worker_thread(&olm_thread_params, &olm_worker_thread);
+        cy_worker_thread_create(&olm_worker_thread, &olm_thread_params);
     }
     olm->ol_info.worker = &olm_worker_thread;
-    OL_LOG_OLM(LOG_OLA_LVL_DEBUG, "olm_init()  olm:%p ol_list:%p worker:%p tag:0x%lx\n", (void *)olm, (void *)ol_list,
-               olm->ol_info.worker, olm_worker_thread.tag);
+    OL_LOG_OLM(LOG_OLA_LVL_DEBUG, "olm_init()  olm:%p ol_list:%p worker:%p state:0x%lx\n", (void *)olm, (void *)ol_list,
+               olm->ol_info.worker, olm_worker_thread.state);
 #endif /* !OLM_NO_HARDWARE */
 
     OL_LOG_OLM(LOG_OLA_LVL_DEBUG, "olm_init()  Done\n");
@@ -159,7 +165,7 @@ void olm_deinit(olm_t *olm)
     OL_LOG_OLM(LOG_OLA_LVL_DEBUG, "olm_deinit() olm:%p\n", (void *)olm);
 
 #if !defined(OLM_NO_HARDWARE)
-    cy_delete_worker_thread(olm->ol_info.worker);
+    cy_worker_thread_delete(olm->ol_info.worker);
     olm->ol_info.worker = NULL;
 #endif  /* !defined(OLM_NO_HARDWARE) */
 
@@ -313,7 +319,7 @@ void olm_dispatch_pm_notification(olm_t *olm, ol_pm_st_t st)
     }
 }
 
-#if defined(MBED_CONF_APP_OLM_TEST)
+#if defined(OLM_LOG_ENABLED)
 
 /*******************************************************************************
 *

@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2019, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -21,8 +21,9 @@
 #include "cy_lpa_wifi_ol_common.h" /* for whd */
 #include "cy_lpa_wifi_ol.h"
 #include "cy_lpa_wifi_arp_ol.h"
-#include "cy_whd_arp_api.h"
-#include "cy_whd_pf_api.h"
+#if defined(OLM_NO_HARDWARE)
+#include "cy_whd_stubs.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -207,7 +208,7 @@ CYPRESS_WEAK whd_result_t whd_pf_get_packet_filter_mask_and_pattern(whd_t *whd, 
     return WHD_IOCTL_FAIL;
 }
 
-CYPRESS_WEAK whd_result_t whd_pf_get_packet_filter_stats(whd_t *whd, uint8_t filter_id, wl_pkt_filter_stats_t *stats)
+CYPRESS_WEAK whd_result_t whd_pf_get_packet_filter_stats(whd_t *whd, uint8_t filter_id, whd_pkt_filter_stats_t *stats)
 {
     (void)filter_id;
     (void)stats;

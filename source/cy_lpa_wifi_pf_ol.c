@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2019, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -27,7 +27,7 @@
 #ifdef USE_HW
 #include "prot/ip.h"
 #include "whd_sdpcm.h"
-#include "cy_whd_pf_api.h"
+#include "whd_wifi_api.h"
 #include "whd_wlioctl.h"
 #include "whd_endian.h"
 #endif

@@ -27,8 +27,8 @@
 #define CYPRESS_PACKED          MBED_PACKED
 
 #else
-#define CYPRESS_WEAK
-#define CYPRESS_PACKED(struct) struct
+#define CYPRESS_WEAK           __attribute__((weak))
+#define CYPRESS_PACKED(struct) struct __attribute__((packed))
 
 #endif  /* defined(IAR) */
 
