@@ -25,7 +25,7 @@
 #endif
 
 #ifdef USE_HW
-#include "prot/ip.h"
+#include "lwip/ip.h"
 #include "whd_sdpcm.h"
 #include "whd_wifi_api.h"
 #include "whd_wlioctl.h"
@@ -38,15 +38,15 @@ extern "C" {
 
 #define MAX_BITS_IN_PORTNUM 16  /* Portnum is 16 bits */
 
-static ol_init_t pf_ol_init;
-static ol_deinit_t pf_ol_deinit;
-static ol_pm_t pf_ol_pm;
+static ol_init_t cylpa_pf_ol_init;
+static ol_deinit_t cylpa_pf_ol_deinit;
+static ol_pm_t cylpa_pf_ol_pm;
 
 const ol_fns_t pf_ol_fns =
 {
-    .init = pf_ol_init,
-    .deinit = pf_ol_deinit,
-    .pm = pf_ol_pm,
+    .init = cylpa_pf_ol_init,
+    .deinit = cylpa_pf_ol_deinit,
+    .pm = cylpa_pf_ol_pm,
 };
 
 
@@ -54,29 +54,29 @@ const ol_fns_t pf_ol_fns =
 * Function Prototypes
 *******************************************************************************/
 
-static int create_portnum_range_mask(cy_pf_ol_cfg_t *pf_cfg, uint16_t *pattern, uint16_t *mask);
-static int create_single_portnum_mask(cy_pf_ol_cfg_t *pf_cfg, uint16_t *pattern, uint16_t *mask);
-static int create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t pattern, uint16_t mask);
-static int create_ethtype_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg);
-static int create_ip_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg);
+static int cylpa_create_portnum_range_mask(cy_pf_ol_cfg_t *pf_cfg, uint16_t *pattern, uint16_t *mask);
+static int cylpa_create_single_portnum_mask(cy_pf_ol_cfg_t *pf_cfg, uint16_t *pattern, uint16_t *mask);
+static int cylpa_create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t pattern, uint16_t mask);
+static int cylpa_create_ethtype_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg);
+static int cylpa_create_ip_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg);
 
-static int sign_extend(int val, unsigned width);
-static int bitwidth(int val);
-static int dump_filters_stats(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg);
+static int cylpa_sign_extend(int val, unsigned width);
+static int cylpa_bitwidth(int val);
+static int cylpa_dump_filters_stats(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg);
 #ifdef TESTING
-static void run_pf_test(unsigned int pattern, unsigned int mask);
+static void cylpa_run_pf_test(unsigned int pattern, unsigned int mask);
 #endif
 
 #ifdef USE_HW
-static int print_packet_filter_stats(whd_t *whd, uint8_t filter_id);
+static int cylpa_print_packet_filter_stats(whd_t *whd, uint8_t filter_id);
 #ifdef DEBUG
-static void print_pat_and_mask(uint8_t id, int mask_len, uint8_t *mask, uint8_t *pat);
+static void cylpa_print_pat_and_mask(uint8_t id, int mask_len, uint8_t *mask, uint8_t *pat);
 #endif
 #endif
 
 
 /*******************************************************************************
- * Function Name: pf_ol_init
+ * Function Name: cylpa_pf_ol_init
  ****************************************************************************//**
  *
  * Packet filter init function.
@@ -94,7 +94,7 @@ static void print_pat_and_mask(uint8_t id, int mask_len, uint8_t *mask, uint8_t 
  * Returns the execution result
  *
  ********************************************************************************/
-static int pf_ol_init(void *ol, ol_info_t *info, const void *cfg)
+static int cylpa_pf_ol_init(void *ol, ol_info_t *info, const void *cfg)
 {
     pf_ol_t *ctxt = (pf_ol_t *)ol;
     memset(ctxt, 0, sizeof(pf_ol_t) );
@@ -115,27 +115,27 @@ static int pf_ol_init(void *ol, ol_info_t *info, const void *cfg)
                 if ( (!IS_POWER(pf_cfg->u.pf.portnum.portnum) ) || (!IS_POWER( (pf_cfg->u.pf.portnum.range + 1) ) ) ||
                      (pf_cfg->u.pf.portnum.range == 0) )
                 {
-                    create_single_portnum_mask(pf_cfg, &pattern, &mask);
+                    cylpa_create_single_portnum_mask(pf_cfg, &pattern, &mask);
                     OL_LOG_PF(LOG_OLA_LVL_DEBUG, "Creating Single Port filter ID: %d Port: %d ",
                               pf_cfg->id, pf_cfg->u.pf.portnum.portnum);
                 }
                 else
                 {
-                    create_portnum_range_mask(pf_cfg, &pattern, &mask);
+                    cylpa_create_portnum_range_mask(pf_cfg, &pattern, &mask);
                     OL_LOG_PF(LOG_OLA_LVL_DEBUG, "Creating Port Range filter ID: %d, Range %d - %d ", pf_cfg->id,
                               pf_cfg->u.pf.portnum.portnum, pf_cfg->u.pf.portnum.portnum + pf_cfg->u.pf.portnum.range);
                 }
-                create_port_filter(ctxt->whd, pf_cfg, pattern, mask);
+                cylpa_create_port_filter(ctxt->whd, pf_cfg, pattern, mask);
 #ifdef TESTING
-                run_pf_test(pattern, mask);
+                cylpa_run_pf_test(pattern, mask);
 #endif
                 break;
             }
             case CY_PF_OL_FEAT_ETHTYPE:
-                create_ethtype_filter(ctxt->whd, pf_cfg);
+                cylpa_create_ethtype_filter(ctxt->whd, pf_cfg);
                 break;
             case CY_PF_OL_FEAT_IPTYPE:
-                create_ip_filter(ctxt->whd, pf_cfg);
+                cylpa_create_ip_filter(ctxt->whd, pf_cfg);
                 break;
             case CY_PF_OL_FEAT_LAST:
                 /* Satisfy compiler, never executed */
@@ -166,13 +166,13 @@ static int pf_ol_init(void *ol, ol_info_t *info, const void *cfg)
     }
 #endif /* USE_HW */
 
-    dump_filters_stats(ctxt->whd, ctxt->cfg);
+    cylpa_dump_filters_stats(ctxt->whd, ctxt->cfg);
 
     return RESULT_OK;
 }
 
 /*******************************************************************************
- * Function Name: pf_ol_deinit
+ * Function Name: cylpa_pf_ol_deinit
  ****************************************************************************//**
  *
  * Remove all filters. No need to disable prior to removal.
@@ -181,10 +181,15 @@ static int pf_ol_init(void *ol, ol_info_t *info, const void *cfg)
  * The pointer to the ol structure.
  *
  ********************************************************************************/
-static void pf_ol_deinit(void *ol)
+static void cylpa_pf_ol_deinit(void *ol)
 {
     pf_ol_t *ctxt = (pf_ol_t *)ol;
     cy_pf_ol_cfg_t *pf_cfg;
+
+    if ((ctxt == NULL) || (ctxt->cfg == NULL) || (ctxt->whd == NULL))
+    {
+        return;
+    }
 
     for (pf_cfg = ctxt->cfg; pf_cfg->feature != CY_PF_OL_FEAT_LAST; pf_cfg++)
     {
@@ -200,7 +205,7 @@ static void pf_ol_deinit(void *ol)
 }
 
 /*******************************************************************************
- * Function Name: pf_ol_pm
+ * Function Name: cylpa_pf_ol_pm
  ****************************************************************************//**
  *
  * Remove all filters. No need to disable prior to removal.
@@ -212,11 +217,16 @@ static void pf_ol_deinit(void *ol)
  * see \ref ol_pm_st_t.
  *
  ********************************************************************************/
-static void pf_ol_pm(void *ol, ol_pm_st_t st)
+static void cylpa_pf_ol_pm(void *ol, ol_pm_st_t st)
 {
     pf_ol_t *ctxt = (pf_ol_t *)ol;
     cy_pf_ol_cfg_t *pf_cfg;
 
+    if ((ctxt == NULL) || (ctxt->cfg == NULL) || (ctxt->whd == NULL))
+    {
+        OL_LOG_PF(LOG_OLA_LVL_ERR, "%s : Bad Args!\n", __func__);
+        return;
+    }
 #ifdef USE_HW
     switch (st)
     {
@@ -300,8 +310,8 @@ static void pf_ol_pm(void *ol, ol_pm_st_t st)
 #define ETHTYPE_OFFSET 12
 
 #ifdef USE_HW
-static uint8_t glob_pat_buf[32];
-static uint8_t glob_mask_buf[32];
+static uint8_t cylpa_glob_pat_buf[32];
+static uint8_t cylpa_glob_mask_buf[32];
 #endif
 
 #ifdef USE_HW
@@ -345,10 +355,13 @@ static void common_filter_attrs(cy_pf_ol_cfg_t *pf_cfg, whd_packet_filter_t *fil
 #endif
 
 /*******************************************************************************
- * Function Name: create_ip_filter
+ * Function Name: cylpa_create_ip_filter
  ****************************************************************************//**
  *
  * Remove all filters. No need to disable prior to removal.
+ *
+ * \param whd
+ * The pointer to the whd interface.
  *
  * \param pf_cfg
  * The pointer to the cy_pf_ol_cfg_t structure \ref cy_pf_ol_cfg_t.
@@ -357,7 +370,7 @@ static void common_filter_attrs(cy_pf_ol_cfg_t *pf_cfg, whd_packet_filter_t *fil
  * Returns the execution result
  *
  ********************************************************************************/
-static int create_ip_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
+static int cylpa_create_ip_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
 {
 #ifdef USE_HW
     whd_packet_filter_t filter;
@@ -367,8 +380,8 @@ static int create_ip_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
     struct ipv4_hdr ip_hdr_mask;
     struct ipv4_hdr ip_hdr_pattern;
 
-    uint8_t *pat_ptr = glob_pat_buf;
-    uint8_t *mask_ptr = glob_mask_buf;
+    uint8_t *pat_ptr = cylpa_glob_pat_buf;
+    uint8_t *mask_ptr = cylpa_glob_mask_buf;
 
     memset(&ether_hdr_pattern, 0, sizeof(ether_hdr_pattern) );
     memset(&ether_hdr_mask, 0, sizeof(ether_hdr_mask) );
@@ -383,8 +396,8 @@ static int create_ip_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
 
     filter.id = pf_cfg->id;
     filter.offset = ETHTYPE_OFFSET;
-    filter.mask = (uint8_t *)glob_mask_buf;
-    filter.pattern = (uint8_t *)glob_pat_buf;
+    filter.mask = (uint8_t *)cylpa_glob_mask_buf;
+    filter.pattern = (uint8_t *)cylpa_glob_pat_buf;
     filter.mask_size = ETHER_TYPE_LEN + sizeof(ip_hdr_pattern);
 
     memcpy(mask_ptr, &ether_hdr_mask.ether_type, ETHER_TYPE_LEN);
@@ -405,10 +418,13 @@ static int create_ip_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
 }
 
 /*******************************************************************************
- * Function Name: create_ethtype_filter
+ * Function Name: cylpa_create_ethtype_filter
  ****************************************************************************//**
  *
  * Remove all filters. No need to disable prior to removal.
+ *
+ * \param whd
+ * The pointer to the whd interface.
  *
  * \param pf_cfg
  * The pointer to the cy_pf_ol_cfg_t structure \ref cy_pf_ol_cfg_t.
@@ -417,7 +433,7 @@ static int create_ip_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
  * Returns the execution result
  *
  ********************************************************************************/
-static int create_ethtype_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
+static int cylpa_create_ethtype_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
 {
 #ifdef USE_HW
     whd_packet_filter_t filter;
@@ -425,8 +441,8 @@ static int create_ethtype_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
     struct ether_header ether_hdr_mask;
     struct ether_header ether_hdr_pattern;
 
-    uint8_t *pat_ptr = glob_pat_buf;
-    uint8_t *mask_ptr = glob_mask_buf;
+    uint8_t *pat_ptr = cylpa_glob_pat_buf;
+    uint8_t *mask_ptr = cylpa_glob_mask_buf;
 
     uint16_t eth = pf_cfg->u.eth.eth_type;
 
@@ -438,8 +454,8 @@ static int create_ethtype_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
 
     filter.id = pf_cfg->id;
     filter.offset = ETHTYPE_OFFSET;
-    filter.mask = (uint8_t *)glob_mask_buf;
-    filter.pattern = (uint8_t *)glob_pat_buf;
+    filter.mask = (uint8_t *)cylpa_glob_mask_buf;
+    filter.pattern = (uint8_t *)cylpa_glob_pat_buf;
     filter.mask_size = ETHER_TYPE_LEN;
 
     OL_LOG_PF(LOG_OLA_LVL_DEBUG, "Creating EtherType filter: ID %d", pf_cfg->id);
@@ -457,25 +473,28 @@ static int create_ethtype_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
 }
 
 /*******************************************************************************
- * Function Name: create_port_filter
+ * Function Name: cylpa_create_port_filter
  ****************************************************************************//**
  *
  * Remove all filters. No need to disable prior to removal.
+ *
+ * \param whd
+ * The pointer to the whd interface.
  *
  * \param pf_cfg
  * The pointer to the cy_pf_ol_cfg_t structure \ref cy_pf_ol_cfg_t.
  *
  * \param pattern
- * TBD.
+ * The pointer to the ol structure.
  *
  * \param mask
- * TBD.
+ * The pointer to the ol_info_t structure.
  *
  * \return
  * Returns the execution result
  *
  ********************************************************************************/
-static int create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t pattern, uint16_t mask)
+static int cylpa_create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t pattern, uint16_t mask)
 {
 #ifndef USE_HW
     OL_LOG_PF(LOG_OLA_LVL_DEBUG, "Creating filter for Pattern 0x%x, Mask 0x%x, Active during: %s %s\n",
@@ -490,8 +509,8 @@ static int create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t patte
     struct bcmudp_hdr udp_hdr_pattern;
     struct ipv4_hdr ip_hdr_mask;
     struct ipv4_hdr ip_hdr_pattern;
-    uint8_t *pat_ptr = glob_pat_buf;
-    uint8_t *mask_ptr = glob_mask_buf;
+    uint8_t *pat_ptr = cylpa_glob_pat_buf;
+    uint8_t *mask_ptr = cylpa_glob_mask_buf;
 
     /* Configure pattern to match against received packets. */
     memset(&ether_hdr_pattern, 0, sizeof(ether_hdr_pattern) );
@@ -542,8 +561,8 @@ static int create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t patte
 
     filter.id = pf_cfg->id;
     filter.offset = ETHTYPE_OFFSET;
-    filter.mask = (uint8_t *)glob_mask_buf;
-    filter.pattern = (uint8_t *)glob_pat_buf;
+    filter.mask = (uint8_t *)cylpa_glob_mask_buf;
+    filter.pattern = (uint8_t *)cylpa_glob_pat_buf;
     filter.mask_size = PORT_FILTER_LEN;
 
     memcpy(mask_ptr, &ether_hdr_mask.ether_type, ETHER_TYPE_LEN);
@@ -557,7 +576,7 @@ static int create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t patte
 
 #ifdef DEBUG
     OL_LOG_PF(LOG_OLA_LVL_INFO, "Before add_packet_filter()\n");
-    print_pat_and_mask(filter.id, PORT_FILTER_LEN, glob_mask_buf, glob_pat_buf);
+    cylpa_print_pat_and_mask(filter.id, PORT_FILTER_LEN, cylpa_glob_mask_buf, cylpa_glob_pat_buf);
 #endif
 
     if (whd_pf_add_packet_filter(whd, &filter) != WHD_SUCCESS)
@@ -570,7 +589,7 @@ static int create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t patte
 }
 
 /*******************************************************************************
- * Function Name: create_single_portnum_mask
+ * Function Name: cylpa_create_single_portnum_mask
  ****************************************************************************//**
  *
  * Remove all filters. No need to disable prior to removal.
@@ -588,7 +607,7 @@ static int create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t patte
  * Returns the execution result
  *
  ********************************************************************************/
-static int create_single_portnum_mask(cy_pf_ol_cfg_t *pf_cfg, uint16_t *pattern, uint16_t *mask)
+static int cylpa_create_single_portnum_mask(cy_pf_ol_cfg_t *pf_cfg, uint16_t *pattern, uint16_t *mask)
 {
     *pattern = pf_cfg->u.pf.portnum.portnum;
     *mask = 0xffff;
@@ -596,7 +615,7 @@ static int create_single_portnum_mask(cy_pf_ol_cfg_t *pf_cfg, uint16_t *pattern,
 }
 
 /*******************************************************************************
- * Function Name: create_portnum_range_mask
+ * Function Name: cylpa_create_portnum_range_mask
  ****************************************************************************//**
  *
  * Remove all filters. No need to disable prior to removal.
@@ -614,7 +633,7 @@ static int create_single_portnum_mask(cy_pf_ol_cfg_t *pf_cfg, uint16_t *pattern,
  * Returns the execution result
  *
  ********************************************************************************/
-static int create_portnum_range_mask(cy_pf_ol_cfg_t *pf_cfg, uint16_t *pattern, uint16_t *mask)
+static int cylpa_create_portnum_range_mask(cy_pf_ol_cfg_t *pf_cfg, uint16_t *pattern, uint16_t *mask)
 {
     uint16_t port = pf_cfg->u.pf.portnum.portnum;
     uint16_t range = pf_cfg->u.pf.portnum.range;
@@ -635,12 +654,12 @@ static int create_portnum_range_mask(cy_pf_ol_cfg_t *pf_cfg, uint16_t *pattern, 
     /* Now sign extend all the way to the leftmost/highest bit
      * to prevent false hits on high bits
      */
-    *mask = sign_extend(*mask, bitwidth(*mask) );
+    *mask = cylpa_sign_extend(*mask, cylpa_bitwidth(*mask) );
 
     return 0;
 }
 
-static int sign_extend(int val, unsigned width)
+static int cylpa_sign_extend(int val, unsigned width)
 {
     int const mask = 1U << (width - 1);
 
@@ -649,7 +668,7 @@ static int sign_extend(int val, unsigned width)
 }
 
 /* Return position of set bit using 1 based notation */
-static int bitwidth(int val)
+static int cylpa_bitwidth(int val)
 {
     int pos;
     for (pos = MAX_BITS_IN_PORTNUM - 1; pos >= 0; pos--)
@@ -664,7 +683,7 @@ static int bitwidth(int val)
 
 #ifdef TESTING
 /* Simulate FW using the pattern and mask */
-static void run_pf_test(unsigned int pattern, unsigned int mask)
+static void cylpa_run_pf_test(unsigned int pattern, unsigned int mask)
 {
     int i;
     if (!pattern)
@@ -686,7 +705,7 @@ static void run_pf_test(unsigned int pattern, unsigned int mask)
 /* Bug in FW? doesn't allow us to retrieve filter patterns after enabling.
  * dump_patterns controls this.
  */
-static int dump_filters_stats(whd_t *whd, cy_pf_ol_cfg_t *base_pf_cfg)
+static int cylpa_dump_filters_stats(whd_t *whd, cy_pf_ol_cfg_t *base_pf_cfg)
 {
 #ifdef USE_HW
     cy_pf_ol_cfg_t *pf_cfg;
@@ -696,7 +715,7 @@ static int dump_filters_stats(whd_t *whd, cy_pf_ol_cfg_t *base_pf_cfg)
 
     for (pf_cfg = base_pf_cfg; pf_cfg->feature != CY_PF_OL_FEAT_LAST; pf_cfg++)
     {
-        print_packet_filter_stats(whd, pf_cfg->id);
+        cylpa_print_packet_filter_stats(whd, pf_cfg->id);
     }
 #endif /* USE_HW */
     return 0;
@@ -704,7 +723,7 @@ static int dump_filters_stats(whd_t *whd, cy_pf_ol_cfg_t *base_pf_cfg)
 
 #ifdef USE_HW
 #ifdef DEBUG
-static void print_pat_and_mask(uint8_t id, int mask_len, uint8_t *mask, uint8_t *pat)
+static void cylpa_print_pat_and_mask(uint8_t id, int mask_len, uint8_t *mask, uint8_t *pat)
 {
     int b;
     OL_LOG_PF(LOG_OLA_LVL_ERR, "ID: %d\n", id);
@@ -732,7 +751,7 @@ static void print_pat_and_mask(uint8_t id, int mask_len, uint8_t *mask, uint8_t 
 #endif /* DEBUG */
 
 /* Query and print stats from each filter */
-static int print_packet_filter_stats(whd_t *whd, uint8_t filter_id)
+static int cylpa_print_packet_filter_stats(whd_t *whd, uint8_t filter_id)
 {
     whd_result_t status;
     wl_pkt_filter_stats_t stats;

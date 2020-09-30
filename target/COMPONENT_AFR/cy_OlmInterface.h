@@ -67,13 +67,6 @@ extern cy_rslt_t cy_olm_init_ols(olm_t *olm, void *whd, void *ip);
  */
 void cy_olm_deinit_ols(olm_t *olm);
 
-/** Get OLM instance 
- *
- * @return  olm_t      : Return OLM structure pointer
- *
- */
-extern void *cy_get_olm_instance();
-
 /** Offload Manager Configuration 
  *
  * @param[in]    olm            : OLM instance pointer

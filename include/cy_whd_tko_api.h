@@ -13,9 +13,7 @@
 #ifndef WHD_TKO_API_H__
 #define WHD_TKO_API_H__  (1)
 
-#include "whd.h"
-#include "whd_wlioctl.h"
-
+#include "cy_lpa_wifi_tko_ol.h"
 #ifdef __cplusplus
 extern "C" {
 #endif

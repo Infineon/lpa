@@ -27,12 +27,12 @@ extern "C" {
 
 
 /******************************************************************************/
-/** \cond SECTION_LPA_INTERNAL */
 /** \addtogroup group_lpa_internal *//** \{ */
 /******************************************************************************/
 
-
-/**< Offload host power-mode status. */
+/**
+ * Offload host power-mode status.
+ */
 typedef enum ol_pm_st
 {
     OL_PM_ST_GOING_TO_SLEEP,    /**< Host is going to sleep. */
@@ -76,9 +76,9 @@ struct ol_fns
 };
 
 /**< Offload power management notification */
-void olm_dispatch_pm_notification(olm_t *olm, ol_pm_st_t st);
+void cylpa_olm_dispatch_pm_notification(olm_t *olm, ol_pm_st_t st);
 
-/** \} \endcond */
+/** \} */
 
 #ifdef __cplusplus
 }

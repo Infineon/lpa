@@ -37,6 +37,10 @@ extern "C" {
 #define RX_EVENT_FLAG     ( 1UL << 0 )
 #define TX_EVENT_FLAG     ( 1UL << 1 )
 
+#define PKT_FILTER_NAME "Pkt_Filter"
+#define ARP_NAME        "ARP"
+#define TKO_NAME        "TKO"
+
 /* This enumeration enlists the different states of the network stack */
 enum network_stack_state_t
 {
@@ -54,7 +58,7 @@ enum network_stack_state_t
 };
 
 /*******************************************************************************
-* Function Name: suspend_ns
+* Function Name: cylpa_suspend_ns
 ********************************************************************************
 *
 * Summary:
@@ -63,10 +67,10 @@ enum network_stack_state_t
 * Return: int32_t: contains status of suspending the network stack.
 *
 *******************************************************************************/
-int32_t suspend_ns(void);
+int32_t cylpa_suspend_ns(void);
 
 /*******************************************************************************
-* Function Name: resume_ns
+* Function Name: cylpa_resume_ns
 ********************************************************************************
 *
 * Summary:
@@ -75,10 +79,10 @@ int32_t suspend_ns(void);
 * Return: int32_t: contains status of resuming the network stack.
 *
 *******************************************************************************/
-int32_t resume_ns(void);
+int32_t cylpa_resume_ns(void);
 
 /*******************************************************************************
-* Function Name: on_emac_activity
+* Function Name: cylpa_on_emac_activity
 ********************************************************************************
 *
 * Summary: This is the callback that is called on detecting emac activity. It
@@ -91,10 +95,10 @@ int32_t resume_ns(void);
 *
 *******************************************************************************/
 
-void on_emac_activity(bool is_tx_activity);
+void cylpa_on_emac_activity(bool is_tx_activity);
 
 /*******************************************************************************
-* Function Name: wait_net_inactivity
+* Function Name: cylpa_wait_net_inactivity
 ********************************************************************************
 *
 * Summary:
@@ -114,13 +118,12 @@ void on_emac_activity(bool is_tx_activity);
 *
 *******************************************************************************/
 
-int32_t wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inactive_window_ms);
+int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inactive_window_ms);
 
 
 /** @addtogroup lpautilities LPA Utilities API
  *  The Documentation is provided for Network Utility functions
- *  used by the LPA application to demonstrate the Low power
- *  functionality
+ *  used by the LPA application to demonstrate the Low power functionality.
  * \{
  *
  *
@@ -128,6 +131,30 @@ int32_t wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inactive_win
  * \subsection subsection_lpa_snippet_1 Code Snippet 1: Using wait_net_suspend for suspend/resume network stack
  * The following code snippet demonstrates an example for Suspending Network stack to allow MCU to go to Deep Sleep.
  * \snippet wifi_low_power.c snippet_cylpa_wait_net_suspend
+ *
+ * \subsection subsection_lpa_snippet_2 Code Snippet 2: Read OLM configuration from device configurator.
+ * The following code snippet demonstrates an example for reading OLM configuration from device configurator and makes a
+ * local copy of the list.
+ * \snippet wifi_low_power.c snippet2_cylpa_read_olm
+ *
+ * \subsection subsection_lpa_snippet_3 Code Snippet 3: Search for TCP KA offload in the device configurator list.
+ * The following code snippet demonstrates an example for searching the "TKO" string in the device configurator list
+ * and if not present it add manual TCP KA offload configuration.
+ * \snippet wifi_low_power.c snippet3_cylpa_add_tko_olm
+ *
+ * \subsection subsection_lpa_snippet_4 Code Snippet 4: Use cylpa_restart_olm when the OLM configuration is changed by the user application.
+ * The following code snippet demonstrates an example for Restarting OLM interface with user defined configuration.
+ * \snippet wifi_low_power.c snippet4_cylpa_restart_olm
+ *
+ * \subsection subsection_lpa_snippet_5 Code Snippet 5: Use cy_tcp_create_socket_connection to offload TCP Keep-alive to WiFi Firmware
+ * The following code snippet demonstrates an example for creating TCP connection(s) and offloads TCP keep-alive when host MCU enters sleep/deepsleep via
+ * wait_net_suspend API call.
+ * \snippet wifi_low_power.c snippet5_cy_tcp_create_socket_connection
+ *
+ * \subsection subsection_lpa_snippet_6 Code Snippet 6: Read OLM configuration from device configurator.
+ *  The following code snippet demonstrates an example for reading OLM configuration from device configurator and makes a
+ * local copy of the list.
+ * \snippet wifi_low_power.c snippet6_cylpa_read_olm
  *
  */
 
@@ -169,8 +196,39 @@ extern int32_t   wait_net_suspend(void *net_intf,   uint32_t wait_ms, uint32_t i
  */
 extern int cy_tcp_create_socket_connection(void *net_intf, void **socket_handle, const char *remote_ip, uint16_t remote_port, uint16_t local_port,
     cy_tko_ol_cfg_t *downloaded, int socket_keepalive_enable);
-/** \} */
 
+/** Restarts OLM
+ *
+ *  This function restarts OLM manager with configuration passed by the caller.
+ *  @note: This API should only be invoked when device is not connected to AP,
+ *  if it is connected to an AP then it has to do disconnect first and then
+ *  invoke this API
+ *
+ *  @param  offload_list           : Pointer to the user defined configuration list \ref ol_desc_t
+ *  @param  net_intf               : Pointer to WLAN interface
+ *  @return int                    : Returns CY_RSLT_SUCCESS if the restart is successful, otherwise it returns error.
+ */
+extern int cylpa_restart_olm( ol_desc_t *offload_list, void *net_intf );
+
+/** Finds OLM descriptor for a given name
+ *
+ *  This function finds the OLM descriptor for a given name
+ *  passed by the caller in a OLM descriptor list.
+ *
+ *  @param  name                   : Pointer to the string name of OLM descriptor
+ *  @param  offload_list           : OLM descriptor list
+ *  @return ol_desc_t              : Returns OLM descriptor matching the name, otherwise it returns NULL
+ */
+extern ol_desc_t *cylpa_find_my_descriptor(const char *name, ol_desc_t *offload_list );
+
+/** Get OLM instance
+ *
+ *  This function returns OLM instance
+ *  @return  olm_t      : Return OLM structure pointer
+ *
+ */
+extern void *cy_get_olm_instance( void );
+/** \} */
 #ifdef __cplusplus
 } /* extern C */
 #endif

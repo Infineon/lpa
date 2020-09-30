@@ -53,8 +53,9 @@
 TCPSocket *glob_socket[MAX_TKO] = {NULL};
 uint8_t databuf[PACKET_PAYLOAD];
 
-WiFiInterface *wifi;
 NetworkInterface *networkInterface;
+
+WiFiInterface *wifi;
 
 cy_tko_ol_cfg_t *tko_ol_cfg = NULL;
 
@@ -293,7 +294,7 @@ int main()
     	}
         else
         {
-        	ThisThread::sleep_for(1000);
+        	rtos::ThisThread::sleep_for( std::chrono::milliseconds( 1000 ) );
         }
     }
     printf("\nDone\n");

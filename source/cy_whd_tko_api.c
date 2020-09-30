@@ -25,7 +25,7 @@
 #include "cy_nw_helper.h"
 #include "whd_wlioctl.h"
 #ifndef MBED_CONF_APP_OLM_NO_HW
-#include "tcp.h"
+#include "lwip/tcp.h"
 #endif
 #include "ip4string.h"
 
@@ -100,8 +100,8 @@ extern "C" {
 static const whd_event_num_t tko_events[]   = { WLC_E_TKO, WLC_E_NONE };
 static uint16_t tko_offload_update_entry = 0xFF;
 static uint16_t tko_state_enabled = false;
-void on_emac_activity(bool is_tx_activity);    //RX_EVENT_FLAG
-extern cy_mutex_t lp_mutex;
+void cylpa_on_emac_activity(bool is_tx_activity);    //RX_EVENT_FLAG
+extern cy_mutex_t cy_lp_mutex;
 
 /* 10Mb/s Ethernet header  */
 typedef struct
@@ -189,7 +189,7 @@ whd_tko_disable(whd_t *whd)
     {
         tko_state_enabled = WHD_FALSE;
 
-        /* Disable WLE_E_KTO Event */
+        /* Disable WLC_E_TKO Event */
         whd_wifi_deregister_event_handler(whd, tko_offload_update_entry);
     }
 
@@ -294,7 +294,7 @@ whd_tko_activate(whd_t *whd, uint8_t index, uint16_t local_port, uint16_t remote
     result = whd_cdc_send_iovar(whd, CDC_SET, buffer, NULL);
     if (result != WHD_SUCCESS)
     {
-        TKO_ERROR_PRINTF( ("%s: tko CONNECT subcmd IOVAR failed. Result: %ld\n", __func__, result) );
+        TKO_ERROR_PRINTF( ("%s: tko CONNECT subcmd IOVAR failed. Result: %u\n", __func__, (unsigned int)result) );
     }
 #endif /* LWIP_TCP */
     return result;
@@ -343,7 +343,7 @@ sock_stats(sock_seq_t *seq, uint16_t local_port, uint16_t remote_port, const cha
 void *whd_callback_handler(whd_interface_t ifp, const whd_event_header_t *event_header, const uint8_t *event_data,
                            /*@null@*/ void *handler_user_data)
 {
-    cy_rtos_get_mutex(&lp_mutex, CY_RTOS_NEVER_TIMEOUT);
+    cy_rtos_get_mutex(&cy_lp_mutex, CY_RTOS_NEVER_TIMEOUT);
     TKO_ERROR_PRINTF( ("%s: Entered \n", __func__) );
     if (event_header != NULL)
     {
@@ -353,7 +353,7 @@ void *whd_callback_handler(whd_interface_t ifp, const whd_event_header_t *event_
                 if (event_data != NULL)
                 {
                     tko_state_enabled = WHD_FALSE;
-                    on_emac_activity(RX_EVENT_FLAG);
+                    cylpa_on_emac_activity(false);
                 }
                 break;
             default:
@@ -362,7 +362,7 @@ void *whd_callback_handler(whd_interface_t ifp, const whd_event_header_t *event_
     }
 
     TKO_ERROR_PRINTF( ("%s: Exit \n", __func__) );
-    cy_rtos_set_mutex(&lp_mutex);
+    cy_rtos_set_mutex(&cy_lp_mutex);
     return handler_user_data;
 }
 

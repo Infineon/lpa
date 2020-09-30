@@ -12,6 +12,7 @@ var searchData=
   ['cy_5farpol_5fdelay_5ffor_5fdhcp_5fms',['CY_ARPOL_DELAY_FOR_DHCP_MS',['../group__group__lpa__macros__arp.html#ga95791623010c342ae67d235f29aeb1ef',1,'cy_lpa_wifi_arp_ol.c']]],
   ['cy_5farpol_5fdhcp_5fretry_5fcount',['CY_ARPOL_DHCP_RETRY_COUNT',['../group__group__lpa__macros__arp.html#gadcd9c428b8408fbab3c7ea05dae36ecf',1,'cy_lpa_wifi_arp_ol.c']]],
   ['cy_5farpol_5fshort_5fdelay_5ffor_5fdhcp_5fms',['CY_ARPOL_SHORT_DELAY_FOR_DHCP_MS',['../group__group__lpa__macros__arp.html#ga3d85238a31bc53870559776648bc7e3d',1,'cy_lpa_wifi_arp_ol.c']]],
+  ['cy_5fget_5folm_5finstance',['cy_get_olm_instance',['../group__lpautilities.html#gaab3a675f4712ee9906da177610b0ca2a',1,'network_activity_handler.h']]],
   ['cy_5fpf_5fethtype_5fcfg_5ft',['cy_pf_ethtype_cfg_t',['../structcy__pf__ethtype__cfg__t.html',1,'']]],
   ['cy_5fpf_5ffeature_5ft',['cy_pf_feature_t',['../group__group__lpa__enums.html#gace0edf60e8d895921d04049cd6b3eefe',1,'cy_lpa_wifi_pf_ol.h']]],
   ['cy_5fpf_5fip_5fcfg_5ft',['cy_pf_ip_cfg_t',['../structcy__pf__ip__cfg__t.html',1,'']]],
@@ -29,5 +30,16 @@ var searchData=
   ['cy_5ftcp_5fcreate_5fsocket_5fconnection',['cy_tcp_create_socket_connection',['../group__lpautilities.html#gab1bdee5b863d063b2cfb1dc693f8b685',1,'network_activity_handler.h']]],
   ['cy_5ftko_5fol_5fcfg_5ft',['cy_tko_ol_cfg_t',['../structcy__tko__ol__cfg__t.html',1,'']]],
   ['cy_5ftko_5fol_5fconnect_5ft',['cy_tko_ol_connect_t',['../structcy__tko__ol__connect__t.html',1,'']]],
-  ['cypress_20low_20power_20assistant_20middleware_20library_202_2e0',['Cypress Low Power Assistant Middleware Library 2.0',['../index.html',1,'']]]
+  ['cylpa_5farp_5fol_5fdeinit',['cylpa_arp_ol_deinit',['../group__group__lpa__macros__arp.html#ga288dbf77826605d3908824e1847be05e',1,'cy_lpa_wifi_arp_ol.c']]],
+  ['cylpa_5farp_5fol_5finit',['cylpa_arp_ol_init',['../group__group__lpa__macros__arp.html#gab541c0d38166b20a4703f203a3533164',1,'cy_lpa_wifi_arp_ol.c']]],
+  ['cylpa_5farp_5fol_5fpm',['cylpa_arp_ol_pm',['../group__group__lpa__macros__arp.html#gad827555283e606020c1a2524854c4193',1,'cy_lpa_wifi_arp_ol.c']]],
+  ['cylpa_5ffind_5fmy_5fdescriptor',['cylpa_find_my_descriptor',['../group__lpautilities.html#ga033b1135cd0d1b9c0ae63a2fc8764c1b',1,'network_activity_handler.h']]],
+  ['cylpa_5folm_5fconfigure_5fwlan_5fpmode',['cylpa_olm_configure_wlan_pmode',['../group__group__lpa__high__level.html#gaa3abc32f50fd00de87b83e957ab68ce8',1,'cylpa_olm_configure_wlan_pmode(void *whd, uint32_t value, bool min_power):&#160;cy_lpa_wifi_olm.c'],['../group__group__lpa__high__level.html#gaa3abc32f50fd00de87b83e957ab68ce8',1,'cylpa_olm_configure_wlan_pmode(void *whd, uint32_t value, bool min_power):&#160;cy_lpa_wifi_olm.c']]],
+  ['cylpa_5folm_5fdeinit',['cylpa_olm_deinit',['../group__group__lpa__high__level.html#gab4dcb5ae5b25ead61ec5ce916c01502b',1,'cylpa_olm_deinit(olm_t *olm):&#160;cy_lpa_wifi_olm.c'],['../group__group__lpa__high__level.html#gab4dcb5ae5b25ead61ec5ce916c01502b',1,'cylpa_olm_deinit(olm_t *olm):&#160;cy_lpa_wifi_olm.c']]],
+  ['cylpa_5folm_5fdeinit_5fols',['cylpa_olm_deinit_ols',['../group__group__lpa__high__level.html#ga8c9412d2234895a6fc4e1c2614a6d8bd',1,'cylpa_olm_deinit_ols(olm_t *olm):&#160;cy_lpa_wifi_olm.c'],['../group__group__lpa__high__level.html#ga8c9412d2234895a6fc4e1c2614a6d8bd',1,'cylpa_olm_deinit_ols(olm_t *olm):&#160;cy_lpa_wifi_olm.c']]],
+  ['cylpa_5folm_5fdispatch_5fpm_5fnotification',['cylpa_olm_dispatch_pm_notification',['../group__group__lpa__internal.html#gabddf7b41f5e99ac7c694e6872a9195b2',1,'cylpa_olm_dispatch_pm_notification(olm_t *olm, ol_pm_st_t st):&#160;cy_lpa_wifi_olm.c'],['../group__group__lpa__internal.html#gabddf7b41f5e99ac7c694e6872a9195b2',1,'cylpa_olm_dispatch_pm_notification(olm_t *olm, ol_pm_st_t st):&#160;cy_lpa_wifi_olm.c']]],
+  ['cylpa_5folm_5finit',['cylpa_olm_init',['../group__group__lpa__high__level.html#ga22f9efd980cb8dd6b081967a217c05c9',1,'cy_lpa_wifi_olm.h']]],
+  ['cylpa_5folm_5finit_5fols',['cylpa_olm_init_ols',['../group__group__lpa__high__level.html#ga7836ab92d6d0ddd5d44466fccf002849',1,'cylpa_olm_init_ols(olm_t *olm, void *whd, void *ip):&#160;cy_lpa_wifi_olm.c'],['../group__group__lpa__high__level.html#ga7836ab92d6d0ddd5d44466fccf002849',1,'cylpa_olm_init_ols(olm_t *olm, void *whd, void *ip):&#160;cy_lpa_wifi_olm.c']]],
+  ['cylpa_5folm_5finit_5fwlan_5fconfig',['cylpa_olm_init_wlan_config',['../group__group__lpa__high__level.html#ga26babb6f33e2550422222adac368457e',1,'cylpa_olm_init_wlan_config(void *whd):&#160;cy_lpa_wifi_olm.c'],['../group__group__lpa__high__level.html#ga26babb6f33e2550422222adac368457e',1,'cylpa_olm_init_wlan_config(void *whd):&#160;cy_lpa_wifi_olm.c']]],
+  ['cylpa_5frestart_5folm',['cylpa_restart_olm',['../group__lpautilities.html#ga2ebae1fd5c9c0e26363fc63b93bc9a83',1,'network_activity_handler.h']]]
 ];

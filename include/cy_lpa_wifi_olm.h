@@ -21,8 +21,33 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdint.h>
 #include "cy_lpa_wifi_ol_common.h" /* for ol_info_t */
 #define OLM_LOG_ENABLED 1
+
+
+/* Number of beacons it can miss 1 to 10 is the range */
+#define LPA_BCNTRIM 9
+
+/* Beacon wait period in milli-seconds */
+#define LPA_BCN_WAIT_PERIOD 10
+
+/* Time for beacon require in seconds */
+#define LPA_BCN_REACQUIRE_START 3
+
+/* Roam time threshold should be higher than LPA_BCN_REACQUIRE_START
+ * value in seconds
+ */
+#define LPA_ROAM_TIME_THRESHOLD 4
+
+/*
+ * PM2 return to sleep time for Max Power Savings  ( in ms)
+ * Min should be PM2_SLEEP_RET_TIME_MIN (10  WHD allowed)
+ * Max should be PM2_SLEEP_RET_TIME_MAX (2000 WHD allowed)
+ */
+#define LPA_PM2_SLEEP_RET_TIME  10
 
 /*******************************************************************************
 * LPA Data Structures
@@ -63,7 +88,7 @@ typedef struct olm
  * @param ol_list    : The pointer to the ol_list structure @ref ol_desc_t.
  *
  *******************************************************************************/
-extern void olm_init(olm_t *olm, const struct ol_desc *ol_list);
+extern void cylpa_olm_init(olm_t *olm, const struct ol_desc *ol_list);
 
 /** This function initializes the Offload Manager.
  *
@@ -72,7 +97,7 @@ extern void olm_init(olm_t *olm, const struct ol_desc *ol_list);
  * @param ip         : The pointer to ip
  *
  *******************************************************************************/
-extern int olm_init_ols(olm_t *olm, void *whd, void *ip);
+extern int cylpa_olm_init_ols(olm_t *olm, void *whd, void *ip);
 
 /** Offload Manager de-initialization function.
  *
@@ -81,63 +106,95 @@ extern int olm_init_ols(olm_t *olm, void *whd, void *ip);
  * @param olm        : The pointer to the olm structure @ref olm_t.
  *
  *******************************************************************************/
-extern void olm_deinit_ols(olm_t *olm);
+extern void cylpa_olm_deinit_ols(olm_t *olm);
+
+/** Offload Manager de-init and free resources
+ *
+ * @param olm        : The pointer to the olm structure @ref olm_t
+ *
+ * *****************************************************************************/
+extern void cylpa_olm_deinit(olm_t *olm);
+
+/** Configure wlan low power mode when going to sleep and
+ *  restore it default when awake.
+ *
+ * @param whd        : The pointer to the whd interface
+ * @param value      : The iovar value to be set into WLAN f/w
+ * @param min_power  : boolean min_power set to true ( when LPA is configuring for low power)
+ *                      else false ( i.e default value applied)
+ *
+ * *****************************************************************************/
+extern void cylpa_olm_configure_wlan_pmode ( void *whd , uint32_t value, bool min_power );
+
+
+/** Configure  wlan for low power using IOVAR(s)
+ *  called once after cylpa_olm_init
+ * @param whd        : The pointer to the whd interface
+ *
+ * *****************************************************************************/
+extern void cylpa_olm_init_wlan_config ( void *whd );
 
 /** \} */
 
-/* Offload Assistant Log Level enums */
+
+/******************************************************************************/
+/** \addtogroup group_loglevel_enum *//**  \{ */
+/******************************************************************************/
+/** Log offload assist enumerations
+ */
 typedef enum
 {
-    LOG_OLA_OLM = 0,
-    LOG_OLA_ARP,
-    LOG_OLA_PF,
-    LOG_OLA_TKO,
-
-    /* add new Offload Log Assist components here */
-
-    LOG_OLA_MAX_INDEX
+    LOG_OLA_OLM = 0,   /**< LOG assist OLM */
+    LOG_OLA_ARP,       /**< LOG assist ARP */
+    LOG_OLA_PF,        /**< LOG assist PF */
+    LOG_OLA_TKO,       /**< LOG assist TKO */
+    LOG_OLA_MAX_INDEX  /**< LOG assist MAX */
 } LOG_OFFLOAD_ASSIST_T;
 
-/* Offload logging error levels */
+/** Log Level enumerations
+ */
 typedef enum
 {
-    LOG_OLA_LVL_OFF = 0,
-    LOG_OLA_LVL_ERR,
-    LOG_OLA_LVL_WARNING,
-    LOG_OLA_LVL_NOTICE,
-    LOG_OLA_LVL_INFO,
-    LOG_OLA_LVL_DEBUG,
-
-    LOG_OLA_LVL_MAX_INDEX   /* not for use */
+    LOG_OLA_LVL_OFF = 0,  /**< LOG LEVEL OFF */
+    LOG_OLA_LVL_ERR,      /**< LOG LEVEL ERROR */
+    LOG_OLA_LVL_WARNING,  /**< LOG LEVEL WARNING */
+    LOG_OLA_LVL_NOTICE,   /**< LOG LEVEL NOTICE */
+    LOG_OLA_LVL_INFO,     /**< LOG LEVEL INFO */
+    LOG_OLA_LVL_DEBUG,    /**< LOG LEVEL DEBUG */
+    LOG_OLA_LVL_MAX_INDEX   /**< LOG LEVEL MAX INDEX NOT USED */
 
 } LOG_OFFLOAD_ASSIST_LEVEL_T;
 
+/** \} */
 #if defined (OLM_LOG_ENABLED)
 
+
+/******************************************************************************/
+/** \addtogroup group_lpa_log_level *//** \{ */
+/******************************************************************************/
 /*
  * OL_LOG Debug verbosity settings
  */
-/*******************************************************************************
-* This function gets log level for a facility
-*
-* @param assist : Offload Assistant type @ref LOG_OFFLOAD_ASSIST_T
-*
-* @return       : currently set log level
-*               : -1 BAD ARGS
-*
-*******************************************************************************/
+/**
+ * This function gets log level for a facility
+ *
+ * @param assist : Offload Assistant type @ref LOG_OFFLOAD_ASSIST_T
+ *
+ * @return       : currently set log level
+ *               : -1 BAD ARGS
+ *
+ */
 extern int ol_log_get_level(LOG_OFFLOAD_ASSIST_T assist);
 
-/*******************************************************************************
-* This function sets log level for a facility
-*
-* @param assist : Offload Assistant type @ref LOG_OFFLOAD_ASSIST_T
-* @param level  : Offload assist logging level @ref LOG_OFFLOAD_ASSIST_LEVEL_T
-*
-* @return       : 0 = success
-*                 -1 = BAD ARGS
-*
-*******************************************************************************/
+/**
+ * This function sets log level for a facility
+ * @param assist : Offload Assistant type @ref LOG_OFFLOAD_ASSIST_T
+ * @param level  : Offload assist logging level @ref LOG_OFFLOAD_ASSIST_LEVEL_T
+ *
+ * @return       : 0 = success
+ *                 -1 = BAD ARGS
+ *
+ */
 extern int ol_log_set_level(LOG_OFFLOAD_ASSIST_T assist, LOG_OFFLOAD_ASSIST_LEVEL_T level);
 
 /** This function prints logging if levels are correct
@@ -149,8 +206,10 @@ extern int ol_log_set_level(LOG_OFFLOAD_ASSIST_T assist, LOG_OFFLOAD_ASSIST_LEVE
  *
  * @return       : # characters printed
  *
- *******************************************************************************/
+ */
 extern int ol_logging(LOG_OFFLOAD_ASSIST_T assist, LOG_OFFLOAD_ASSIST_LEVEL_T level, const char *fmt, ...);
+
+/** \} */
 
 /**< Offload Logging Macros */
 #define OL_LOG(...) ol_logging(__VA_ARGS__)                     /**< ex: OL_LOG(LOG_OLA_ARP, LOG_OLA_LVL_NOTICE, "ARP OL IP: %s\n", ip_string); */

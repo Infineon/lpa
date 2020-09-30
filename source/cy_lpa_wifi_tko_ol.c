@@ -25,7 +25,7 @@
 #endif
 
 #ifdef USE_HW
-#include "prot/ip.h"
+#include "lwip/ip.h"
 #include "whd_sdpcm.h"
 #include "cy_whd_tko_api.h"
 #include "whd_wifi_api.h"
@@ -38,17 +38,39 @@
 extern "C" {
 #endif
 
-static ol_init_t tko_ol_init;
-static ol_deinit_t tko_ol_deinit;
-static ol_pm_t tko_ol_pm;
+static ol_init_t cylpa_tko_ol_init;
+static ol_deinit_t cylpa_tko_ol_deinit;
+static ol_pm_t cylpa_tko_ol_pm;
 
 const ol_fns_t tko_ol_fns =
 {
-    .init = tko_ol_init,
-    .deinit = tko_ol_deinit,
-    .pm = tko_ol_pm,
+    .init = cylpa_tko_ol_init,
+    .deinit = cylpa_tko_ol_deinit,
+    .pm = cylpa_tko_ol_pm,
 };
 
+
+/*******************************************************************************
+ * Global Declarations
+*******************************************************************************/
+cy_tko_ol_cfg_t cy_tko_ol_cfg = {
+
+   .interval = 0,
+   .retry_interval = 0,
+   .retry_count = 0,
+   {
+       {
+          .local_port = 0,
+          .remote_port = 0,
+          "0.0.0.0"
+       }
+   }
+};
+
+/* cy_tko_ol_cfg index points to an index to the TCP connection parameters
+ * upto maximum of MAX_TKO TCP connections supported.
+ */
+uint8_t cy_tko_ol_cfg_index = 0;
 
 /*******************************************************************************
 * Function Prototypes
@@ -56,10 +78,10 @@ const ol_fns_t tko_ol_fns =
 
 
 /*******************************************************************************
- * Function Name: pf_ol_init
+ * Function Name: cylpa_tko_ol_init
  ****************************************************************************//**
  *
- * Packet filter init function.
+ * TCP Keepalive offload filter init function.
  *
  * \param ol
  * The pointer to the ol structure.
@@ -74,7 +96,7 @@ const ol_fns_t tko_ol_fns =
  * Returns the execution result
  *
  ********************************************************************************/
-static int tko_ol_init(void *ol, ol_info_t *info, const void *cfg)
+static int cylpa_tko_ol_init(void *ol, ol_info_t *info, const void *cfg)
 {
 #ifdef USE_HW
     tko_ol_t *ctxt = (tko_ol_t *)ol;
@@ -87,8 +109,17 @@ static int tko_ol_init(void *ol, ol_info_t *info, const void *cfg)
     OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "%s\n", __func__);
     memset(ctxt, 0, sizeof(tko_ol_t) );
 
-    tko_cfg = ctxt->cfg  = (cy_tko_ol_cfg_t *)cfg;
+    if ( cfg == NULL )
+    {
+    	OL_LOG_TKO(LOG_OLA_LVL_ERR, "TCP Keep Alive offload not configured!!\n", __func__);
+    	return RESULT_OK;
+    }
+
+    ctxt->cfg = (cy_tko_ol_cfg_t *)cfg;
+    tko_cfg = &cy_tko_ol_cfg;
     ctxt->whd  = info->whd;
+
+    memcpy(&cy_tko_ol_cfg, ctxt->cfg, sizeof(cy_tko_ol_cfg));
 
     for (i = 0; i < MAX_TKO; i++)
     {
@@ -146,19 +177,23 @@ static int tko_ol_init(void *ol, ol_info_t *info, const void *cfg)
 }
 
 /*******************************************************************************
- * Function Name: pf_ol_deinit
+ * Function Name: cylpa_tko_ol_deinit
  ****************************************************************************//**
  *
- * Remove all filters. No need to disable prior to removal.
+ * Remove TCP keep-alive offload filters. No need to disable prior to removal.
  *
  * \param ol
  * The pointer to the ol structure.
  *
  ********************************************************************************/
-static void tko_ol_deinit(void *ol)
+static void cylpa_tko_ol_deinit(void *ol)
 {
 #ifdef USE_HW
     tko_ol_t *ctxt = (tko_ol_t *)ol;
+    if ((ctxt == NULL) || (ctxt->whd == NULL))
+    {
+        return;
+    }
     whd_tko_disable(ctxt->whd);
 #endif
 }
@@ -167,10 +202,10 @@ static void tko_ol_deinit(void *ol)
     printf("%lu.%lu.%lu.%lu\n", (ipaddr) & 0xff, (ipaddr) >> 8 & 0xff, (ipaddr) >> 16 & 0xff, (ipaddr) >> 24 & 0xff)
 
 /*******************************************************************************
- * Function Name: pf_ol_pm
+ * Function Name: cylpa_tko_ol_pm
  ****************************************************************************//**
  *
- * Remove all filters. No need to disable prior to removal.
+ * TCP keep-alive offload Power Management notification callback
  *
  * \param ol
  * The pointer to the ol structure.
@@ -179,13 +214,19 @@ static void tko_ol_deinit(void *ol)
  * see \ref ol_pm_st_t.
  *
  ********************************************************************************/
-static void tko_ol_pm(void *ol, ol_pm_st_t st)
+static void cylpa_tko_ol_pm(void *ol, ol_pm_st_t st)
 {
 #ifdef USE_HW
     tko_ol_t *ctxt = (tko_ol_t *)ol;
-    cy_tko_ol_cfg_t *tko_cfg = ctxt->cfg;
+    cy_tko_ol_cfg_t *tko_cfg = &cy_tko_ol_cfg;
     whd_result_t result;
     int found = 0;
+
+    if ((ctxt == NULL) || (ctxt->whd == NULL))
+    {
+        OL_LOG_TKO(LOG_OLA_LVL_ERR, "%s : Bad Args!\n", __func__);
+        return;
+    }
 
     if (st == OL_PM_ST_GOING_TO_SLEEP)
     {
@@ -233,7 +274,7 @@ static void tko_ol_pm(void *ol, ol_pm_st_t st)
             result = whd_tko_disable(ctxt->whd);
             if (result != WHD_SUCCESS)
             {
-                OL_LOG_TKO(LOG_OLA_LVL_ERR, "%s: whd_tko_disable returns failured\n", __func__);
+                OL_LOG_TKO(LOG_OLA_LVL_ERR, "%s: whd_tko_disable returned failure\n", __func__);
             }
             else
             {
@@ -246,6 +287,71 @@ static void tko_ol_pm(void *ol, ol_pm_st_t st)
         }
     }
 #endif
+}
+
+/*******************************************************************************
+ * Function Name: cylpa_tko_ol_update_config
+ ****************************************************************************//**
+ *
+ * Update the TCP keep-alive offload configuration list
+ *
+ * \param remote_ip
+ * The pointer to IP address of TCP server.
+ *
+ * \param remote_port
+ * The destination port of TCP server
+ *
+ * \param local_port
+ * The source port of the TCP client
+ *
+ * \param cfg 
+ * The pointer to TCP keep-alive offload parameters. \ref cy_tko_ol_cfg_t
+ *
+ * \return
+ * Returns the execution result
+ *
+ ********************************************************************************/
+int cylpa_tko_ol_update_config(const char *remote_ip, uint16_t remote_port, uint16_t local_port, cy_tko_ol_cfg_t *cfg )
+{
+	cy_tko_ol_connect_t *tko_ol_connect_params = NULL;
+
+	if ( ( remote_ip == NULL ) || ( remote_port == 0) || ( local_port == 0 ) || ( cfg == NULL ) )
+	{
+		OL_LOG_TKO(LOG_OLA_LVL_ERR, "TCP Keep Alive offload configuration is NULL!!\n", __func__);
+		return RESULT_OK;
+	}
+
+	/*
+	 * if the API is called many times more than
+	 * max TCP connections then update the first index
+	 *
+	 */
+	if ( cy_tko_ol_cfg_index == MAX_TKO )
+	{
+		cy_tko_ol_cfg_index = 0;
+	}
+
+	tko_ol_connect_params = &cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index];
+	memset(tko_ol_connect_params, 0, sizeof(cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index]));
+	memcpy(cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].remote_ip, remote_ip, strlen(remote_ip));
+	cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].remote_port = remote_port;
+	cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].local_port  = local_port;
+
+	cy_tko_ol_cfg.interval       = cfg->interval;
+	cy_tko_ol_cfg.retry_count    = cfg->retry_count;
+	cy_tko_ol_cfg.retry_interval = cfg->retry_interval;
+
+	OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "\nUpdating...\n");
+	OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "%d: %s, ", cy_tko_ol_cfg_index, cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].remote_ip);
+	OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Local %d, ", cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].local_port);
+	OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Remote %d\n", cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].remote_port);
+	OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Interval:%d Retry_interval:%d Retry_count:%d\n",
+			   cy_tko_ol_cfg.interval, cy_tko_ol_cfg.retry_interval, cy_tko_ol_cfg.retry_count );
+	OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Done \n\n");
+
+	cy_tko_ol_cfg_index++;
+
+	return RESULT_OK;
 }
 
 #ifdef __cplusplus

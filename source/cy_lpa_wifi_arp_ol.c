@@ -51,9 +51,9 @@ extern "C" {
 #define CY_ARPOL_DELAY_FOR_DHCP_MS          (1000UL)    /**< Delay (ms) wait after link is up for DHCP to start */
 #define CY_ARPOL_DHCP_RETRY_COUNT           (25UL)    /**< Number of times to retry getting the IP address */
 
-static ol_init_t arp_ol_init;            /**< Initialization of an arp_ol instance */
-static ol_deinit_t arp_ol_deinit;        /**< De-initialization of an arp_ol instance */
-static ol_pm_t arp_ol_pm;                /**< Power manager change of power status */
+static ol_init_t cylpa_arp_ol_init;            /**< Initialization of an arp_ol instance */
+static ol_deinit_t cylpa_arp_ol_deinit;        /**< De-initialization of an arp_ol instance */
+static ol_pm_t cylpa_arp_ol_pm;                /**< Power manager change of power status */
 
 /** \} */
 
@@ -66,9 +66,9 @@ static ol_pm_t arp_ol_pm;                /**< Power manager change of power stat
 /* Function list for the OLM */
 const ol_fns_t arp_ol_fns =
 {
-    .init = arp_ol_init,
-    .deinit = arp_ol_deinit,
-    .pm = arp_ol_pm,
+    .init = cylpa_arp_ol_init,
+    .deinit = cylpa_arp_ol_deinit,
+    .pm = cylpa_arp_ol_pm,
 };
 
 /******************************************************************************
@@ -78,10 +78,10 @@ const ol_fns_t arp_ol_fns =
  *****************************************************************************/
 #if !defined(OLM_NO_HARDWARE)
 /* structure for sal callback info */
-static cylpa_nw_ip_status_change_callback_t arp_ol_cb;
+static cylpa_nw_ip_status_change_callback_t cy_arp_ol_cb;
 
 /* timer for waiting for DHCP to get moving after a link up */
-static cy_timer_t delay_dhcp_timer;
+static cy_timer_t cy_delay_dhcp_timer;
 #endif
 
 #if defined(MBED_CONF_APP_OLM_TEST)
@@ -94,8 +94,8 @@ uint32_t arp_ol_test_enable_net_callback = 1;
 *******************************************************************************/
 
 #if !defined(OLM_NO_HARDWARE)
-static void arp_ol_nw_ip_change_timer_callback(cy_timer_callback_arg_t arg);
-static int dhcp_retry_count = CY_ARPOL_DHCP_RETRY_COUNT;
+static void cylpa_arp_ol_nw_ip_change_timer_callback(cy_timer_callback_arg_t arg);
+static int cy_dhcp_retry_count = CY_ARPOL_DHCP_RETRY_COUNT;
 #endif
 
 /******************************************************************************/
@@ -105,11 +105,11 @@ static int dhcp_retry_count = CY_ARPOL_DHCP_RETRY_COUNT;
 
 #if !defined(OLM_NO_HARDWARE)
 /*******************************************************************************
-* Function Name: arp_ol_nw_ip_change_work
+* Function Name: cylpa_arp_ol_nw_ip_change_work
 ****************************************************************************//**
 *
-* Called by Worker Thread created in olm_init() and stored as ol_info_ptr->worker
-* Deferred to the Worker Thread in arp_ol_nw_ip_change_callback() below
+* Called by Worker Thread created in cylpa_olm_init() and stored as ol_info_ptr->worker
+* Deferred to the Worker Thread in cylpa_arp_ol_nw_ip_change_callback() below
 *
 * \param iface
 * Opaque sal pointer use for NetworkStack.
@@ -119,7 +119,7 @@ static int dhcp_retry_count = CY_ARPOL_DHCP_RETRY_COUNT;
 *
 *******************************************************************************/
 
-static void arp_ol_nw_ip_change_work(void *arg)
+static void cylpa_arp_ol_nw_ip_change_work(void *arg)
 {
     cy_nw_ip_address_t addr;
     cy_nw_ip_interface_t iface;
@@ -130,7 +130,7 @@ static void arp_ol_nw_ip_change_work(void *arg)
      */
     if ( (arp_ol == NULL) || (arp_ol->ol_info_ptr == NULL) )
     {
-        OL_LOG_ARP(LOG_OLA_LVL_ERR, "arp_ol_nw_ip_change_work() Bad Args.\n");
+        OL_LOG_ARP(LOG_OLA_LVL_ERR, "cylpa_arp_ol_nw_ip_change_work() Bad Args.\n");
         return;
     }
     iface = (cy_nw_ip_interface_t)arp_ol->ol_info_ptr->ip;
@@ -167,7 +167,7 @@ static void arp_ol_nw_ip_change_work(void *arg)
         }
         arp_ol->ip_address = addr.ip.v4;
 
-        dhcp_retry_count = CY_ARPOL_DHCP_RETRY_COUNT;
+        cy_dhcp_retry_count = CY_ARPOL_DHCP_RETRY_COUNT;
     }
     else
     {
@@ -195,17 +195,17 @@ static void arp_ol_nw_ip_change_work(void *arg)
         {
             if (arp_ol->ip_address == NULL_IP_ADDRESS)
             {
-                if (--dhcp_retry_count > 0)
+                if (--cy_dhcp_retry_count > 0)
                 {
                     /* set up timer for future to handle timing of DHCP issue */
-                    if (delay_dhcp_timer != 0)
+                    if (cy_delay_dhcp_timer != 0)
                     {
-                        cy_rtos_deinit_timer(&delay_dhcp_timer);
-                        delay_dhcp_timer = 0;
+                        cy_rtos_deinit_timer(&cy_delay_dhcp_timer);
+                        cy_delay_dhcp_timer = 0;
                     }
-                    cy_rtos_init_timer(&delay_dhcp_timer, CY_TIMER_TYPE_ONCE, arp_ol_nw_ip_change_timer_callback,
+                    cy_rtos_init_timer(&cy_delay_dhcp_timer, CY_TIMER_TYPE_ONCE, cylpa_arp_ol_nw_ip_change_timer_callback,
                                        (cy_timer_callback_arg_t)arp_ol);
-                    cy_rtos_start_timer(&delay_dhcp_timer, CY_ARPOL_DELAY_FOR_DHCP_MS);
+                    cy_rtos_start_timer(&cy_delay_dhcp_timer, CY_ARPOL_DELAY_FOR_DHCP_MS);
                 }
             }
         }
@@ -213,26 +213,26 @@ static void arp_ol_nw_ip_change_work(void *arg)
 }
 
 /*******************************************************************************
- * Function Name: arp_ol_nw_ip_change_timer_callback
+ * Function Name: cylpa_arp_ol_nw_ip_change_timer_callback
  ****************************************************************************/
 
-static void arp_ol_nw_ip_change_timer_callback(cy_timer_callback_arg_t arg)
+static void cylpa_arp_ol_nw_ip_change_timer_callback(cy_timer_callback_arg_t arg)
 {
     arp_ol_t *arp_ol = (arp_ol_t *)arg;
-    cy_rtos_deinit_timer(&delay_dhcp_timer);
-    delay_dhcp_timer = 0;
+    cy_rtos_deinit_timer(&cy_delay_dhcp_timer);
+    cy_delay_dhcp_timer = 0;
     if ( (arp_ol == NULL) || (arp_ol->ol_info_ptr == NULL) || (arp_ol->ol_info_ptr->worker == NULL) )
     {
         return;
     }
-    cy_worker_thread_enqueue(arp_ol->ol_info_ptr->worker, arp_ol_nw_ip_change_work, (void *)arg);
+    cy_worker_thread_enqueue(arp_ol->ol_info_ptr->worker, cylpa_arp_ol_nw_ip_change_work, (void *)arg);
 }
 
 /*******************************************************************************
-* Function Name: arp_ol_nw_ip_change_callback
+* Function Name: cylpa_arp_ol_nw_ip_change_callback
 *
-* Initialize the callback with sal in arp_ol_init()
-* Register/Unregister the callback with sal in arp_ol_pm() or arp_ol_deinit()
+* Initialize the callback with sal in cylpa_arp_ol_init()
+* Register/Unregister the callback with sal in cylpa_arp_ol_pm() or cylpa_arp_ol_deinit()
 * Called by sal when sal receives a callback from the NetworkStack
 * We defer calls to the worker thread, if available.
 *
@@ -243,7 +243,7 @@ static void arp_ol_nw_ip_change_timer_callback(cy_timer_callback_arg_t arg)
 * Pointer to arp_ol_t structure.
 *
 *******************************************************************************/
-static void arp_ol_nw_ip_change_callback(cy_nw_ip_interface_t iface, void *arg)
+static void cylpa_arp_ol_nw_ip_change_callback(cy_nw_ip_interface_t iface, void *arg)
 {
 
     arp_ol_t *arp_ol = (arp_ol_t *)arg;
@@ -263,14 +263,14 @@ static void arp_ol_nw_ip_change_callback(cy_nw_ip_interface_t iface, void *arg)
 #endif
 
     /* set up timer for future to handle timing of DHCP issue */
-    if (delay_dhcp_timer != 0)
+    if (cy_delay_dhcp_timer != 0)
     {
-        cy_rtos_deinit_timer(&delay_dhcp_timer);
-        delay_dhcp_timer = 0;
+        cy_rtos_deinit_timer(&cy_delay_dhcp_timer);
+        cy_delay_dhcp_timer = 0;
     }
-    cy_rtos_init_timer(&delay_dhcp_timer, CY_TIMER_TYPE_ONCE, arp_ol_nw_ip_change_timer_callback,
+    cy_rtos_init_timer(&cy_delay_dhcp_timer, CY_TIMER_TYPE_ONCE, cylpa_arp_ol_nw_ip_change_timer_callback,
                        (cy_timer_callback_arg_t)arp_ol);
-    cy_rtos_start_timer(&delay_dhcp_timer, CY_ARPOL_SHORT_DELAY_FOR_DHCP_MS);
+    cy_rtos_start_timer(&cy_delay_dhcp_timer, CY_ARPOL_SHORT_DELAY_FOR_DHCP_MS);
     return;
 }
 
@@ -281,11 +281,11 @@ static void arp_ol_nw_ip_change_callback(cy_nw_ip_interface_t iface, void *arg)
 /******************************************************************************/
 
 /*******************************************************************************
-* Function Name: arp_ol_init
+* Function Name: cylpa_arp_ol_init
 ****************************************************************************//**
 *
 * Initialize the callback with sal in arp_ol_init()
-* Register/Unregister the callback with sal in arp_ol_pm() or arp_ol_deinit()
+* Register/Unregister the callback with sal in cylpa_arp_ol_pm() or cylpa_arp_ol_deinit()
 * Called by sal when sal receives a callback from the NetworkStack
 * We defer calls to the worker thread, if available.
 *
@@ -299,15 +299,15 @@ static void arp_ol_nw_ip_change_callback(cy_nw_ip_interface_t iface, void *arg)
 * Pointer to arp_ol_cfg_t structure.
 *
 *******************************************************************************/
-static int arp_ol_init(void *ol, ol_info_t *ol_info, const void *cfg)
+static int cylpa_arp_ol_init(void *ol, ol_info_t *ol_info, const void *cfg)
 {
     arp_ol_t *arp_ol = (arp_ol_t *)ol;
 
-    OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "arp_ol_init()\n");
+    OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "cylpa_arp_ol_init()\n");
 
     if ( (ol == NULL) || (ol_info == NULL) || (cfg == NULL) )
     {
-        OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "arp_ol_init() Bad pointers arp_ol:%p ol_info:%p cfg:%p\n", ol, (void *)ol_info,
+        OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "cylpa_arp_ol_init() Bad pointers arp_ol:%p ol_info:%p cfg:%p\n", ol, (void *)ol_info,
                    cfg);
         return RESULT_BADARGS;
     }
@@ -326,7 +326,7 @@ static int arp_ol_init(void *ol, ol_info_t *ol_info, const void *cfg)
      * - registered in the PM change callback below
      * - only used if SNOOP is off
      */
-    cylpa_nw_ip_initialize_status_change_callback(&arp_ol_cb, arp_ol_nw_ip_change_callback, arp_ol);
+    cylpa_nw_ip_initialize_status_change_callback(&cy_arp_ol_cb, cylpa_arp_ol_nw_ip_change_callback, arp_ol);
 #endif /* !defined(OLM_NO_HARDWARE) */
 
     /* Clear out all ARP Offload features */
@@ -339,13 +339,13 @@ static int arp_ol_init(void *ol, ol_info_t *ol_info, const void *cfg)
     whd_arp_arpoe_set(arp_ol->ol_info_ptr->whd, 0);
 
     /* TODO: We get here only if we are awake! Do we start up features as if we just woke up? */
-    arp_ol_pm(arp_ol, OL_PM_ST_AWAKE);
+    cylpa_arp_ol_pm(arp_ol, OL_PM_ST_AWAKE);
 
     return RESULT_OK;
 }
 
 /*******************************************************************************
-* Function Name: arp_ol_deinit
+* Function Name: cylpa_arp_ol_deinit
 ****************************************************************************//**
 *
 * De-Initialization of an ARP OL instance.
@@ -355,11 +355,11 @@ static int arp_ol_init(void *ol, ol_info_t *ol_info, const void *cfg)
 * Pointer to arp_ol_t structure.
 *
 *******************************************************************************/
-static void arp_ol_deinit(void *ol)
+static void cylpa_arp_ol_deinit(void *ol)
 {
     arp_ol_t *arp_ol = (arp_ol_t *)ol;
 
-    OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "arp_ol_deinit()\n");
+    OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "cylpa_arp_ol_deinit()\n");
 
     if (arp_ol == NULL)
     {
@@ -369,12 +369,12 @@ static void arp_ol_deinit(void *ol)
 
 #if !defined(OLM_NO_HARDWARE)
     /* Un-register the ip change callback with sal api */
-    cylpa_nw_ip_unregister_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &arp_ol_cb );
+    cylpa_nw_ip_unregister_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &cy_arp_ol_cb );
     /* deinit timer if needed */
-    if (delay_dhcp_timer != 0)
+    if (cy_delay_dhcp_timer != 0)
     {
-        cy_rtos_deinit_timer(&delay_dhcp_timer);
-        delay_dhcp_timer = 0;
+        cy_rtos_deinit_timer(&cy_delay_dhcp_timer);
+        cy_delay_dhcp_timer = 0;
     }
 #endif /* !defined(OLM_NO_HARDWARE) */
 
@@ -383,7 +383,7 @@ static void arp_ol_deinit(void *ol)
 }
 
 /*******************************************************************************
-* Function Name: arp_ol_pm
+* Function Name: cylpa_arp_ol_pm
 ****************************************************************************//**
 *
 * Power manager change for an ARP OL instance.
@@ -395,12 +395,12 @@ static void arp_ol_deinit(void *ol)
 * New Power Manager State (ol_pm_st_t).
 *
 *******************************************************************************/
-static void arp_ol_pm(void *ol, ol_pm_st_t st)
+static void cylpa_arp_ol_pm(void *ol, ol_pm_st_t st)
 {
     arp_ol_t *arp_ol = (arp_ol_t *)ol;
     arp_ol_config_state_t new_arp_ol_state;
 
-    OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "arp_ol_pm(arp:%p, cfg:%p st:%d - %s)\n", (void *)arp_ol, (void *)arp_ol->config, st,
+    OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "cylpa_arp_ol_pm(arp:%p, cfg:%p st:%d - %s)\n", (void *)arp_ol, (void *)arp_ol->config, st,
                (st == OL_PM_ST_AWAKE) ? "Awake" : "Sleep");
 
     /* We have a non-hardware build that we need to handle - "OLM_NO_HARDWARE" defined in app/olm-sanity/Makefile */
@@ -410,7 +410,7 @@ static void arp_ol_pm(void *ol, ol_pm_st_t st)
 #endif
           )
     {
-        OL_LOG_ARP(LOG_OLA_LVL_ERR, "arp_ol_pm() Bad Args!\n");
+        OL_LOG_ARP(LOG_OLA_LVL_ERR, "cylpa_arp_ol_pm() Bad Args!\n");
         return;
     }
 
@@ -438,12 +438,12 @@ static void arp_ol_pm(void *ol, ol_pm_st_t st)
 #if defined(MBED_CONF_APP_OLM_TEST)
         if (arp_ol_test_enable_net_callback == 0)
         {
-            cylpa_nw_ip_unregister_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &arp_ol_cb );
+            cylpa_nw_ip_unregister_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &cy_arp_ol_cb );
         }
         else
 #endif
         {
-        	cylpa_nw_ip_register_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &arp_ol_cb );
+        	cylpa_nw_ip_register_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &cy_arp_ol_cb );
         }
 #endif /* !defined(OLM_NO_HARDWARE) */
         /* check that AGENT is on if HOST_AUTO_REPLY or PEER_AUTO_REPLY is on */
@@ -462,7 +462,7 @@ static void arp_ol_pm(void *ol, ol_pm_st_t st)
         if (whd_arp_features_set(arp_ol->ol_info_ptr->whd, enable_flags) != WHD_SUCCESS)
         {
 #if !defined(OLM_NO_HARDWARE)
-            OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "arp_ol_pm() whd_arp_features_set() Failed!\n");
+            OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "cylpa_arp_ol_pm() whd_arp_features_set() Failed!\n");
 #endif
         }
     }

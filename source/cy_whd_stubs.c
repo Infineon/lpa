@@ -215,6 +215,26 @@ CYPRESS_WEAK whd_result_t whd_pf_get_packet_filter_stats(whd_t *whd, uint8_t fil
     return WHD_IOCTL_FAIL;
 }
 
+CYPRESS_WEAK whd_result_t whd_wifi_get_iovar_value(whd_t *whd, const char *iovar, uint32_t *value)
+{
+    (void)iovar;
+    (void)value;
+    return WHD_IOCTL_FAIL;
+}
+
+CYPRESS_WEAK whd_result_t whd_wifi_set_iovar_value(whd_t *whd, const char *iovar, uint32_t value)
+{
+    (void)iovar;
+    (void)value;
+    return WHD_IOCTL_FAIL;
+}
+
+CYPRESS_WEAK whd_result_t whd_wifi_enable_powersave_with_throughput(whd_t *whd, uint16_t return_to_sleep_delay_ms)
+{
+    (void)return_to_sleep_delay_ms;
+    return WHD_IOCTL_FAIL;
+}
+
 #ifdef __cplusplus
 }
 #endif

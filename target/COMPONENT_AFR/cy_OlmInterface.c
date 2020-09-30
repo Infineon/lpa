@@ -25,9 +25,10 @@
 #include "cy_lpa_wifi_olm.h"
 #include "cy_lpa_wifi_arp_ol.h"
 #include "cy_result_mw.h"
+#include "network_activity_handler.h"
 
-olm_t _olm;
-whd_interface_t iface = NULL;
+olm_t cy_olm;
+whd_interface_t cylpa_iface = NULL;
 
 CYPRESS_WEAK const struct ol_desc *cycfg_get_default_ol_list()
 {
@@ -42,7 +43,7 @@ CYPRESS_WEAK const struct ol_desc *get_default_ol_list()
 
 void *cy_get_olm_instance()
 {
-    return &_olm;
+    return &cy_olm;
 }
 
 cy_rslt_t cy_olm_create(void *ifp, ol_desc_t *oflds_list)
@@ -59,29 +60,29 @@ cy_rslt_t cy_olm_create(void *ifp, ol_desc_t *oflds_list)
     }
 
     /* Offload Manager init */
-    _olm.ol_info.whd = ifp;
-    iface = ifp;
-    olm_init(&_olm, olm_desc);
+    cy_olm.ol_info.whd = ifp;
+    cylpa_iface = ifp;
+    cylpa_olm_init(&cy_olm, olm_desc);
 
     return result;
 }
 
 cy_rslt_t cy_olm_init_ols(olm_t *olm, void *whd, void *ip)
 {
-    return olm_init_ols(olm, whd, ip);
+    return cylpa_olm_init_ols(olm, whd, ip);
 }
 
 void cy_olm_deinit_ols(olm_t *olm)
 {
-    olm_deinit_ols(olm);
+    cylpa_olm_deinit_ols(olm);
 }
 
 void cy_olm_pm_notification_callback(olm_t *olm, ol_pm_st_t st)
 {
-    olm_dispatch_pm_notification(olm, st);
+    cylpa_olm_dispatch_pm_notification(olm, st);
 }
 
 whd_interface_t cy_olm_get_whd_interface ( void )
 {
-	return iface;
+	return cylpa_iface;
 }

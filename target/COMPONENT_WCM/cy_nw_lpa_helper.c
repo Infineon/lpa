@@ -23,10 +23,11 @@ cylpa_nw_ip_status_change_callback_t cylpa_ip_status_change_callback = {
 
 void cylpa_nw_ip_status_change_handler ( cylpa_nw_ip_status_change_callback_t *cb );
 static void cy_wcm_event_callback_func (cy_wcm_event_t event, cy_wcm_event_data_t *event_data);
+static bool is_wcm_callback_registered = false;
 
 void cylpa_nw_ip_status_change_handler ( cylpa_nw_ip_status_change_callback_t *cb )
 {
-    struct netif *iface = cy_lwip_get_interface();
+    struct netif *iface = cy_lwip_get_interface( CY_LWIP_STA_NW_INTERFACE );
     if ( cb->cb_func != NULL )
     {
         cb->priv = iface;
@@ -36,7 +37,7 @@ void cylpa_nw_ip_status_change_handler ( cylpa_nw_ip_status_change_callback_t *c
 
 void cylpa_nw_ip_initialize_status_change_callback(cylpa_nw_ip_status_change_callback_t *cb, cylpa_nw_ip_status_change_callback_func_t *cb_func, void *arg)
 {
-    struct netif *iface = cy_lwip_get_interface();
+    struct netif *iface = cy_lwip_get_interface( CY_LWIP_STA_NW_INTERFACE );
 
     cb->cb_func = cb_func;
     cb->arg = arg;
@@ -49,12 +50,20 @@ void cylpa_nw_ip_initialize_status_change_callback(cylpa_nw_ip_status_change_cal
 
 void cylpa_nw_ip_register_status_change_callback(cy_nw_ip_interface_t nw_interface, cylpa_nw_ip_status_change_callback_t *cb)
 {
-  	cy_wcm_register_event_callback(&cy_wcm_event_callback_func);
+    if ( is_wcm_callback_registered == false )
+    {
+        cy_wcm_register_event_callback(&cy_wcm_event_callback_func);
+        is_wcm_callback_registered = true;
+    }
 }
 
 void cylpa_nw_ip_unregister_status_change_callback(cy_nw_ip_interface_t nw_interface, cylpa_nw_ip_status_change_callback_t *cb)
 {
-    cy_wcm_deregister_event_callback(&cy_wcm_event_callback_func);
+    if (is_wcm_callback_registered == true )
+    {
+        cy_wcm_deregister_event_callback(&cy_wcm_event_callback_func);
+        is_wcm_callback_registered = false;
+    }
 }
 
 static void cy_wcm_event_callback_func (cy_wcm_event_t event, cy_wcm_event_data_t *event_data)

@@ -25,22 +25,20 @@
 
 #include "network_activity_handler.h"
 #include "cyabs_rtos.h"
-#include "cy_lwip.h"
 #include "cy_OlmInterface.h"
 #include "whd_int.h"
 #include <cycfg_system.h>
 #include "cyhal.h"
+#include "ip4string.h"
+#include <iot_wifi_common.h>
+#include <iot_secure_sockets.h>
 
 /* lwIP header files */
+#include <lwip/sockets.h>
 #include <lwip/tcpip.h>
 #include <lwip/api.h>
 #include <lwip/tcp.h>
 #include <lwip/priv/tcp_priv.h>
-#include "cy_nw_helper.h"
-
-/* secure socket Header files */
-#include "cy_secure_sockets.h"
-#include "cy_tls.h"
 
 /******************************************************
  *                      Macros
@@ -49,16 +47,17 @@
 #define IDLE_POWER_MODE_STRING_LEN (32)
 
 #define sleep_manager_lock_deep_sleep() \
-        nw_act_handler_deepsleep_lock = true
+        cy_nw_act_handler_deepsleep_lock = true
 
 #define sleep_manager_unlock_deep_sleep() \
-        nw_act_handler_deepsleep_lock = false
+        cy_nw_act_handler_deepsleep_lock = false
 
 #define sleep_manager_can_deep_sleep() \
-    (nw_act_handler_deepsleep_lock == true ? true:false)
+        (cy_nw_act_handler_deepsleep_lock == true ? true:false)
 
 #define PACKET_PAYLOAD 1500
-uint8_t tcp_databuf[PACKET_PAYLOAD];
+/* TCP user data buffer to send to server */
+static uint8_t cy_tcp_databuf[PACKET_PAYLOAD];
 #define HARDCODED_STR   "Some random stuff"
 
 /******************************************************
@@ -66,11 +65,16 @@ uint8_t tcp_databuf[PACKET_PAYLOAD];
  ******************************************************/
 
 /******************************************************
+ *                  Extern Function Declarations
+ *****************************************************/
+extern void cylpa_deep_sleep_log(void);
+
+/******************************************************
  *               Static Function Declarations
  ******************************************************/
 
 /*******************************************************************************
-* Function Name: get_idle_power_mode
+* Function Name: cylpa_get_idle_power_mode
 ********************************************************************************
 *
 * Summary: This function is used to get the currently configured MCU low power
@@ -84,10 +88,10 @@ uint8_t tcp_databuf[PACKET_PAYLOAD];
 * void.
 *
 *******************************************************************************/
-static void get_idle_power_mode(char *str, uint32_t length);
+static void cylpa_get_idle_power_mode(char *str, uint32_t length);
 
 /*******************************************************************************
-* Function Name: print_whd_bus_stats
+* Function Name: cylpa_print_whd_bus_stats
 ********************************************************************************
 *
 * Summary: This function is used to print the WHD bus stats, one of the useful
@@ -100,11 +104,11 @@ static void get_idle_power_mode(char *str, uint32_t length);
 * void.
 *
 *******************************************************************************/
-static void print_whd_bus_stats(struct netif *wifi);
+static void cylpa_print_whd_bus_stats(struct netif *wifi);
 
 
 /*******************************************************************************
-* Function Name: cy_register_network_activity_callback
+* Function Name: cylpa_register_network_activity_callback
 ********************************************************************************
 *
 * Summary: This function is used to register a callback for the event of net
@@ -114,10 +118,10 @@ static void print_whd_bus_stats(struct netif *wifi);
 * cy_rslt_t: contains status of attaching callback.
 *
 *******************************************************************************/
-static cy_rslt_t cy_register_network_activity_callback(void);
+static cy_rslt_t cylpa_register_network_activity_callback(void);
 
 /*******************************************************************************
-* Function Name: network_state_handler
+* Function Name: cylpa_network_state_handler
 ********************************************************************************
 *
 * Summary: This function prints state of the network stack on the terminal
@@ -129,10 +133,10 @@ static cy_rslt_t cy_register_network_activity_callback(void);
 * enumeration, network_stack_state_t
 *
 *******************************************************************************/
-static void network_state_handler(cy_rslt_t state);
+static void cylpa_network_state_handler(cy_rslt_t state);
 
 /*******************************************************************************
-* Function Name: cy_network_act_handler_init
+* Function Name: cylpa_network_act_handler_init
 ********************************************************************************
 *
 * Summary:
@@ -147,7 +151,7 @@ static void network_state_handler(cy_rslt_t state);
 * void
 *
 *******************************************************************************/
-static void cy_network_act_handler_init(void);
+static void cylpa_network_act_handler_init(void);
 
 /******************************************************
  *               Variable Definitions
@@ -157,33 +161,32 @@ static void cy_network_act_handler_init(void);
     of the TCP/IP stack. Locking the TCP/IP stack prevents the MCU from servicing
     the network timers. This enables the MCU to stay in deep sleep longer.
 */
-
-static bool s_ns_suspended;
+static bool cylpa_s_ns_suspended;
 
 /*  This event variable is used to alert the device if there is any network
     activity.
 */
-cy_event_t lp_wait_net_event;
+cy_event_t cy_lp_wait_net_event;
 
 /*  This is mutex to sychronize multiple threads */
-cy_mutex_t lp_mutex;
+cy_mutex_t cy_lp_mutex;
 
 /* This variable is used to track total time spent in deep sleep */
-uint32_t dsleep_nw_suspend_time;
+uint32_t cy_dsleep_nw_suspend_time;
 
 /* This variable blocks deep sleep for freertos */
-bool nw_act_handler_deepsleep_lock = false;
+bool cy_nw_act_handler_deepsleep_lock = false;
 
 /* callback for SysPM to block deep sleep */
-cy_stc_syspm_callback_t deepsleepPMCallback;
+cy_stc_syspm_callback_t cy_deepsleepPMCallback;
 
 /* LP Timer object */
-cyhal_lptimer_t lptickerObj;
+cyhal_lptimer_t cy_lptickerObj;
 
 /******************************************************
  *               Function Definitions
  ******************************************************/
-cy_en_syspm_status_t cy_lpa_nw_activity_handler_pm_callback(cy_stc_syspm_callback_params_t *callbackParams, cy_en_syspm_callback_mode_t mode)
+cy_en_syspm_status_t cylpa_nw_activity_handler_pm_callback(cy_stc_syspm_callback_params_t *callbackParams, cy_en_syspm_callback_mode_t mode)
 {
     cy_en_syspm_status_t retStatus = CY_SYSPM_FAIL;
 
@@ -191,7 +194,7 @@ cy_en_syspm_status_t cy_lpa_nw_activity_handler_pm_callback(cy_stc_syspm_callbac
     {
         case CY_SYSPM_CHECK_READY:
         {
-            if(!nw_act_handler_deepsleep_lock)
+            if(!cy_nw_act_handler_deepsleep_lock)
             {
                 retStatus = CY_SYSPM_SUCCESS;
             }
@@ -219,22 +222,22 @@ cy_en_syspm_status_t cy_lpa_nw_activity_handler_pm_callback(cy_stc_syspm_callbac
     return (retStatus);
 }
 
-void cy_network_act_handler_init(void)
+void cylpa_network_act_handler_init(void)
 {
     //register pm callback     
-    deepsleepPMCallback.callback = &cy_lpa_nw_activity_handler_pm_callback;
-    deepsleepPMCallback.callbackParams = NULL;
-    deepsleepPMCallback.type = CY_SYSPM_DEEPSLEEP;
-    deepsleepPMCallback.order = 0; 
+    cy_deepsleepPMCallback.callback = &cylpa_nw_activity_handler_pm_callback;
+    cy_deepsleepPMCallback.callbackParams = NULL;
+    cy_deepsleepPMCallback.type = CY_SYSPM_DEEPSLEEP;
+    cy_deepsleepPMCallback.order = 0; 
 
-    /* Register for SysPM and handle deep sleep based on nw_act_handler_deepsleep_lock variable*/
-    Cy_SysPm_RegisterCallback(&deepsleepPMCallback);
+    /* Register for SysPM and handle deep sleep based on cy_nw_act_handler_deepsleep_lock variable*/
+    Cy_SysPm_RegisterCallback(&cy_deepsleepPMCallback);
 
     /* Register for network activity callback */
-    cy_register_network_activity_callback();
+    cylpa_register_network_activity_callback();
 }
 
-static void get_idle_power_mode(char *str, uint32_t length)
+static void cylpa_get_idle_power_mode(char *str, uint32_t length)
 {
     switch (CY_CFG_PWR_SYS_IDLE_MODE)
     {
@@ -259,10 +262,10 @@ static void get_idle_power_mode(char *str, uint32_t length)
     }
 }
 
-static void print_whd_bus_stats(struct netif *wifi)
+static void cylpa_print_whd_bus_stats(struct netif *wifi)
 {
     whd_interface_t ifp = NULL;
-    if (wifi->flags & NETIF_FLAG_UP)
+    if (wifi->flags & NETIF_FLAG_LINK_UP)
     {
         ifp = (whd_interface_t)wifi->state;
         NW_INFO(("\n=====================================================\n"));
@@ -275,15 +278,15 @@ static void print_whd_bus_stats(struct netif *wifi)
     }
 }
 
-void on_emac_activity(bool is_tx_activity)
+void cylpa_on_emac_activity(bool is_tx_activity)
 {
-    cy_rtos_setbits_event(&lp_wait_net_event,
+    cy_rtos_setbits_event(&cy_lp_wait_net_event,
         (uint32_t)(is_tx_activity ? TX_EVENT_FLAG : RX_EVENT_FLAG), true);
 }
 
-static cy_rslt_t cy_register_network_activity_callback(void)
+static cy_rslt_t cylpa_register_network_activity_callback(void)
 {
-    cy_rslt_t result = cy_rtos_init_event(&lp_wait_net_event);
+    cy_rslt_t result = cy_rtos_init_event(&cy_lp_wait_net_event);
 
     if (CY_RSLT_SUCCESS != result)
     {
@@ -291,7 +294,7 @@ static cy_rslt_t cy_register_network_activity_callback(void)
         return result;
     }
 
-    result  = cy_rtos_init_mutex(&lp_mutex);
+    result  = cy_rtos_init_mutex(&cy_lp_mutex);
 
     if ( CY_RSLT_SUCCESS != result )
     {
@@ -301,50 +304,50 @@ static cy_rslt_t cy_register_network_activity_callback(void)
     else
     {
         /* Set EMAC activity callback for this module. */
-        cy_network_activity_register_cb(on_emac_activity);
+        cy_network_activity_register_cb(cylpa_on_emac_activity);
         result = CY_RSLT_SUCCESS;
     }
 
     return result;
 }
 
-int32_t suspend_ns(void)
+int32_t cylpa_suspend_ns(void)
 {
     int32_t state;
 
-    if (true == s_ns_suspended)
+    if (true == cylpa_s_ns_suspended)
     {
         state = ST_BAD_STATE;
     }
     else
     {
         LOCK_TCPIP_CORE();
-        s_ns_suspended = true;
+        cylpa_s_ns_suspended = true;
         state = ST_SUCCESS;
     }
 
     return state;
 }
 
-int32_t resume_ns(void)
+int32_t cylpa_resume_ns(void)
 {
     int32_t state;
 
-    if (false == s_ns_suspended)
+    if (false == cylpa_s_ns_suspended)
     {
         state = ST_BAD_STATE;
     }
     else
     {
         UNLOCK_TCPIP_CORE();
-        s_ns_suspended = false;
+        cylpa_s_ns_suspended = false;
         state = ST_SUCCESS;
     }
 
     return state;
 }
 
-int32_t wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inactive_window_ms)
+int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inactive_window_ms)
 {
     cy_time_t lp_start_time;
     cy_time_t lp_end_time;
@@ -353,7 +356,7 @@ int32_t wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inactive_win
     if (inactive_interval_ms > inactive_window_ms)
     {
         /* Clear event flags to start with an initial state of no activity. */
-        cy_rtos_clearbits_event(&lp_wait_net_event, (uint32_t)(TX_EVENT_FLAG | RX_EVENT_FLAG), false);
+        cy_rtos_clearbits_event(&cy_lp_wait_net_event, (uint32_t)(TX_EVENT_FLAG | RX_EVENT_FLAG), false);
 
          /* Start the wait timer. */
         cy_rtos_get_time( &lp_start_time);
@@ -369,7 +372,7 @@ int32_t wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inactive_win
                to monitor for inactivity.
             */
             flags = (TX_EVENT_FLAG | RX_EVENT_FLAG);
-            result = cy_rtos_waitbits_event(&lp_wait_net_event, &flags, true, false, inactive_window_ms);
+            result = cy_rtos_waitbits_event(&cy_lp_wait_net_event, &flags, true, false, inactive_window_ms);
             if (CY_RTOS_TIMEOUT == result)
             {
                 /* Inactivity wait condition met. */
@@ -408,39 +411,39 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
     struct netif *wifi = (struct netif *)net_intf;
     if(!lp_tmr_initialized)
     {
-        cy_rslt_t result = cyhal_lptimer_init(&lptickerObj);
+        cy_rslt_t result = cyhal_lptimer_init(&cy_lptickerObj);
         lp_tmr_initialized = (result == CY_RSLT_SUCCESS);
     }
 
     if (false == emac_activity_callback_registered)
     {
-        cy_network_act_handler_init();
+        cylpa_network_act_handler_init();
         emac_activity_callback_registered = true;
     }
 
     sleep_manager_lock_deep_sleep();
-    state = wait_net_inactivity(network_inactive_interval_ms, network_inactive_window_ms);
+    state = cylpa_wait_net_inactivity(network_inactive_interval_ms, network_inactive_window_ms);
 
     if (ST_SUCCESS == state)
     {
         /* Suspend network stack.
          * State data (e.g. caches) may be adjusted here so that the stack resumes properly.
          */
-        state = suspend_ns();
+        state = cylpa_suspend_ns();
         if (ST_SUCCESS == state)
         {
-            cy_rtos_clearbits_event(&lp_wait_net_event, (uint32_t)(TX_EVENT_FLAG | RX_EVENT_FLAG), false);
+            cy_rtos_clearbits_event(&cy_lp_wait_net_event, (uint32_t)(TX_EVENT_FLAG | RX_EVENT_FLAG), false);
 
-            get_idle_power_mode(idle_power_mode, sizeof(idle_power_mode));
-            olm_dispatch_pm_notification(cy_get_olm_instance(), OL_PM_ST_GOING_TO_SLEEP);
+            cylpa_get_idle_power_mode(idle_power_mode, sizeof(idle_power_mode));
+            cylpa_olm_dispatch_pm_notification(cy_get_olm_instance(), OL_PM_ST_GOING_TO_SLEEP);
             NW_INFO(("\nNetwork Stack Suspended, MCU will enter %s power mode\n", idle_power_mode));
             sleep_manager_unlock_deep_sleep();
             flags = (RX_EVENT_FLAG | TX_EVENT_FLAG);
 
-            start = cyhal_lptimer_read(&lptickerObj);
+            start = cyhal_lptimer_read(&cy_lptickerObj);
 
             /* Wait till there is emac activity. */
-            result = cy_rtos_waitbits_event(&lp_wait_net_event, &flags, true, false, wait_ms);
+            result = cy_rtos_waitbits_event(&cy_lp_wait_net_event, &flags, true, false, wait_ms);
             if (CY_RTOS_TIMEOUT == result)
             {
                 state = ST_WAIT_TIMEOUT_EXPIRED;
@@ -450,7 +453,7 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
                 state = ST_NET_ACTIVITY;
             }
 
-            end = cyhal_lptimer_read(&lptickerObj);
+            end = cyhal_lptimer_read(&cy_lptickerObj);
 
             if(end > start)
             {
@@ -461,18 +464,18 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
                 end = (start-end)/32;
             }
 
-            cy_rtos_get_mutex(&lp_mutex, wait_ms);
+            cy_rtos_get_mutex(&cy_lp_mutex, wait_ms);
 
             sleep_manager_lock_deep_sleep();
             /* Resume the network stack.
              * State data (e.g. caches) may be adjusted here so that the stack resumes properly.
             */
-            NW_INFO(("Resuming Network Stack, Network stack was suspended for %lums\n",end));
-            dsleep_nw_suspend_time += end-start;
-            olm_dispatch_pm_notification(cy_get_olm_instance(), OL_PM_ST_AWAKE);
+            NW_INFO(("Resuming Network Stack, Network stack was suspended for %ums\n",(unsigned int)end));
+            cy_dsleep_nw_suspend_time += end-start;
+            cylpa_olm_dispatch_pm_notification(cy_get_olm_instance(), OL_PM_ST_AWAKE);
             if(statsCount == 0)
             {
-                print_whd_bus_stats(wifi);
+                cylpa_print_whd_bus_stats(wifi);
             }
             else
             {
@@ -486,9 +489,9 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
             if (end > wait_ms) {
                 state = ST_WAIT_TIMEOUT_EXPIRED;
             }
-            network_state_handler(state);
-            cy_rtos_set_mutex(&lp_mutex);
-            resume_ns();
+            cylpa_network_state_handler(state);
+            cy_rtos_set_mutex(&cy_lp_mutex);
+            cylpa_resume_ns();
         }
     }
 
@@ -496,7 +499,7 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
     return state;
 }
 
-static void network_state_handler(cy_rslt_t state)
+static void cylpa_network_state_handler(cy_rslt_t state)
 {
     switch(state)
     {
@@ -520,101 +523,186 @@ static void network_state_handler(cy_rslt_t state)
     }
 }
 
-
-/* This function can be used for doing TCP Keepalive verification
+/*-----------------------------------------------------------*/
+/* Create TCP connection to be offloaded to WLAN Firmware
  *
  */
-/* TCP user data buffer to send to server */
-static uint8_t tcp_user_databuf[PACKET_PAYLOAD];
 int cy_tcp_create_socket_connection( void *net_intf, void **global_socket_ptr, const char *remote_ip, uint16_t remote_port, uint16_t local_port,
                                           cy_tko_ol_cfg_t *downloaded, int socket_keepalive_enable)
 {
-    cy_rslt_t response = CY_RSLT_SUCCESS;
-    cy_socket_sockaddr_t remote_addr = {0};
-    cy_nw_ip_address_t nw_ip_addr;
-    struct netif *net = NULL;
+    int response = SOCKETS_ERROR_NONE;
+    SocketsSockaddr_t remote_addr = {0};
+    SocketsSockaddr_t source_addr = {0};
+    uint32_t nw_ip_addr;
     int32_t seconds;
+    bool ipaddr_bin = false;
+    uint32_t srcip = 0;
+    uint8_t ipaddr[4] = {0};
+    WIFIReturnCode_t result;
+    char srcipbuf[16]= {0};
 #if LWIP_TCP
-    extern struct tcp_pcb *tcp_active_pcbs;
-    uint32_t sock_handle;
-    cy_socket_sockaddr_t sockaddr;
+    Socket_t sock_handle = NULL;
 #endif
 
     if (net_intf == NULL )
     {
-        printf("Network is not up!\n");
-        return CY_RSLT_TCPIP_ERROR;
+        OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Network is not up!\n");
+        return SOCKETS_SOCKET_ERROR;
     }
 
     int len = strlen(HARDCODED_STR);
     uint32_t bytes_sent = 0;
 
-    net = (struct netif *)net_intf;
-
-    cy_nw_str_to_ipv4((const char *)remote_ip, &nw_ip_addr);
-    remote_addr.ip_address.version = CY_SOCKET_IP_VER_V4;
-    remote_addr.ip_address.ip.v4 = nw_ip_addr.ip.v4;
-    remote_addr.port = remote_port;
-    sockaddr.ip_address.version = CY_SOCKET_IP_VER_V4;
-    sockaddr.ip_address.ip.v4 = net->ip_addr.u_addr.ip4.addr;
-    sockaddr.port = local_port;
-
-    printf("TCP remote IP Address %lx  remote port:%d\n", remote_addr.ip_address.ip.v4, remote_port );
-
-    /* Create TCP Socket */
-    response = cy_socket_create(CY_SOCKET_DOMAIN_AF_INET, CY_SOCKET_TYPE_STREAM, CY_SOCKET_IPPROTO_TCP, (cy_socket_t *)&sock_handle);
-    if (response != CY_RSLT_SUCCESS) {
-          printf("TCP socket create failed ret:%ld\n", response);
-          return response;
+    ipaddr_bin =  stoip4(remote_ip, strlen(remote_ip), &nw_ip_addr);
+    if( ipaddr_bin  == false )
+    {
+    	return SOCKETS_SOCKET_ERROR;
     }
 
-    /* Bind socket to local port */
-    response = cy_socket_bind((void * )sock_handle, &sockaddr, (uint32_t)sizeof(cy_socket_sockaddr_t));
-    if ( CY_RSLT_SUCCESS != response) {
-          printf("socket.bind() failed: %ld\n", response);
-          return response;
+    remote_addr.ulAddress = nw_ip_addr;
+    remote_addr.ucSocketDomain = SOCKETS_AF_INET;
+    remote_addr.ucLength = sizeof(SocketsSockaddr_t);
+    remote_addr.usPort = htons(remote_port);
+
+    OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "TCP remote IP Address %s  remote port:%d\n", remote_ip, remote_port );
+
+    /* Create TCP Socket */
+    sock_handle = SOCKETS_Socket ( SOCKETS_AF_INET, SOCKETS_SOCK_STREAM, SOCKETS_IPPROTO_TCP );
+    if ( sock_handle == NULL )
+    {
+        OL_LOG_TKO(LOG_OLA_LVL_ERR, "TCP socket create failed \n");
+        return SOCKETS_SOCKET_ERROR;
+    }
+
+    result = WIFI_GetIP(ipaddr);
+    if ( result == eWiFiSuccess )
+    {
+        sprintf(srcipbuf,"%d.%d.%d.%d", ipaddr[0], ipaddr[1], ipaddr[2], ipaddr[3]);
+    }
+
+    ipaddr_bin = stoip4((const char *)&srcipbuf, strlen(srcipbuf), &srcip);
+    if( ipaddr_bin  == false )
+    {
+        return SOCKETS_SOCKET_ERROR;
+    }
+
+    source_addr.ulAddress = srcip;
+    source_addr.ucSocketDomain = SOCKETS_AF_INET;
+    source_addr.ucLength = sizeof(SocketsSockaddr_t);
+    source_addr.usPort = htons(local_port);
+
+    /* Bind Tcp Socket */
+    response = SOCKETS_Bind ( sock_handle, &source_addr, sizeof(source_addr) );
+    if ( response != SOCKETS_ERROR_NONE )
+    {
+        OL_LOG_TKO(LOG_OLA_LVL_ERR, "TCP socket bind failed response=%d\n", response);
+        SOCKETS_Close(sock_handle);
+        return response;
     }
 
     /* Establish TCP Connection */
-    response = cy_socket_connect((void *)sock_handle, &remote_addr, (uint32_t)sizeof(cy_socket_sockaddr_t));
-
-    if ( response != CY_RSLT_SUCCESS ) {
-        printf("TCP connect failed on remote port:%d err=%ld\n", remote_port, response);
+    response =  SOCKETS_Connect( sock_handle, &remote_addr, sizeof(SocketsSockaddr_t));
+    if ( response != SOCKETS_ERROR_NONE )
+    {
+    	OL_LOG_TKO(LOG_OLA_LVL_ERR, "TCP connect failed to IP %s local port:%d remote port:%d err=%d\n",
+                   remote_ip, local_port, remote_port, response);
+        SOCKETS_Close(sock_handle);
         return response;
     }
-    if ( response == CY_RSLT_SUCCESS)
-    {
-        printf("TCP Connection Established Successfully ctx:%lx\n", sock_handle);
-    }
+
+    OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Created TCP connection to IP %s, local port %d, remote port %d\n",
+               remote_ip, local_port, remote_port);
 
 #if LWIP_TCP
     if (socket_keepalive_enable)
     {
         /* Enable Host TCP Keepalive */
-        ip_set_option(tcp_active_pcbs, SOF_KEEPALIVE);
+        response = SOCKETS_SetSockOpt( sock_handle, SOL_SOCKET, SOCKETS_SO_TCPKEEPALIVE,
+        		                       &socket_keepalive_enable, sizeof(socket_keepalive_enable));
+        if ( response != SOCKETS_ERROR_NONE)
+        {
+            OL_LOG_TKO(LOG_OLA_LVL_ERR, "Host TCP keepalive enable failed %d\n", response );
+        }
 
         /* keep_idle, After this much idle time, send Packet */
-        seconds = downloaded->interval * 1000;
-        tcp_active_pcbs->keep_idle = seconds ? seconds : TCP_KEEPIDLE_DEFAULT;
+        seconds = downloaded->interval;
+        seconds = seconds ? seconds : TCP_KEEPIDLE_DEFAULT;
+
+        response = SOCKETS_SetSockOpt ( sock_handle, IPPROTO_TCP, SOCKETS_SO_TCPKEEPALIVE_IDLE_TIME,
+        		                        &seconds, sizeof(seconds));
+        if ( response != SOCKETS_ERROR_NONE )
+        {
+            OL_LOG_TKO(LOG_OLA_LVL_ERR, "TCP keepalive Idle time configuration failed :%d\n", response );
+        }
 
         /* If don't get ack retry keep_intvl seconds for keep_cnt times */
-        seconds = downloaded->retry_interval * 1000;
-        tcp_active_pcbs->keep_cnt = seconds ? seconds : TCP_KEEPCNT_DEFAULT;
+        seconds = downloaded->retry_count;
+        seconds = seconds ? seconds : TCP_KEEPCNT_DEFAULT;
 
-        seconds = downloaded->interval * 1000;
-        tcp_active_pcbs->keep_intvl = seconds ? seconds : TCP_KEEPINTVL_DEFAULT;
+        response = SOCKETS_SetSockOpt ( sock_handle, IPPROTO_TCP, SOCKETS_SO_TCPKEEPALIVE_COUNT,
+        		                        &seconds, sizeof(seconds));
+        if ( response != SOCKETS_ERROR_NONE )
+        {
+            OL_LOG_TKO(LOG_OLA_LVL_ERR, "TCP keepalive retry count configuration failed :%d\n", response );
+        }
 
-        printf("Set LWIP keepalive: Interval %d, Retry Interval %d, keepalive value %d\n",
-                  downloaded->interval, downloaded->retry_interval, downloaded->interval);
+        /* TCP keep-alive interval between packets */
+        seconds = downloaded->retry_interval;
+        seconds = seconds ? seconds : TCP_KEEPINTVL_DEFAULT;
+
+        response = SOCKETS_SetSockOpt ( sock_handle, IPPROTO_TCP, SOCKETS_SO_TCPKEEPALIVE_INTERVAL,
+        		                        &seconds, sizeof(seconds));
+        if ( response != SOCKETS_ERROR_NONE )
+        {
+            OL_LOG_TKO(LOG_OLA_LVL_ERR, "TCP keepalive Interval configuration failed :%d\n", response );
+        }
+
+        OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "SetSockOpt LWIP keepalive: Interval %d, Retry Interval %d, keepalive value %d\n",
+                   downloaded->interval, downloaded->retry_interval, downloaded->interval);
     }
 #endif
-
-    memcpy(tcp_user_databuf, HARDCODED_STR, len);
-    response = cy_socket_send((void *)sock_handle, tcp_user_databuf, len, NETCONN_NOFLAG, &bytes_sent);
-    if (response != CY_RSLT_SUCCESS) {
-            printf("Could only send %ld bytes on socket err: %ld\n", bytes_sent, response );
+    memcpy(cy_tcp_databuf, HARDCODED_STR, len);
+    bytes_sent = SOCKETS_Send( sock_handle, cy_tcp_databuf, len, NETCONN_NOFLAG);
+    if (bytes_sent != len )
+    {
+        OL_LOG_TKO(LOG_OLA_LVL_ERR, "Could only send %u bytes on socket of request length: %d\n", (unsigned int)bytes_sent, len );
     }
 
     *global_socket_ptr = (void *)sock_handle;
+    cylpa_tko_ol_update_config(remote_ip, remote_port, local_port, downloaded);
     return response;
+}
+
+/*-----------------------------------------------------------*/
+/* Restart olm with a new configuration
+ */
+int cylpa_restart_olm( ol_desc_t *offload_list, void *net_intf )
+{
+	olm_t *olm_ptr = (olm_t *)cy_get_olm_instance();
+	const ol_desc_t *oflds_list = (const ol_desc_t *)offload_list;
+	cylpa_olm_deinit(olm_ptr);
+	cylpa_olm_init(olm_ptr, oflds_list);
+	return CY_RSLT_SUCCESS;
+}
+
+/*-----------------------------------------------------------*/
+/*
+ * Find the descriptor for the given filter.
+ */
+ol_desc_t *cylpa_find_my_descriptor(const char *name, ol_desc_t *offload_list )
+{
+    ol_desc_t *oflds_list = offload_list;
+
+    if (oflds_list == NULL)
+    {
+        return NULL;
+    }
+    /* Loop through the offload list to find by name */
+    while (oflds_list && oflds_list->name && strncmp(oflds_list->name, name, strlen(name))) {
+        oflds_list++;
+    }
+    if (!oflds_list || !oflds_list->name) {
+        return NULL;
+    }
+    return oflds_list;
 }

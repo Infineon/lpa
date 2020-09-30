@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['olm_5fdeinit_5fols',['olm_deinit_ols',['../group__group__lpa__high__level.html#ga9015500f9a97035a826a74700d497f17',1,'olm_deinit_ols(olm_t *olm):&#160;cy_lpa_wifi_olm.c'],['../group__group__lpa__high__level.html#ga9015500f9a97035a826a74700d497f17',1,'olm_deinit_ols(olm_t *olm):&#160;cy_lpa_wifi_olm.c']]],
-  ['olm_5finit',['olm_init',['../group__group__lpa__high__level.html#gaeccaa368a7b4e5d14f359ebf746bb53e',1,'cy_lpa_wifi_olm.h']]],
-  ['olm_5finit_5fols',['olm_init_ols',['../group__group__lpa__high__level.html#ga8001c03a8ec1e0b7e3494d4ac805923f',1,'olm_init_ols(olm_t *olm, void *whd, void *ip):&#160;cy_lpa_wifi_olm.c'],['../group__group__lpa__high__level.html#ga8001c03a8ec1e0b7e3494d4ac805923f',1,'olm_init_ols(olm_t *olm, void *whd, void *ip):&#160;cy_lpa_wifi_olm.c']]]
+  ['ol_5flog_5fget_5flevel',['ol_log_get_level',['../group__group__lpa__log__level.html#gad72047bf5ca91a1c3b3e1f99b07f6e77',1,'cy_lpa_wifi_olm.h']]],
+  ['ol_5flog_5fset_5flevel',['ol_log_set_level',['../group__group__lpa__log__level.html#ga066150dba6c2efeca654cac95808702c',1,'cy_lpa_wifi_olm.h']]],
+  ['ol_5flogging',['ol_logging',['../group__group__lpa__log__level.html#ga125e251b0e7d9f20a923cc4b75a2466f',1,'cy_lpa_wifi_olm.h']]]
 ];

@@ -20,11 +20,19 @@
 #include <stdint.h>
 #include "cy_lpa_compat.h"
 
+#if !defined(OLM_NO_HARDWARE)
+#include "whd.h"
+#include "whd_wlioctl.h"
+#define MAX_TKO MAX_TKO_CONN
+#else
+#define MAX_TKO 4
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define MAX_TKO 4
+
 /** User uses configurator to set these */
 typedef struct cy_tko_connect
 {
@@ -52,6 +60,7 @@ typedef struct tko
 /** \} */
 
 extern const ol_fns_t tko_ol_fns;
+int cylpa_tko_ol_update_config(const char *remote_ip, uint16_t remote_port, uint16_t local_port, cy_tko_ol_cfg_t *cfg );
 
 #ifdef __cplusplus
 }
