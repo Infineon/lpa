@@ -180,9 +180,6 @@ bool cy_nw_act_handler_deepsleep_lock = false;
 /* callback for SysPM to block deep sleep */
 cy_stc_syspm_callback_t cy_deepsleepPMCallback;
 
-/* LP Timer object */
-cyhal_lptimer_t cy_lptickerObj;
-
 /******************************************************
  *               Function Definitions
  ******************************************************/
@@ -278,10 +275,25 @@ static void cylpa_print_whd_bus_stats(struct netif *wifi)
     }
 }
 
+/*******************************************************************************
+* Function Name: cylpa_on_emac_activity
+********************************************************************************
+*
+* Summary: This function wakes up Network Stack which is suspended using
+* wait_net_suspend function.
+*
+* Parameters:
+* bool is_tx_activity: Set to TRUE for any TX activity
+*
+*
+*******************************************************************************/
 void cylpa_on_emac_activity(bool is_tx_activity)
 {
-    cy_rtos_setbits_event(&cy_lp_wait_net_event,
-        (uint32_t)(is_tx_activity ? TX_EVENT_FLAG : RX_EVENT_FLAG), true);
+    if (cy_lp_wait_net_event)
+    {
+        cy_rtos_setbits_event(&cy_lp_wait_net_event,
+			(uint32_t)(is_tx_activity ? TX_EVENT_FLAG : RX_EVENT_FLAG), true);
+    }
 }
 
 static cy_rslt_t cylpa_register_network_activity_callback(void)
@@ -404,16 +416,11 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
     static uint8_t statsCount = 0;
     int32_t state;
     uint32_t result, flags;
-    uint32_t start, end;
     char idle_power_mode[IDLE_POWER_MODE_STRING_LEN];
     static bool emac_activity_callback_registered = false;
-    static bool lp_tmr_initialized = false;
     struct netif *wifi = (struct netif *)net_intf;
-    if(!lp_tmr_initialized)
-    {
-        cy_rslt_t result = cyhal_lptimer_init(&cy_lptickerObj);
-        lp_tmr_initialized = (result == CY_RSLT_SUCCESS);
-    }
+    cy_time_t lp_start_time;
+    cy_time_t lp_end_time;
 
     if (false == emac_activity_callback_registered)
     {
@@ -440,7 +447,7 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
             sleep_manager_unlock_deep_sleep();
             flags = (RX_EVENT_FLAG | TX_EVENT_FLAG);
 
-            start = cyhal_lptimer_read(&cy_lptickerObj);
+            cy_rtos_get_time( &lp_start_time);
 
             /* Wait till there is emac activity. */
             result = cy_rtos_waitbits_event(&cy_lp_wait_net_event, &flags, true, false, wait_ms);
@@ -453,15 +460,15 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
                 state = ST_NET_ACTIVITY;
             }
 
-            end = cyhal_lptimer_read(&cy_lptickerObj);
+            cy_rtos_get_time( &lp_end_time);
 
-            if(end > start)
+            if(lp_end_time > lp_start_time)
             {
-                end = (end-start)/32;
+                lp_end_time = (lp_end_time-lp_start_time);
             }
             else
             {
-                end = (start-end)/32;
+                lp_end_time = (lp_start_time-lp_end_time);
             }
 
             cy_rtos_get_mutex(&cy_lp_mutex, wait_ms);
@@ -470,8 +477,8 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
             /* Resume the network stack.
              * State data (e.g. caches) may be adjusted here so that the stack resumes properly.
             */
-            NW_INFO(("Resuming Network Stack, Network stack was suspended for %ums\n",(unsigned int)end));
-            cy_dsleep_nw_suspend_time += end-start;
+            NW_INFO(("Resuming Network Stack, Network stack was suspended for %ums\n",(unsigned int)lp_end_time));
+            cy_dsleep_nw_suspend_time += lp_end_time;
             cylpa_olm_dispatch_pm_notification(cy_get_olm_instance(), OL_PM_ST_AWAKE);
             if(statsCount == 0)
             {
@@ -486,7 +493,7 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
              * xEventGroupWaitBits function returns the current bit for timeout scenario with
              * OOB disabled
              */
-            if (end > wait_ms) {
+            if (lp_end_time > wait_ms) {
                 state = ST_WAIT_TIMEOUT_EXPIRED;
             }
             cylpa_network_state_handler(state);

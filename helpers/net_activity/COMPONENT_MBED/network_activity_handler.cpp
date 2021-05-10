@@ -214,10 +214,13 @@ static cy_rslt_t register_emac_activity_callback(WhdSTAInterface *wifi)
     return result;
 }
 
-void cylpa_on_emac_activity(bool is_rx_activity)
+void cylpa_on_emac_activity(bool is_tx_activity)
 {
-    cy_rtos_setbits_event(&cy_lp_wait_net_event,
-        (uint32_t)(is_rx_activity ? RX_EVENT_FLAG : TX_EVENT_FLAG), true);
+    if (cy_lp_wait_net_event)
+    {
+         cy_rtos_setbits_event(&cy_lp_wait_net_event,
+		 	(uint32_t)(is_tx_activity ? TX_EVENT_FLAG : RX_EVENT_FLAG), true);
+    }
 }
 
 int32_t cylpa_suspend_ns(void)

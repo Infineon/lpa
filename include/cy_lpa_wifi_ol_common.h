@@ -15,7 +15,7 @@
 
 /**
  *******************************************************************************
- * \mainpage Low Power Assistant Middleware Library 3.0.0
+ * \mainpage Low Power Assistant Middleware Library 3.1.0
  *******************************************************************************
  * \section section_lpa_overview Overview
  *******************************************************************************
@@ -356,7 +356,6 @@
  *    # MTB2.2 and .mtb approach
  *    echo https://github.com/cypresssemiconductorco/TARGET_CY8CKIT-062S2-43012#latest-v2.X#\$\$ASSET_REPO\$\$/TARGET_CY8CKIT-062S2-43012/latest-v2.X > deps/TARGET_CY8CKIT-062S2-43012.mtb
  *    echo https://github.com/cypresssemiconductorco/freertos/#latest-v10.X#\$\$ASSET_REPO\$\$/freertos/latest-v10.X > deps/freertos.mtb
- *    echo https://github.com/cypresssemiconductorco/abstraction-rtos/#latest-v1.X#\$\$ASSET_REPO\$\$/abstraction-rtos/latest-v1.X > deps/abstraction-rtos.mtb
  *    \endcode
  * 
  * 3. Delete below libs from deps folder
@@ -1067,8 +1066,6 @@
  *
  *    # MTB2.2 and .mtb approach , make sure below mtb files are present
  *    echo https://github.com/cypresssemiconductorco/TARGET_CY8CKIT-062S2-43012#latest-v2.X#\$\$ASSET_REPO\$\$/TARGET_CY8CKIT-062S2-43012/latest-v2.X > deps/TARGET_CY8CKIT-062S2-43012.mtb
- *    echo https://github.com/cypresssemiconductorco/freertos/#latest-v10.X#\$\$ASSET_REPO\$\$/freertos/latest-v10.X > deps/freertos.mtb
- *    echo https://github.com/cypresssemiconductorco/abstraction-rtos/#latest-v1.X#\$\$ASSET_REPO\$\$/abstraction-rtos/latest-v1.X > deps/abstraction-rtos.mtb
  *    \endcode
  *
  * 4. Modify the example for your Wi-Fi SSID parameters in lowpower_task.h
@@ -1798,8 +1795,6 @@
  *
  *    # MTB2.2 and .mtb approach , make sure below mtb files are present
  *    echo https://github.com/cypresssemiconductorco/TARGET_CY8CKIT-062S2-43012#latest-v2.X#\$\$ASSET_REPO\$\$/TARGET_CY8CKIT-062S2-43012/latest-v2.X > deps/TARGET_CY8CKIT-062S2-43012.mtb
- *    echo https://github.com/cypresssemiconductorco/freertos/#latest-v10.X#\$\$ASSET_REPO\$\$/freertos/latest-v10.X > deps/freertos.mtb
- *    echo https://github.com/cypresssemiconductorco/abstraction-rtos/#latest-v1.X#\$\$ASSET_REPO\$\$/abstraction-rtos/latest-v1.X > deps/abstraction-rtos.mtb
  *    \endcode
  *
  * 4. Modify the example for your Wi-Fi SSID parameters in lowpower_task.h
@@ -2746,8 +2741,6 @@
  *
  *    # MTB2.2 and .mtb approach , make sure below mtb files are present
  *    echo https://github.com/cypresssemiconductorco/TARGET_CY8CKIT-062S2-43012#latest-v2.X#\$\$ASSET_REPO\$\$/TARGET_CY8CKIT-062S2-43012/latest-v2.X > deps/TARGET_CY8CKIT-062S2-43012.mtb
- *    echo https://github.com/cypresssemiconductorco/freertos/#latest-v10.X#\$\$ASSET_REPO\$\$/freertos/latest-v10.X > deps/freertos.mtb
- *    echo https://github.com/cypresssemiconductorco/abstraction-rtos/#latest-v1.X#\$\$ASSET_REPO\$\$/abstraction-rtos/latest-v1.X > deps/abstraction-rtos.mtb
  *    \endcode
  *
  * 4. Modify the example for your Wi-Fi SSID parameters in lowpower_task.h
@@ -3389,8 +3382,6 @@
  *
  *    # MTB2.2 and .mtb approach , make sure below mtb files are present
  *    echo https://github.com/cypresssemiconductorco/TARGET_CY8CKIT-062S2-43012#latest-v2.X#\$\$ASSET_REPO\$\$/TARGET_CY8CKIT-062S2-43012/latest-v2.X > deps/TARGET_CY8CKIT-062S2-43012.mtb
- *    echo https://github.com/cypresssemiconductorco/freertos/#latest-v10.X#\$\$ASSET_REPO\$\$/freertos/latest-v10.X > deps/freertos.mtb
- *    echo https://github.com/cypresssemiconductorco/abstraction-rtos/#latest-v1.X#\$\$ASSET_REPO\$\$/abstraction-rtos/latest-v1.X > deps/abstraction-rtos.mtb
  *    \endcode
  *
  * 4. Modify the example for your Wi-Fi SSID parameters in app_config.h
@@ -4162,6 +4153,9 @@
  * 2. Make sure CY8CKIT-062S2-43012.lib file is present inside deps folder
  *    \code
  *    TARGET_CY8CKIT-062S2-43012.lib : https://github.com/cypresssemiconductorco/TARGET_CY8CKIT-062S2-43012/#latest-v2.X
+ *
+ *    # MTB2.2 and .mtb approach , make sure below mtb files are present
+ *    echo https://github.com/cypresssemiconductorco/TARGET_CY8CKIT-062S2-43012#latest-v2.X#\$\$ASSET_REPO\$\$/TARGET_CY8CKIT-062S2-43012/latest-v2.X > deps/TARGET_CY8CKIT-062S2-43012.mtb
  *    \endcode
  * 3. Update FreeRTOSConfig.h with below changes to enable MCU Deep Sleep Functionality
  *
@@ -4891,7 +4885,11 @@
  *     <td>9.2.0</td>
  *   </tr>
  *   <tr>
- *     <td>GCC compiler for other SDK(s)</td>
+ *     <td>GCC compiler for Anycloud FreeRTOS</td>
+ *     <td>9.3.0</td>
+ *   </tr>
+ *   <tr>
+ *     <td>GCC compiler for Amazon FreeRTOS</td>
  *     <td>7.2.1</td>
  *   </tr>
  *   <tr>
@@ -4904,11 +4902,11 @@
  *   </tr>
  *   <tr>
  *     <td>MBED OS</td>
- *     <td>6.2.0</td>
+ *     <td>6.8.0</td>
  *   </tr>
  *   <tr>
  *     <td>AnyCloud FreeRTOS</td>
- *     <td>SDK v1.2</td>
+ *     <td>SDK v1.4</td>
  *   </tr>
  *   <tr>
  *     <td>Amazon FreeRTOS</td>
@@ -4935,6 +4933,11 @@
  *
  * <table class="doxtable">
  *   <tr><th>Version</th><th>Changes</th><th>Reason for Change</th></tr>
+ *   <tr>
+ *     <td>3.1.0</td>
+ *     <td> Minor Fixes and documentation update  </td>
+ *     <td> MBED OS 6.8.0 , Anycloud SDKv1.4 , Amazon FreeRTOS v202007.00 </td>
+ *   </tr>
  *   <tr>
  *     <td>3.0.0</td>
  *     <td> LPA Middleware for all SDK(s) </td>

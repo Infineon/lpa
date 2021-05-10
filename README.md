@@ -58,7 +58,7 @@ This section provides the list of dependent libraries required for this middlewa
 
 ## Supported Software and Tools
 ```
-ToolChain : GCC_ARM and IAR (FreeRTOS)
+ToolChain : GCC_ARM, IAR and ARMC6 (FreeRTOS)
             GCC_ARM and ARMC6 (MBEDOS)
             GCC_ARM, IAR and ARMC6 (Amazon FreeRTOS)
 OS        : MBEDOS , FreeRTOS and Amazon FreeRTOS

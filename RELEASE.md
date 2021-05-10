@@ -1,4 +1,4 @@
-# Low Power Assistant Middleware(LPA) Library 3.0.0
+# Low Power Assistant Middleware(LPA) Library 3.1.0
 
 ### What's Included?
 
@@ -6,19 +6,21 @@ Please refer to the [README.md](./README.md) and the [Low Power Assistant Middle
 The revision history of the LPA Middleware is also available on the [Low Power Assistant Middleware Library Changelog](https://cypresssemiconductorco.github.io/lpa/lpa_api_reference_manual/html/index.html#group_lpa_changelog).
 
 New in this release:
-1. Supports all SDK(s)
-2. Support for AFR 202007
-3. Support for MBED-OS 6.2.0
-4. Support for Modustoolbox 2.2
+1. Minor Fixes and Documentation update
+2. Add Code Snippet for resuming network stack
+3. Modified ipv4 to string conversion functions
+4. Verified LPA with FreeRTOS v10.3.1 for Anycloud SDK
+5. Add ARMC6 Compiler support for LPA in Anycloud SDK
 
 ### Release Versions
 
 |  Version         | Description of Change                                                  | Supported SDK                                                  |
 | ---------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 3.1.0            | Minor Fixes and documentation update                                   | MBED OS 6.8.0 , Anycloud SDKv1.4 , Amazon FreeRTOS v202007.00  |
 | 3.0.0            | LPA Middleware for all SDK(s) and Modustoolbox 2.2                     | MBED OS 6.2.0 , Anycloud SDK , Amazon FreeRTOS v202007.00      |
 | 2.1.0(ER)        | Add AFR SDK Support (Wi-Fi Only LPA) and WLAN low power configurations | Amazon FreeRTOS v202002.00                                     |
 | 2.0.0            | Add TCP Keepalive offload Feature and AnyCloud SDK Support             | FreeRTOS Anycloud SDK                                          |
-| 1.0.0            | New LPA Middleware. Only ARP and Packet Filter offloads supported      |   MBEDOS upto 5.15.2                                           |
+| 1.0.0            | New LPA Middleware. Only ARP and Packet Filter offloads supported      | MBEDOS upto 5.15.2                                             |
 
 
 ### Known Issues
@@ -35,11 +37,12 @@ This version of the LPA Middleware was validated for compatibility with the foll
 | - ModusToolbox MCU Personality in Device Configurator                     |   1.2     |
 | - ModusToolbox WiFi and BT Personalities in Device Configurator           |   1.0     |
 | GCC compiler for MBED-OS                                                  |   9.2.0   |
-| GCC compiler for other SDK(s)                                             |   7.2.1   |
+| GCC compiler for AnyCloud                                                 |   9.3.0   |
+| GCC compiler for AMAZON FREERTOS                                          |   7.2     |
 | IAR Compiler                                                              |   8.32    |
 | ARM Compiler 6                                                            |   6.14    |
-| MBED OS                                                                   |   6.2.0   |
-| AnyCloud FreeRTOS                                                         | SDK v1.2  |
+| MBED OS                                                                   |   6.8.0   |
+| AnyCloud FreeRTOS                                                         | SDK v1.4  |
 | AMAZON FREERTOS                                                           | V202007.00|
 
 ### More information

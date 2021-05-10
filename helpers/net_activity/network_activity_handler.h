@@ -130,6 +130,7 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
  * \section subsection_lpa_code_snippets Code Snippets
  * \subsection subsection_lpa_snippet_1 Code Snippet 1: Using wait_net_suspend for suspend/resume network stack
  * The following code snippet demonstrates an example for Suspending Network stack to allow MCU to go to Deep Sleep.
+ * LPA API \b cylpa_on_emac_activity should be called to resume network stack in order to queue packets to LwIP.
  * \snippet wifi_low_power.c snippet_cylpa_wait_net_suspend
  *
  * \subsection subsection_lpa_snippet_2 Code Snippet 2: Read OLM configuration from device configurator.
@@ -179,6 +180,21 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
  *  @return int32_t                : Returns status on one of these cases: Network error status if the network stack suspension failed or EMAC activity status as a result of network inactivity monitor.
  */
 extern int32_t   wait_net_suspend(void *net_intf,   uint32_t wait_ms, uint32_t inactive_interval_ms, uint32_t inactive_window_ms);
+
+/** Network Monitor Function
+ *
+ *  This function should be used for waking up Network Stack from suspended/lock state.
+ *  TCPIP Core will locked in wait_net_suspend function for putting MCU to Deep Sleep.
+ *  Any task which needs to queue to LwIP should be call this function to unlock TCPIP
+ *  Core.
+ *
+ *  @param is_tx_activity  : set event bit for TX/RX activity
+ *
+ *
+ *  @return void
+ */
+
+extern void cylpa_on_emac_activity(bool is_tx_activity);
 
 /** Creates TCP Socket connection
  *

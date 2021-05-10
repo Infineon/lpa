@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Low Power Assistant Middleware Library 3.0.0: LPA Utilities API</title>
+<title>Low Power Assistant Middleware Library 3.1.0: LPA Utilities API</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><a href="http://www.cypress.com/"><img alt="Logo" src="cypress_logo.png"/></a></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Low Power Assistant Middleware Library 3.0.0</div>
+   <div id="projectname">Low Power Assistant Middleware Library 3.1.0</div>
   </td>
  </tr>
  </tbody>
@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('group__lpautilities.html','');});
 Code Snippets</h1>
 <h2><a class="anchor" id="subsection_lpa_snippet_1"></a>
 Code Snippet 1: Using wait_net_suspend for suspend/resume network stack</h2>
-<p>The following code snippet demonstrates an example for Suspending Network stack to allow MCU to go to Deep Sleep. </p><div class="fragment"><div class="line">    <span class="comment">/* Configures an emac activity callback to the Wi-Fi interface and</span></div><div class="line"><span class="comment">     * suspends the network if the network is inactive for a duration of</span></div><div class="line"><span class="comment">     * INACTIVE_WINDOW_MS inside an interval of INACTIVE_INTERVAL_MS. The</span></div><div class="line"><span class="comment">     * callback is used to signal the presence/absence of network activity</span></div><div class="line"><span class="comment">     * to resume/suspend the network stack.</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keywordflow">for</span> (;;)</div><div class="line">    {</div><div class="line">         <a class="code" href="group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f">wait_net_suspend</a>(wifi, portMAX_DELAY, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);</div><div class="line">         vTaskDelay(pdMS_TO_TICKS(100));</div><div class="line">    }</div></div><!-- fragment --> <h2><a class="anchor" id="subsection_lpa_snippet_2"></a>
+<p>The following code snippet demonstrates an example for Suspending Network stack to allow MCU to go to Deep Sleep. LPA API <b>cylpa_on_emac_activity</b> should be called to resume network stack in order to queue packets to LwIP. </p><div class="fragment"><div class="line">    <span class="comment">/* Configures an emac activity callback to the Wi-Fi interface and</span></div><div class="line"><span class="comment">     * suspends the network if the network is inactive for a duration of</span></div><div class="line"><span class="comment">     * INACTIVE_WINDOW_MS inside an interval of INACTIVE_INTERVAL_MS. The</span></div><div class="line"><span class="comment">     * callback is used to signal the presence/absence of network activity</span></div><div class="line"><span class="comment">     * to resume/suspend the network stack.</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keywordtype">void</span> main_task()</div><div class="line">    {</div><div class="line">        ...</div><div class="line">        <span class="keywordflow">for</span> (;;)</div><div class="line">        {</div><div class="line">           <a class="code" href="group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f">wait_net_suspend</a>(wifi, portMAX_DELAY, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);</div><div class="line">           vTaskDelay(pdMS_TO_TICKS(100));</div><div class="line">        }</div><div class="line">    }</div><div class="line">    </div><div class="line">    <span class="keywordtype">void</span> child_task()</div><div class="line">    {</div><div class="line">        ...</div><div class="line">        <span class="comment">/* Call LPA API to resume network stack which is suspended by wait_net_suspend</span></div><div class="line"><span class="comment">         * Function. This should be called by any process which wants to send packets to</span></div><div class="line"><span class="comment">         * WLAN when network stack is suspended.</span></div><div class="line"><span class="comment">         */</span></div><div class="line">        <a class="code" href="group__lpautilities.html#ga83db731bc98eb6abbcfbf453e9fecb69">cylpa_on_emac_activity</a>(<span class="keyword">true</span>);</div><div class="line"></div><div class="line">        <span class="comment">/* Call any API to queue packets to LwIP</span></div><div class="line"><span class="comment">         */</span></div><div class="line">        ...</div><div class="line">    }</div><div class="line"></div></div><!-- fragment --> <h2><a class="anchor" id="subsection_lpa_snippet_2"></a>
 Code Snippet 2: Read OLM configuration from device configurator.</h2>
 <p>The following code snippet demonstrates an example for reading OLM configuration from device configurator and makes a local copy of the list. </p><div class="fragment"><div class="line">        ...</div><div class="line">        <a class="code" href="structolm__t.html">olm_t</a> *olm_inst = NULL;</div><div class="line">        <a class="code" href="structol__desc__t.html">ol_desc_t</a>* dev_cfg_list = NULL;</div><div class="line"></div><div class="line">        olm_inst = <a class="code" href="group__lpautilities.html#gaab3a675f4712ee9906da177610b0ca2a">cy_get_olm_instance</a>();</div><div class="line">        <span class="keywordflow">if</span> ( olm_inst != NULL )</div><div class="line">        {</div><div class="line">            <span class="comment">/* make a copy to local list */</span></div><div class="line">            dev_cfg_list = (<a class="code" href="structol__desc__t.html">ol_desc_t</a> *)olm_inst-&gt;<a class="code" href="structolm__t.html#a2b190f623aefb6f3c6e51cc62b751789">ol_list</a>;</div><div class="line">            ...</div></div><!-- fragment --> <h2><a class="anchor" id="subsection_lpa_snippet_3"></a>
 Code Snippet 3: Search for TCP KA offload in the device configurator list.</h2>
@@ -108,6 +108,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga8fe3dbb6666cb69c052385ce9ff9405f"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f">wait_net_suspend</a> (void *net_intf, uint32_t wait_ms, uint32_t inactive_interval_ms, uint32_t inactive_window_ms)</td></tr>
 <tr class="memdesc:ga8fe3dbb6666cb69c052385ce9ff9405f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Network Monitor Function.  <a href="#ga8fe3dbb6666cb69c052385ce9ff9405f">More...</a><br /></td></tr>
 <tr class="separator:ga8fe3dbb6666cb69c052385ce9ff9405f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga83db731bc98eb6abbcfbf453e9fecb69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#ga83db731bc98eb6abbcfbf453e9fecb69">cylpa_on_emac_activity</a> (bool is_tx_activity)</td></tr>
+<tr class="memdesc:ga83db731bc98eb6abbcfbf453e9fecb69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Network Monitor Function.  <a href="#ga83db731bc98eb6abbcfbf453e9fecb69">More...</a><br /></td></tr>
+<tr class="separator:ga83db731bc98eb6abbcfbf453e9fecb69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab1bdee5b863d063b2cfb1dc693f8b685"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#gab1bdee5b863d063b2cfb1dc693f8b685">cy_tcp_create_socket_connection</a> (void *net_intf, void **socket_handle, const char *remote_ip, uint16_t remote_port, uint16_t local_port, <a class="el" href="structcy__tko__ol__cfg__t.html">cy_tko_ol_cfg_t</a> *downloaded, int socket_keepalive_enable)</td></tr>
 <tr class="memdesc:gab1bdee5b863d063b2cfb1dc693f8b685"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates TCP Socket connection.  <a href="#gab1bdee5b863d063b2cfb1dc693f8b685">More...</a><br /></td></tr>
 <tr class="separator:gab1bdee5b863d063b2cfb1dc693f8b685"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,6 +175,34 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int32_t : Returns status on one of these cases: Network error status if the network stack suspension failed or EMAC activity status as a result of network inactivity monitor. </dd></dl>
+
+</div>
+</div>
+<a id="ga83db731bc98eb6abbcfbf453e9fecb69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga83db731bc98eb6abbcfbf453e9fecb69">&#9670;&nbsp;</a></span>cylpa_on_emac_activity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cylpa_on_emac_activity </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_tx_activity</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Network Monitor Function. </p>
+<p>This function should be used for waking up Network Stack from suspended/lock state. TCPIP Core will locked in wait_net_suspend function for putting MCU to Deep Sleep. Any task which needs to queue to LwIP should be call this function to unlock TCPIP Core.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">is_tx_activity</td><td>: set event bit for TX/RX activity</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
 </div>
 </div>
@@ -354,7 +385,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath">
     <ul>
         <li class="footer">
-            Generated for <b>Low Power Assistant Middleware Library 3.0.0</b> by <b>Cypress Semiconductor Corporation</b>.
+            Generated for <b>Low Power Assistant Middleware Library 3.1.0</b> by <b>Cypress Semiconductor Corporation</b>.
             All rights reserved.
         </li>
     </ul>
