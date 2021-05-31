@@ -15,7 +15,7 @@
 
 /**
  *******************************************************************************
- * \mainpage Low Power Assistant Middleware Library 3.1.0
+ * \mainpage Low Power Assistant Middleware Library 3.1.1
  *******************************************************************************
  * \section section_lpa_overview Overview
  *******************************************************************************
@@ -4173,31 +4173,7 @@
  *    #define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   CY_CFG_PWR_DEEPSLEEP_LATENCY
  *    #endif
  *    \endcode
- * 4. Make sure below changes are present in app_bt_cfg.c which controls BT Host wake and device wake from device configurator
- *    \code
- *    .controller_config =
- *	   {
- *            .bt_power_pin      = CYBSP_BT_POWER,
- *            .sleep_mode =
- *        {
- *            // For ModusToolBox BT LPA configuration
- *            #if defined(CYCFG_BT_LP_ENABLED)
- *                .sleep_mode_enabled   = CYCFG_BT_LP_ENABLED,
- *                .device_wakeup_pin    = CYCFG_BT_DEV_WAKE_GPIO,
- *                .host_wakeup_pin      = CYCFG_BT_HOST_WAKE_GPIO,
- *                .device_wake_polarity = CYCFG_BT_DEV_WAKE_POLARITY,
- *                .host_wake_polarity   = CYCFG_BT_HOST_WAKE_IRQ_EVENT
- *            #else
- *    			.sleep_mode_enabled   = true,
- *		        .device_wakeup_pin    = CYBSP_BT_DEVICE_WAKE,
- *	  		    .host_wakeup_pin      = CYBSP_BT_HOST_WAKE,
- *    			.device_wake_polarity = CYBT_WAKE_ACTIVE_LOW,
- *    			.host_wake_polarity   = CYBT_WAKE_ACTIVE_LOW
- *            #endif
- *         }
- *     },
- *    \endcode
- * 5. Configure BT Wake up Configurations.
+ * 4. Configure BT Wake up Configurations.
  *    This step can be done by using the ModusToolbox Device Configurator 
  *    or by manually updating the code. 
  *    + <b>BT Low power using the ModusToolbox Device Configurator</b>
@@ -4205,7 +4181,7 @@
  *    + <b>BT Low power Manual configuration</b>
  *       Refer to \ref group_lpa_p3_cc_manual_flow
  *
- * 6. Update Makefile with below changes
+ * 5. Update Makefile with below changes
  *    \code
  *    COMPONENTS=WCM SECURE_SOCKETS
  *
@@ -4214,7 +4190,7 @@
  *    CY_GETLIBS_SHARED_PATH=../
  *    CY_GETLIBS_SHARED_NAME=mtb_shared
  *    \endcode
- * 7. Build the project and program the board. The Cypress Board's BT
+ * 6. Build the project and program the board. The Cypress Board's BT
  *    Powersave is configured and enabled by default. The following command
  *    is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as 
  *    the toolchain:
@@ -4223,17 +4199,17 @@
  *    make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
  *    \endcode
  *
- * 8. Open Ble scanner app in phone, Filter by mac address displayed on the serial port for this device. Click <i>bond</i> on the app
+ * 7. Open Ble scanner app in phone, Filter by mac address displayed on the serial port for this device. Click <i>bond</i> on the app
  *     * CySmart BLE APP : https://play.google.com/store/apps/details?id=com.cypress.cysmart&hl=en_US
  *
- * 9. Check the board operation. Refer to the \ref section_lpa_measurement
+ * 8. Check the board operation. Refer to the \ref section_lpa_measurement
  *    section for corresponding instructions.
  *    Following image show current measurement with BLE advertising and connected. \n
  *    High Current Spike in PSoC6 is due to WiFi
  *
  *    \image html ble_beacon_anycloud.png height=500px
  *
- * 10. To disable the BT Low Power feature or to change the
+ * 9. To disable the BT Low Power feature or to change the
  *    BT_HOST_WAKE / BT_DEV_WAKE pins, Cypress recommends using 
  *    the ModusToolbox Device Configurator. Use the appropriate 
  *    connectivity device tab (for the CY8CKIT_062S2_43012 board
@@ -4933,6 +4909,11 @@
  *
  * <table class="doxtable">
  *   <tr><th>Version</th><th>Changes</th><th>Reason for Change</th></tr>
+ *   <tr>
+ *     <td>3.1.1</td>
+ *     <td> Fix for wait_net_suspend with TCPIP core locking Configuration </td>
+ *     <td> Anycloud SDKv1.4.1 </td>
+ *   </tr>
  *   <tr>
  *     <td>3.1.0</td>
  *     <td> Minor Fixes and documentation update  </td>

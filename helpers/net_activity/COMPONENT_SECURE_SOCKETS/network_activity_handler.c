@@ -399,7 +399,6 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
 int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inactive_interval_ms,
         uint32_t network_inactive_window_ms)
 {
-    static uint8_t statsCount = 0;
     int32_t state;
     uint32_t result, flags;
     char idle_power_mode[IDLE_POWER_MODE_STRING_LEN];
@@ -465,16 +464,8 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
             */
             NW_INFO(("Resuming Network Stack, Network stack was suspended for %lums\n",lp_end_time));
             cy_dsleep_nw_suspend_time += lp_end_time;
-            cylpa_olm_dispatch_pm_notification(cy_get_olm_instance(), OL_PM_ST_AWAKE);
-            if(statsCount == 0)
-            {
-                cylpa_print_whd_bus_stats(wifi);
-            }
-            else
-            {
-                statsCount++;
-                if(statsCount == 5) statsCount = 0;
-            }
+            cylpa_print_whd_bus_stats(wifi);
+
             /* Update state to timeout expired even if event is set after timeout is expired as
              * xEventGroupWaitBits function returns the current bit for timeout scenario with
              * OOB disabled
@@ -483,8 +474,10 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
                 state = ST_WAIT_TIMEOUT_EXPIRED;
             }
             cylpa_network_state_handler(state);
-            cy_rtos_set_mutex(&cy_lp_mutex);
             cylpa_resume_ns();
+            /* Call OLM API to reset back the configurations */
+            cylpa_olm_dispatch_pm_notification(cy_get_olm_instance(), OL_PM_ST_AWAKE);
+            cy_rtos_set_mutex(&cy_lp_mutex);
         }
     }
 

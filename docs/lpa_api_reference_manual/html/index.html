@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Low Power Assistant Middleware Library 3.1.0: Low Power Assistant Middleware Library 3.1.0</title>
+<title>Low Power Assistant Middleware Library 3.1.1: Low Power Assistant Middleware Library 3.1.1</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><a href="http://www.cypress.com/"><img alt="Logo" src="cypress_logo.png"/></a></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Low Power Assistant Middleware Library 3.1.0</div>
+   <div id="projectname">Low Power Assistant Middleware Library 3.1.1</div>
   </td>
  </tr>
  </tbody>
@@ -81,7 +81,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 
 <div class="header">
   <div class="headertitle">
-<div class="title">Low Power Assistant Middleware Library 3.1.0 </div>  </div>
+<div class="title">Low Power Assistant Middleware Library 3.1.1 </div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="section_lpa_overview"></a>
@@ -1436,7 +1436,6 @@ FREERTOS</h3>
 <li>Make sure CY8CKIT-062S2-43012.lib file is present inside deps folder <div class="fragment"><div class="line">TARGET_CY8CKIT-062S2-43012.lib : https:<span class="comment">//github.com/cypresssemiconductorco/TARGET_CY8CKIT-062S2-43012/#latest-v2.X</span></div><div class="line"></div><div class="line"><span class="preprocessor"># MTB2.2 and .mtb approach , make sure below mtb files are present</span></div><div class="line"><span class="preprocessor">echo https://github.com/cypresssemiconductorco/TARGET_CY8CKIT-062S2-43012#latest-v2.X#\$\$ASSET_REPO\$\$/TARGET_CY8CKIT-062S2-43012/latest-v2.X &gt; deps/TARGET_CY8CKIT-062S2-43012.mtb</span></div></div><!-- fragment --></li>
 <li><p class="startli">Update FreeRTOSConfig.h with below changes to enable MCU Deep Sleep Functionality</p>
 <p class="startli">configUSE_TICKLESS_IDLE : This change to support Tickless Deep Sleep mode </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cycfg_system.h&gt;</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_SLEEP) || (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)</span></div><div class="line"><span class="keyword">extern</span> <span class="keywordtype">void</span> vApplicationSleep( uint32_t xExpectedIdleTime );</div><div class="line"><span class="preprocessor">#define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )</span></div><div class="line"><span class="preprocessor">#define configUSE_TICKLESS_IDLE  2</span></div><div class="line"><span class="preprocessor">#endif</span></div><div class="line"></div><div class="line"><span class="preprocessor">#if CY_CFG_PWR_DEEPSLEEP_LATENCY &gt; 0</span></div><div class="line"><span class="preprocessor">#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   CY_CFG_PWR_DEEPSLEEP_LATENCY</span></div><div class="line"><span class="preprocessor">#endif</span></div></div><!-- fragment --></li>
-<li>Make sure below changes are present in app_bt_cfg.c which controls BT Host wake and device wake from device configurator <div class="fragment"><div class="line">.controller_config =</div><div class="line"> {</div><div class="line">        .bt_power_pin      = CYBSP_BT_POWER,</div><div class="line">        .sleep_mode =</div><div class="line">    {</div><div class="line">        <span class="comment">// For ModusToolBox BT LPA configuration</span></div><div class="line"><span class="preprocessor">        #if defined(CYCFG_BT_LP_ENABLED)</span></div><div class="line">            .sleep_mode_enabled   = CYCFG_BT_LP_ENABLED,</div><div class="line">            .device_wakeup_pin    = CYCFG_BT_DEV_WAKE_GPIO,</div><div class="line">            .host_wakeup_pin      = CYCFG_BT_HOST_WAKE_GPIO,</div><div class="line">            .device_wake_polarity = CYCFG_BT_DEV_WAKE_POLARITY,</div><div class="line">            .host_wake_polarity   = CYCFG_BT_HOST_WAKE_IRQ_EVENT</div><div class="line"><span class="preprocessor">        #else</span></div><div class="line">         .sleep_mode_enabled   = <span class="keyword">true</span>,</div><div class="line">         .device_wakeup_pin    = CYBSP_BT_DEVICE_WAKE,</div><div class="line">         .host_wakeup_pin      = CYBSP_BT_HOST_WAKE,</div><div class="line">         .device_wake_polarity = CYBT_WAKE_ACTIVE_LOW,</div><div class="line">         .host_wake_polarity   = CYBT_WAKE_ACTIVE_LOW</div><div class="line"><span class="preprocessor">        #endif</span></div><div class="line">     }</div><div class="line"> },</div></div><!-- fragment --></li>
 <li>Configure BT Wake up Configurations. This step can be done by using the ModusToolbox Device Configurator or by manually updating the code.<ul>
 <li><b>BT Low power using the ModusToolbox Device Configurator</b> Refer to <a class="el" href="index.html#group_lpa_p3_cc_mt_flow">ModusToolbox Device Configurator Flow</a></li>
 <li><b>BT Low power Manual configuration</b> Refer to <a class="el" href="index.html#group_lpa_p3_cc_manual_flow">Manual Configuration Flow</a></li>
@@ -1914,6 +1913,8 @@ Changelog</h1>
 <tr>
 <th>Version</th><th>Changes</th><th>Reason for Change </th></tr>
 <tr>
+<td>3.1.1 </td><td>Fix for wait_net_suspend with TCPIP core locking Configuration  </td><td>Anycloud SDKv1.4.1   </td></tr>
+<tr>
 <td>3.1.0 </td><td>Minor Fixes and documentation update  </td><td>MBED OS 6.8.0 , Anycloud SDKv1.4 , Amazon FreeRTOS v202007.00   </td></tr>
 <tr>
 <td>3.0.0 </td><td>LPA Middleware for all SDK(s)  </td><td>MBED OS 6.2.0 , Anycloud SDKv1.2 , Amazon FreeRTOS v202007.00   </td></tr>
@@ -1962,7 +1963,7 @@ Utilities</h2>
 <div id="nav-path" class="navpath">
     <ul>
         <li class="footer">
-            Generated for <b>Low Power Assistant Middleware Library 3.1.0</b> by <b>Cypress Semiconductor Corporation</b>.
+            Generated for <b>Low Power Assistant Middleware Library 3.1.1</b> by <b>Cypress Semiconductor Corporation</b>.
             All rights reserved.
         </li>
     </ul>

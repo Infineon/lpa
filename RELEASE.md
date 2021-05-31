@@ -1,4 +1,4 @@
-# Low Power Assistant Middleware(LPA) Library 3.1.0
+# Low Power Assistant Middleware(LPA) Library 3.1.1
 
 ### What's Included?
 
@@ -6,16 +6,14 @@ Please refer to the [README.md](./README.md) and the [Low Power Assistant Middle
 The revision history of the LPA Middleware is also available on the [Low Power Assistant Middleware Library Changelog](https://cypresssemiconductorco.github.io/lpa/lpa_api_reference_manual/html/index.html#group_lpa_changelog).
 
 New in this release:
-1. Minor Fixes and Documentation update
-2. Add Code Snippet for resuming network stack
-3. Modified ipv4 to string conversion functions
-4. Verified LPA with FreeRTOS v10.3.1 for Anycloud SDK
-5. Add ARMC6 Compiler support for LPA in Anycloud SDK
+
+Fix for wait_net_suspend with TCPIP core locking Configuration
 
 ### Release Versions
 
 |  Version         | Description of Change                                                  | Supported SDK                                                  |
 | ---------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 3.1.1            | Fix for wait_net_suspend with TCPIP core locking Configuration         | MBED OS 6.8.0 , Anycloud SDKv1.4.1 , Amazon FreeRTOS v202007.00  |
 | 3.1.0            | Minor Fixes and documentation update                                   | MBED OS 6.8.0 , Anycloud SDKv1.4 , Amazon FreeRTOS v202007.00  |
 | 3.0.0            | LPA Middleware for all SDK(s) and Modustoolbox 2.2                     | MBED OS 6.2.0 , Anycloud SDK , Amazon FreeRTOS v202007.00      |
 | 2.1.0(ER)        | Add AFR SDK Support (Wi-Fi Only LPA) and WLAN low power configurations | Amazon FreeRTOS v202002.00                                     |
@@ -42,7 +40,7 @@ This version of the LPA Middleware was validated for compatibility with the foll
 | IAR Compiler                                                              |   8.32    |
 | ARM Compiler 6                                                            |   6.14    |
 | MBED OS                                                                   |   6.8.0   |
-| AnyCloud FreeRTOS                                                         | SDK v1.4  |
+| AnyCloud FreeRTOS                                                         | SDK v1.4.1|
 | AMAZON FREERTOS                                                           | V202007.00|
 
 ### More information
@@ -62,4 +60,4 @@ The following resources contain more information:
 * [PSoC 63 with BLE Datasheet Programmable System-on-Chip datasheet](http://www.cypress.com/ds218787)
   
 ---
-© Cypress Semiconductor Corporation, 2019-2020.
+© Cypress Semiconductor Corporation, 2021.
