@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Low Power Assistant Middleware Library 3.1.1: Low Power Assistant Middleware Library 3.1.1</title>
+<title>Low Power Assistant Middleware Library 3.2.0: Low Power Assistant Middleware Library 3.2.0</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -28,9 +28,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><a href="http://www.cypress.com/"><img alt="Logo" src="cypress_logo.png"/></a></td>
+  <td id="projectlogo"><a href="http://www.cypress.com/"><img alt="Logo" src="infineon_logo.png"/></a></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Low Power Assistant Middleware Library 3.1.1</div>
+   <div id="projectname">Low Power Assistant Middleware Library 3.2.0</div>
   </td>
  </tr>
  </tbody>
@@ -81,7 +81,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 
 <div class="header">
   <div class="headertitle">
-<div class="title">Low Power Assistant Middleware Library 3.1.1 </div>  </div>
+<div class="title">Low Power Assistant Middleware Library 3.2.0 </div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="section_lpa_overview"></a>
@@ -120,7 +120,7 @@ Features</h2>
 </ul>
 <h1><a class="anchor" id="section_lpa_getting_started"></a>
 Getting Started</h1>
-<p>The LPA middleware can be used in various software environments including Mbed OS, FreeRTOS and Amazon FreeRTOS. The quickest way to get started is by using the Code Examples. Cypress Semiconductor continuously extends its portfolio of code examples at the <a href="http://www.cypress.com"><b>Cypress Semiconductor website</b></a> and at the <a href="https://github.com/cypresssemiconductorco"><b>Cypress Semiconductor GitHub</b></a> website. The following Quick Start Guide sections describe several use cases for using the LPA features:</p><ul>
+<p>The LPA middleware can be used in various software environments including Mbed OS, FreeRTOS and Amazon FreeRTOS. The quickest way to get started is by using the Code Examples. Cypress Semiconductor continuously extends its portfolio of code examples at the <a href="http://www.cypress.com"><b>Cypress Semiconductor website</b></a> and at the <a href="https://github.com/Infineon"><b>Cypress Semiconductor GitHub</b></a> website. The following Quick Start Guide sections describe several use cases for using the LPA features:</p><ul>
 <li>MCU Low Power <a class="el" href="index.html#group_lpa_p1_qsg_general">Quick Start Guide</a></li>
 <li>Wi-Fi Host Wake Signal <a class="el" href="index.html#group_lpa_p2_host_wake_qsg">Quick Start Guide</a></li>
 <li>Wi-Fi Address Resolution Protocol (ARP) Offload <a class="el" href="index.html#group_lpa_p2_arp_offload_qsg">Quick Start Guide</a></li>
@@ -451,7 +451,7 @@ FREERTOS</h4>
 <li>Switch to the "Pins" tab, enable P4[1] pin, specify its name as "CYBSP_WIFI_HOST_WAKE", in the "Parameters" pane change "Interrupt Trigger Type" to "Rising Edge". If you are using a different pioneer kit, refer to its guide for Host&lt;-&gt;Device connection pinout.</li>
 </ul>
 </li>
-<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --><p class="startli">When the modified mtb-example-anycloud-wlan-lowpower starts, the console output shows that it connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">=======================================================</div><div class="line">CE230106 - AnyCloud Example: WLAN Lowpower</div><div class="line">=======================================================</div><div class="line"></div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Jan 27 2020 21:57:29 version 13.10.271.236 (5a526db) FWID 01-61e2b002</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2020-01-27 21:54:33</div><div class="line">WHD VERSION      : v1.80.0 : v1.80.0 : GCC 7.2 : 2020-03-10 04:09:17 -0500</div><div class="line">Info:Connecting to AP</div><div class="line">IP Address 10.0.0.201 assigned</div><div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div><div class="line">Info:Beacon period = 100, DTIM period = 3</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:64, rx_total:71, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2286, cmd53_read:366, cmd53_write:559</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line">Network is active. Resuming network stack</div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
+<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --><p class="startli">When the modified mtb-example-anycloud-wlan-lowpower starts, the console output shows that it connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">=======================================================</div><div class="line">CE230106 - Example: WLAN Lowpower</div><div class="line">=======================================================</div><div class="line"></div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Jan 27 2020 21:57:29 version 13.10.271.236 (5a526db) FWID 01-61e2b002</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2020-01-27 21:54:33</div><div class="line">WHD VERSION      : v1.80.0 : v1.80.0 : GCC 7.2 : 2020-03-10 04:09:17 -0500</div><div class="line">Info:Connecting to AP</div><div class="line">IP Address 10.0.0.201 assigned</div><div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div><div class="line">Info:Beacon period = 100, DTIM period = 3</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:64, rx_total:71, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2286, cmd53_read:366, cmd53_write:559</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line">Network is active. Resuming network stack</div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
 <li><p class="startli">PSoC 6 MCU is in System Deep Sleep. Only WLAN OOB can wake Host up in this situation. Check the board operation. Use a PC to connect to the same Wi-Fi Access Point as the PSoC 6 board.</p>
 <p class="startli">Send a "ping" command to the board and observe in the serial terminal that the PSoC 6 MCU wakes up each command: </p><div class="fragment"><div class="line">C:\&gt;ping -n 3 10.0.0.201</div><div class="line">Pinging 10.0.0.201 with 32 bytes of data:</div><div class="line">Reply from 10.0.0.201: bytes=32 time=274ms TTL=255</div><div class="line">Reply from 10.0.0.201: bytes=32 time=393ms TTL=255</div><div class="line">Reply from 10.0.0.201: bytes=32 time=396ms TTL=255</div><div class="line"></div><div class="line">Ping statistics <span class="keywordflow">for</span> 10.0.0.201:</div><div class="line">    Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),</div><div class="line">Approximate round trip times in milli-seconds:</div><div class="line">    Minimum = 274ms, Maximum = 396ms, Average = 354ms</div><div class="line"></div><div class="line">&lt;Terminal logs &gt;</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 443ms</div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:91, rx_total:97, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2314, cmd53_read:488, cmd53_write:607</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:93, sdio_intrs:187, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter Deep sleep power mode</div></div><!-- fragment --><p> Ping traffic causes WLAN OOB periodically wakes up the host, oob_intrs displayed in the serial terminal output shows the number of WLAN OOB interrupts received.</p>
 </li>
@@ -626,7 +626,7 @@ FREERTOS</h4>
 <li>Save the configuration to generate the necessary code.</li>
 </ul>
 </li>
-<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --><p class="startli">When the modified mtb-example-anycloud-wlan-lowpower starts, the console output shows that it connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">=======================================================</div><div class="line">CE230106 - AnyCloud Example: WLAN Lowpower</div><div class="line">=======================================================</div><div class="line"></div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Jan 27 2020 21:57:29 version 13.10.271.236 (5a526db) FWID 01-61e2b002</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2020-01-27 21:54:33</div><div class="line">WHD VERSION      : v1.80.0 : v1.80.0 : GCC 7.2 : 2020-03-10 04:09:17 -0500</div><div class="line">Info:Connecting to AP</div><div class="line">IP Address 10.0.0.201 assigned</div><div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div><div class="line">Info:Beacon period = 100, DTIM period = 3</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:64, rx_total:71, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2286, cmd53_read:366, cmd53_write:559</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line">Network is active. Resuming network stack</div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
+<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --><p class="startli">When the modified mtb-example-anycloud-wlan-lowpower starts, the console output shows that it connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">=======================================================</div><div class="line">CE230106 - Example: WLAN Lowpower</div><div class="line">=======================================================</div><div class="line"></div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Jan 27 2020 21:57:29 version 13.10.271.236 (5a526db) FWID 01-61e2b002</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2020-01-27 21:54:33</div><div class="line">WHD VERSION      : v1.80.0 : v1.80.0 : GCC 7.2 : 2020-03-10 04:09:17 -0500</div><div class="line">Info:Connecting to AP</div><div class="line">IP Address 10.0.0.201 assigned</div><div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div><div class="line">Info:Beacon period = 100, DTIM period = 3</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:64, rx_total:71, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2286, cmd53_read:366, cmd53_write:559</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line">Network is active. Resuming network stack</div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
 <li>Check the board operation. Use a PC to connect to the same Wi-Fi Access Point as the PSoC 6 board.<ul>
 <li>Send a "ping" command to the board and observe in the serial terminal that the PSoC 6 MCU wakes up for each command: <div class="fragment"><div class="line">C:\&gt;ping -n 3 10.0.0.201</div><div class="line"></div><div class="line">Pinging 10.0.0.201 with 32 bytes of data:</div><div class="line">Reply from 10.0.0.201: bytes=32 time=319ms TTL=255</div><div class="line">Reply from 10.0.0.201: bytes=32 time=233ms TTL=255</div><div class="line">Reply from 10.0.0.201: bytes=32 time=151ms TTL=255</div><div class="line"></div><div class="line">Ping statistics <span class="keywordflow">for</span> 10.0.0.201:</div><div class="line">  Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),</div><div class="line">Approximate round trip times in milli-seconds:</div><div class="line">  Minimum = 151ms, Maximum = 319ms, Average = 234ms</div><div class="line"></div><div class="line">&lt;Terminal logs &gt;</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 2456ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:174, rx_total:198, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2638, cmd53_read:1001, cmd53_write:796</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:199, sdio_intrs:401, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line">Network is active. Resuming network stack</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
 <li><p class="startli">Send an "arping" command as follows and observe that the PSoC 6 MCU is in Deep Sleep mode. </p><div class="fragment"><div class="line">C:\&gt;arp-ping.exe -n 3 10.0.0.201</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 10.0.0.201 in 113.078ms</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 10.0.0.201 in 1115.498ms</div><div class="line">Reply that D4:4D:A4:A0:02:A4 is 10.0.0.201 in 1113.863ms</div><div class="line"></div><div class="line">Ping statistics <span class="keywordflow">for</span> 10.0.0.201/arp</div><div class="line">   3 probes sent.</div><div class="line">   3 successful, 0 failed.</div><div class="line">Approximate trip times in milli-seconds:</div><div class="line">   Minimum = 113.078ms, Maximum = 1115.498ms, Average = 780.813ms</div></div><!-- fragment --><p class="startli">Use any available ARPping tool. As an example:</p><ul>
@@ -876,7 +876,7 @@ FREERTOS</h4>
 <li>Save the configuration to generate the necessary code.</li>
 </ul>
 </li>
-<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --><p class="startli">When the modified mtb-example-anycloud-wlan-lowpower starts, the console output shows that it connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">=======================================================</div><div class="line">CE230106 - AnyCloud Example: WLAN Lowpower</div><div class="line">=======================================================</div><div class="line"></div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Jan 27 2020 21:57:29 version 13.10.271.236 (5a526db) FWID 01-61e2b002</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2020-01-27 21:54:33</div><div class="line">WHD VERSION      : v1.80.0 : v1.80.0 : GCC 7.2 : 2020-03-10 04:09:17 -0500</div><div class="line">Info:Connecting to AP</div><div class="line">IP Address 10.0.0.201 assigned</div><div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div><div class="line">Info:Beacon period = 100, DTIM period = 3</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:64, rx_total:71, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2286, cmd53_read:366, cmd53_write:559</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line">Network is active. Resuming network stack</div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
+<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --><p class="startli">When the modified mtb-example-anycloud-wlan-lowpower starts, the console output shows that it connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">=======================================================</div><div class="line">CE230106 - Example: WLAN Lowpower</div><div class="line">=======================================================</div><div class="line"></div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Jan 27 2020 21:57:29 version 13.10.271.236 (5a526db) FWID 01-61e2b002</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2020-01-27 21:54:33</div><div class="line">WHD VERSION      : v1.80.0 : v1.80.0 : GCC 7.2 : 2020-03-10 04:09:17 -0500</div><div class="line">Info:Connecting to AP</div><div class="line">IP Address 10.0.0.201 assigned</div><div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div><div class="line">Info:Beacon period = 100, DTIM period = 3</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div><div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div><div class="line"></div><div class="line">=====================================================</div><div class="line">WHD Stats..</div><div class="line">tx_total:64, rx_total:71, tx_no_mem:0, rx_no_mem:0</div><div class="line">tx_fail:0, no_credit:0, flow_control:0</div><div class="line">Bus Stats..</div><div class="line">cmd52:2286, cmd53_read:366, cmd53_write:559</div><div class="line">cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0</div><div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div><div class="line">=====================================================</div><div class="line">Network is active. Resuming network stack</div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
 <li>Check the board operation. Use a PC to connect to the same Wi-Fi Access Point as the PSoC 6 board.<ul>
 <li>Send "ping" command to the board and observe in serial terminal that it does not wake up the PSoC 6 MCU since there is no "keep" packet filter for ICMP pings, there is no response for the pings: <div class="fragment"><div class="line">C:\&gt;ping -n 3 10.0.0.201</div><div class="line"></div><div class="line">Pinging 10.0.0.201 with 32 bytes of data:</div><div class="line">Request timed out.</div><div class="line">Request timed out.</div><div class="line">Request timed out.</div><div class="line"></div><div class="line">Ping statistics <span class="keywordflow">for</span> 10.0.0.201:</div><div class="line">    Packets: Sent = 3, Received = 0, Lost = 3 (100% loss),</div></div><!-- fragment --></li>
 <li><p class="startli">Send an "arping" command as follows and observe that the PSoC 6 MCU is in Deep Sleep mode. Use any available ARPping tool. As an example:</p><ul>
@@ -1061,7 +1061,7 @@ FREERTOS</h4>
 </li>
 <li>Use a PC to connect to the same Wi-Fi Access Point as the PSoC 6 board. Run <a href="tcp_echo_server.py" rel="stylesheet" type="text/css"><b>tcp_echo_server.py</b></a> in that PC to act as TCP Server <div class="fragment"><div class="line">python tcp_echo_server.py --port 3360</div></div><!-- fragment --></li>
 <li>Make sure below Makefile changes present if LPA version used is greater than 3.0.0 <div class="fragment"><div class="line">COMPONENTS=WCM SECURE_SOCKETS</div><div class="line"></div><div class="line"><span class="preprocessor"># For MTB2.2, below change</span></div><div class="line"></div><div class="line">CY_GETLIBS_SHARED_PATH=../</div><div class="line">CY_GETLIBS_SHARED_NAME=mtb_shared</div></div><!-- fragment --></li>
-<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --><p class="startli">When the modified mtb-example-connectivity-offload-tcp-keepalive starts, the console output lists available Wi-Fi networks. It then connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">Info: ============================================</div><div class="line">Info: AnyCloud Example: WLAN TCP Keepalive Offload</div><div class="line">Info: ============================================</div><div class="line"></div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Jan 27 2020 21:57:29 version 13.10.271.236 (5a526db) FWID 01-61e2b002</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2020-01-27 21:54:33</div><div class="line">WHD VERSION      : v1.80.0 : v1.80.0 : GCC 7.2 : 2020-03-10 04:09:17 -0500</div><div class="line">Wi-Fi initialization is successful</div><div class="line">Join to AP: SSID</div><div class="line">IP Address 192.168.43.11 assigned</div><div class="line">Successfully joined wifi network SSID</div><div class="line">Taking TCP Keepalive configuration from the Generated sources.</div><div class="line">TCP remote IP Address f2ba8c0  remote port:3360</div><div class="line">TCP Connection Established Successfully ctx:8011050</div><div class="line">Socket[0]: Created connection to IP 192.168.43.15, local port 3353, remote port 3360</div><div class="line">Skipped TCP socket connection <span class="keywordflow">for</span> socket <span class="keywordtype">id</span>[1]. Check the TCP Keepalive configuration.</div><div class="line">Skipped TCP socket connection <span class="keywordflow">for</span> socket <span class="keywordtype">id</span>[2]. Check the TCP Keepalive configuration.</div><div class="line">Skipped TCP socket connection <span class="keywordflow">for</span> socket <span class="keywordtype">id</span>[3]. Check the TCP Keepalive configuration.</div><div class="line">Low power task created</div><div class="line">whd_tko_toggle: Successfully enabled</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
+<li><p class="startli">Build the project and program the board. The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make getlibs</div><div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div></div><!-- fragment --><p class="startli">When the modified mtb-example-connectivity-offload-tcp-keepalive starts, the console output lists available Wi-Fi networks. It then connects to the specified above Wi-Fi Access Point, and then the PSoC 6 MCU goes to System Deep Sleep. </p><div class="fragment"><div class="line">Info: ============================================</div><div class="line">Info:  Example: WLAN TCP Keepalive Offload</div><div class="line">Info: ============================================</div><div class="line"></div><div class="line">WLAN MAC Address : D4:4D:A4:A0:02:A4</div><div class="line">WLAN Firmware    : wl0: Jan 27 2020 21:57:29 version 13.10.271.236 (5a526db) FWID 01-61e2b002</div><div class="line">WLAN CLM         : API: 18.2 Data: 9.10.0 Compiler: 1.36.1 ClmImport: 1.34.1 Creation: 2020-01-27 21:54:33</div><div class="line">WHD VERSION      : v1.80.0 : v1.80.0 : GCC 7.2 : 2020-03-10 04:09:17 -0500</div><div class="line">Wi-Fi initialization is successful</div><div class="line">Join to AP: SSID</div><div class="line">IP Address 192.168.43.11 assigned</div><div class="line">Successfully joined wifi network SSID</div><div class="line">Taking TCP Keepalive configuration from the Generated sources.</div><div class="line">TCP remote IP Address f2ba8c0  remote port:3360</div><div class="line">TCP Connection Established Successfully ctx:8011050</div><div class="line">Socket[0]: Created connection to IP 192.168.43.15, local port 3353, remote port 3360</div><div class="line">Skipped TCP socket connection <span class="keywordflow">for</span> socket <span class="keywordtype">id</span>[1]. Check the TCP Keepalive configuration.</div><div class="line">Skipped TCP socket connection <span class="keywordflow">for</span> socket <span class="keywordtype">id</span>[2]. Check the TCP Keepalive configuration.</div><div class="line">Skipped TCP socket connection <span class="keywordflow">for</span> socket <span class="keywordtype">id</span>[3]. Check the TCP Keepalive configuration.</div><div class="line">Low power task created</div><div class="line">whd_tko_toggle: Successfully enabled</div><div class="line"></div><div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div></div><!-- fragment --></li>
 <li>Verify the TCP Keepalive offload is working as desired.Refer to the <a class="el" href="index.html#section_lpa_measurement">How to Measure Power Consumption</a> section for corresponding instructions.The following oscilloscope screen capture shows current measurement with</li>
 </ol>
 <p><b>TCP Keepalive Offload enabled with 20 seconds interval configuration and WLAN DTIM configured as 3 :</b> </p><div class="image">
@@ -1638,7 +1638,7 @@ With LPA </th><th>Configurations </th><th>Notes  </th></tr>
 <td rowspan="3">MCU Low Power QSG </td><td>MBEDOS </td><td>mbed-os-blinky-led </td><td align="center">17.9mA </td><td align="center">25.9uA </td><td rowspan="3">Without LPA: MCU Idle power mode set to Active<br />
 With LPA: MCU Idle power mode set to Deep Sleep </td><td rowspan="3"></td></tr>
 <tr>
-<td>AnyCloud SDK(FreeRTOS) </td><td>mtb-example-psoc6-empty-app </td><td align="center">17.2mA </td><td align="center">24uA </td></tr>
+<td>Low Power Assistant(FreeRTOS) </td><td>mtb-example-psoc6-empty-app </td><td align="center">17.2mA </td><td align="center">24uA </td></tr>
 <tr>
 <td>AFR </td><td>afr-example-wlan-lowpower </td><td align="center">1.6mA </td><td align="center">29uA  </td></tr>
 <tr>
@@ -1653,7 +1653,7 @@ DTIM : 3 </li>
 </ul>
 </td><td rowspan="3"></td></tr>
 <tr>
-<td>AnyCloud SDK(FreeRTOS) </td><td>mtb-example-anycloud-wlan-lowpower </td><td align="center">2.85mA </td><td align="center">600uA  </td></tr>
+<td>Low Power Assistant(FreeRTOS) </td><td>mtb-example-anycloud-wlan-lowpower </td><td align="center">2.85mA </td><td align="center">600uA  </td></tr>
 <tr>
 <td>AFR </td><td>afr-example-wlan-offloads </td><td align="center">770uA </td><td align="center">290uA  </td></tr>
 <tr>
@@ -1668,7 +1668,7 @@ DTIM : 3 </li>
 </ul>
 </td><td rowspan="3"></td></tr>
 <tr>
-<td>AnyCloud SDK(FreeRTOS) </td><td>mtb-example-anycloud-wlan-lowpower </td><td align="center">2.5mA </td><td align="center">350uA  </td></tr>
+<td>Low Power Assistant(FreeRTOS) </td><td>mtb-example-anycloud-wlan-lowpower </td><td align="center">2.5mA </td><td align="center">350uA  </td></tr>
 <tr>
 <td>AFR </td><td>afr-example-wlan-offloads </td><td align="center">1.4mA </td><td align="center">235uA  </td></tr>
 <tr>
@@ -1686,7 +1686,7 @@ PM2_SLEEP_RET : 10ms </li>
 </ul>
 </td><td rowspan="3"></td></tr>
 <tr>
-<td>AnyCloud SDK(FreeRTOS) </td><td>mtb-example-anycloud-offload-tcp-keepalive </td><td align="center">1.6mA </td><td align="center">600uA  </td></tr>
+<td>Low Power Assistant(FreeRTOS) </td><td>mtb-example-anycloud-offload-tcp-keepalive </td><td align="center">1.6mA </td><td align="center">600uA  </td></tr>
 <tr>
 <td>AFR </td><td>afr-example-wlan-offloads </td><td align="center">1.6mA </td><td align="center">236uA  </td></tr>
 <tr>
@@ -1696,7 +1696,7 @@ With LPA: BT low power enabled<br />
 MCU Idle power mode set to Deep Sleep for both use cases <br />
 BLE Advertising interval : 1000ms </td><td rowspan="3"></td></tr>
 <tr>
-<td>AnyCloud SDK(FreeRTOS) </td><td>mtb-example-anycloud-ble-wifi-onboarding </td><td align="center">3.4mA </td><td align="center">350uA  </td></tr>
+<td>Low Power Assistant(FreeRTOS) </td><td>mtb-example-anycloud-ble-wifi-onboarding </td><td align="center">3.4mA </td><td align="center">350uA  </td></tr>
 <tr>
 <td>AFR </td><td>demos/ble </td><td align="center">4.5mA </td><td align="center">80uA  </td></tr>
 <tr>
@@ -1706,7 +1706,7 @@ With LPA: BT low power enabled<br />
 MCU Idle power mode set to Deep Sleep for both use cases <br />
 BLE Advertising interval : 1000ms  </td><td rowspan="2"></td></tr>
 <tr>
-<td>AnyCloud SDK(FreeRTOS) </td><td>mtb-example-anycloud-ble-wifi-onboarding </td><td align="center">3.5mA </td><td align="center">760uA  </td></tr>
+<td>Low Power Assistant(FreeRTOS) </td><td>mtb-example-anycloud-ble-wifi-onboarding </td><td align="center">3.5mA </td><td align="center">760uA  </td></tr>
 <tr>
 <td>AFR </td><td>demos/ble </td><td align="center">4.5mA </td><td align="center">3.5mA </td><td>High Current is due to <br />
  <ul>
@@ -1887,7 +1887,7 @@ Supported Software and Tools</h1>
 <tr>
 <td>GCC compiler for MBED-OS </td><td>9.2.0  </td></tr>
 <tr>
-<td>GCC compiler for Anycloud FreeRTOS </td><td>9.3.0  </td></tr>
+<td>GCC compiler for ModusToolbox </td><td>9.3.0  </td></tr>
 <tr>
 <td>GCC compiler for Amazon FreeRTOS </td><td>7.2.1  </td></tr>
 <tr>
@@ -1896,8 +1896,6 @@ Supported Software and Tools</h1>
 <td>ARM Compiler 6 </td><td>6.14  </td></tr>
 <tr>
 <td>MBED OS </td><td>6.8.0  </td></tr>
-<tr>
-<td>AnyCloud FreeRTOS </td><td>SDK v1.4  </td></tr>
 <tr>
 <td>Amazon FreeRTOS </td><td>V202007.00  </td></tr>
 </table>
@@ -1911,19 +1909,21 @@ Errata</h1>
 Changelog</h1>
 <table class="doxtable">
 <tr>
-<th>Version</th><th>Changes</th><th>Reason for Change </th></tr>
+<th>Version</th><th>Changes</th><th>Comments </th></tr>
 <tr>
-<td>3.1.1 </td><td>Fix for wait_net_suspend with TCPIP core locking Configuration  </td><td>Anycloud SDKv1.4.1   </td></tr>
+<td>3.2.0 </td><td>Add LPA support for 4373 Kit  </td><td>LPA v3.2.0   </td></tr>
 <tr>
-<td>3.1.0 </td><td>Minor Fixes and documentation update  </td><td>MBED OS 6.8.0 , Anycloud SDKv1.4 , Amazon FreeRTOS v202007.00   </td></tr>
+<td>3.1.1 </td><td>Fix for wait_net_suspend with TCPIP core locking Configuration  </td><td>LPA v3.1.1   </td></tr>
 <tr>
-<td>3.0.0 </td><td>LPA Middleware for all SDK(s)  </td><td>MBED OS 6.2.0 , Anycloud SDKv1.2 , Amazon FreeRTOS v202007.00   </td></tr>
+<td>3.1.0 </td><td>Minor Fixes and documentation update  </td><td>MBED OS 6.8.0 , LPA v3.1.0 , Amazon FreeRTOS v202007.00   </td></tr>
+<tr>
+<td>3.0.0 </td><td>LPA Middleware for all SDK(s)  </td><td>MBED OS 6.2.0 , LPA v3.0.0 , Amazon FreeRTOS v202007.00   </td></tr>
 <tr>
 <td rowspan="2">2.1.0(ER) </td><td>Add LPA Support to Amazon FreeRTOS release  </td><td>Added AFR SDK support to Wi-Fi Only LPA   </td></tr>
 <tr>
 <td>Support WLAN Low power configurations in LPA for all OS  </td><td>Feature enhancement  </td></tr>
 <tr>
-<td rowspan="2">2.0.0 </td><td>Add LPA Support to FreeRTOS - AnyCloud SDK release  </td><td>Added AnyCloud SDK support to LPA   </td></tr>
+<td rowspan="2">2.0.0 </td><td>Add LPA Support to FreeRTOS  </td><td>LPA v2.0.0   </td></tr>
 <tr>
 <td>Add TCP Keepalive offload support  </td><td>Feature enhancement  </td></tr>
 <tr>
@@ -1933,12 +1933,12 @@ Changelog</h1>
 More Information</h1>
 <p>For more information, Cypress highly recommends starting with these documents.</p>
 <ul>
-<li><a href="https://github.com/cypresssemiconductorco/lpa"><b>Cypress GitHub LPA Middleware</b></a></li>
+<li><a href="https://github.com/Infineon/lpa"><b>Cypress GitHub LPA Middleware</b></a></li>
 <li><a href="https://www.cypress.com/products/modustoolbox-software-environment"><b>ModusToolbox Software Environment, Quick Start Guide, Documentation, and Videos</b></a></li>
-<li><a href="https://github.com/cypresssemiconductorco/mbed-os-example-wlan-lowpower"><b>LPA Middleware Code Example for MBED OS </b></a></li>
-<li><a href="https://github.com/cypresssemiconductorco/mtb-example-anycloud-wlan-lowpower"><b>LPA Middleware Code Example for FREERTOS </b></a></li>
-<li><a href="https://github.com/cypresssemiconductorco/afr-example-wlan-lowpower"><b>LPA Middleware Code Example for AMAZON FREERTOS </b></a></li>
-<li><a href="https://github.com/cypresssemiconductorco"><b>LPA Middleware Code Examples at GITHUB</b></a></li>
+<li><a href="https://github.com/Infineon/mbed-os-example-wlan-lowpower"><b>LPA Middleware Code Example for MBED OS </b></a></li>
+<li><a href="https://github.com/Infineon/mtb-example-anycloud-wlan-lowpower"><b>LPA Middleware Code Example for FREERTOS </b></a></li>
+<li><a href="https://github.com/Infineon/afr-example-wlan-lowpower"><b>LPA Middleware Code Example for AMAZON FREERTOS </b></a></li>
+<li><a href="https://github.com/Infineon"><b>LPA Middleware Code Examples at GITHUB</b></a></li>
 <li><a href="https://www.cypress.com/ModusToolboxDeviceConfig"><b>ModusToolbox Device Configurator Tool Guide</b></a></li>
 <li><a href="https://www.cypress.com/documentation/technical-reference-manuals/psoc-6-mcu-psoc-63-ble-architecture-technical-reference"><b>PSoC 6 Technical Reference Manual</b></a></li>
 <li><a href="http://www.cypress.com/ds218787"><b>PSoC 63 with BLE Datasheet Programmable System-on-Chip datasheet</b></a></li>
@@ -1963,7 +1963,7 @@ Utilities</h2>
 <div id="nav-path" class="navpath">
     <ul>
         <li class="footer">
-            Generated for <b>Low Power Assistant Middleware Library 3.1.1</b> by <b>Cypress Semiconductor Corporation</b>.
+            Generated for <b>Low Power Assistant Middleware Library 3.2.0</b> by <b>Cypress Semiconductor Corporation</b>.
             All rights reserved.
         </li>
     </ul>

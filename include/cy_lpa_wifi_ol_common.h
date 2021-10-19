@@ -15,7 +15,7 @@
 
 /**
  *******************************************************************************
- * \mainpage Low Power Assistant Middleware Library 3.1.1
+ * \mainpage Low Power Assistant Middleware Library 3.2.0
  *******************************************************************************
  * \section section_lpa_overview Overview
  *******************************************************************************
@@ -109,7 +109,7 @@
  * Cypress Semiconductor continuously extends its portfolio
  * of code examples at the <a href="http://www.cypress.com">
  * <b>Cypress Semiconductor website</b></a> and at the
- * <a href="https://github.com/cypresssemiconductorco">
+ * <a href="https://github.com/Infineon">
  * <b>Cypress Semiconductor GitHub</b></a> website.
  * The following Quick Start Guide sections describe several use cases
  * for using the LPA features:
@@ -1120,7 +1120,7 @@
  *    \code
  *    
  *    =======================================================
- *    CE230106 - AnyCloud Example: WLAN Lowpower
+ *    CE230106 - Example: WLAN Lowpower
  *    =======================================================
  *
  *    WLAN MAC Address : D4:4D:A4:A0:02:A4
@@ -1860,7 +1860,7 @@
  *    \code
  *    
  *    =======================================================
- *    CE230106 - AnyCloud Example: WLAN Lowpower
+ *    CE230106 - Example: WLAN Lowpower
  *    =======================================================
  *
  *    WLAN MAC Address : D4:4D:A4:A0:02:A4
@@ -2808,7 +2808,7 @@
  *    \code
  *    
  *    =======================================================
- *    CE230106 - AnyCloud Example: WLAN Lowpower
+ *    CE230106 - Example: WLAN Lowpower
  *    =======================================================
  *
  *    WLAN MAC Address : D4:4D:A4:A0:02:A4
@@ -3466,7 +3466,7 @@
  *    \code
  *    
  *    Info: ============================================
- *    Info: AnyCloud Example: WLAN TCP Keepalive Offload
+ *    Info:  Example: WLAN TCP Keepalive Offload
  *    Info: ============================================
  *
  *    WLAN MAC Address : D4:4D:A4:A0:02:A4
@@ -4570,7 +4570,7 @@
  *     <td rowspan="3"></td>
  *   </tr>
  *   <tr>
- *     <td>AnyCloud SDK(FreeRTOS)</td>
+ *     <td>Low Power Assistant(FreeRTOS)</td>
  *     <td>mtb-example-psoc6-empty-app</td>
  *     <td align="center">17.2mA</td>
  *     <td align="center">24uA</td>
@@ -4594,7 +4594,7 @@
  *     <td rowspan="3"></td>
  *   </tr>
  *   <tr>
- *     <td>AnyCloud SDK(FreeRTOS)</td>
+ *     <td>Low Power Assistant(FreeRTOS)</td>
  *     <td>mtb-example-anycloud-wlan-lowpower</td>
  *     <td align="center">2.85mA</td>
  *     <td align="center">600uA</td>
@@ -4619,7 +4619,7 @@
  *     <td rowspan="3"></td>
  *   </tr>
  *   <tr>
- *     <td>AnyCloud SDK(FreeRTOS)</td>
+ *     <td>Low Power Assistant(FreeRTOS)</td>
  *     <td>mtb-example-anycloud-wlan-lowpower</td>
  *     <td align="center">2.5mA</td>
  *     <td align="center">350uA</td>
@@ -4646,7 +4646,7 @@
  *     <td rowspan="3"></td>
  *   </tr>
  *   <tr>
- *     <td>AnyCloud SDK(FreeRTOS)</td>
+ *     <td>Low Power Assistant(FreeRTOS)</td>
  *     <td>mtb-example-anycloud-offload-tcp-keepalive</td>
  *     <td align="center">1.6mA</td>
  *     <td align="center">600uA</td>
@@ -4668,7 +4668,7 @@
  *     <td rowspan="3"></td>
  *   </tr>
  *   <tr>
- *     <td>AnyCloud SDK(FreeRTOS)</td>
+ *     <td>Low Power Assistant(FreeRTOS)</td>
  *     <td>mtb-example-anycloud-ble-wifi-onboarding</td>
  *     <td align="center">3.4mA</td>
  *     <td align="center">350uA</td>
@@ -4690,7 +4690,7 @@
  *   </tr>
  *     <td rowspan="2"></td>
   *   <tr>
- *     <td>AnyCloud SDK(FreeRTOS)</td>
+ *     <td>Low Power Assistant(FreeRTOS)</td>
  *     <td>mtb-example-anycloud-ble-wifi-onboarding</td>
  *     <td align="center">3.5mA</td>
  *     <td align="center">760uA</td>
@@ -4861,7 +4861,7 @@
  *     <td>9.2.0</td>
  *   </tr>
  *   <tr>
- *     <td>GCC compiler for Anycloud FreeRTOS</td>
+ *     <td>GCC compiler for ModusToolbox</td>
  *     <td>9.3.0</td>
  *   </tr>
  *   <tr>
@@ -4879,10 +4879,6 @@
  *   <tr>
  *     <td>MBED OS</td>
  *     <td>6.8.0</td>
- *   </tr>
- *   <tr>
- *     <td>AnyCloud FreeRTOS</td>
- *     <td>SDK v1.4</td>
  *   </tr>
  *   <tr>
  *     <td>Amazon FreeRTOS</td>
@@ -4908,21 +4904,26 @@
  *******************************************************************************
  *
  * <table class="doxtable">
- *   <tr><th>Version</th><th>Changes</th><th>Reason for Change</th></tr>
+ *   <tr><th>Version</th><th>Changes</th><th>Comments</th></tr>
+ *   <tr>
+ *     <td>3.2.0</td>
+ *     <td> Add LPA support for 4373 Kit </td>
+ *     <td> LPA v3.2.0 </td>
+ *   </tr>
  *   <tr>
  *     <td>3.1.1</td>
  *     <td> Fix for wait_net_suspend with TCPIP core locking Configuration </td>
- *     <td> Anycloud SDKv1.4.1 </td>
+ *     <td> LPA v3.1.1 </td>
  *   </tr>
  *   <tr>
  *     <td>3.1.0</td>
  *     <td> Minor Fixes and documentation update  </td>
- *     <td> MBED OS 6.8.0 , Anycloud SDKv1.4 , Amazon FreeRTOS v202007.00 </td>
+ *     <td> MBED OS 6.8.0 , LPA v3.1.0 , Amazon FreeRTOS v202007.00 </td>
  *   </tr>
  *   <tr>
  *     <td>3.0.0</td>
  *     <td> LPA Middleware for all SDK(s) </td>
- *     <td> MBED OS 6.2.0 , Anycloud SDKv1.2 , Amazon FreeRTOS v202007.00 </td>
+ *     <td> MBED OS 6.2.0 , LPA v3.0.0 , Amazon FreeRTOS v202007.00 </td>
  *   </tr>
  *   <tr>
  *     <td rowspan="2">2.1.0(ER)</td>
@@ -4935,8 +4936,8 @@
  *   </tr>
  *   <tr>
  *     <td rowspan="2">2.0.0</td>
- *     <td>Add LPA Support to FreeRTOS - AnyCloud SDK release </td>
- *     <td>	Added AnyCloud SDK support to LPA </td>
+ *     <td>Add LPA Support to FreeRTOS </td>
+ *     <td>	LPA v2.0.0 </td>
  *   </tr>
  *   <tr>
  *     <td>Add TCP Keepalive offload support </td>
@@ -4956,23 +4957,23 @@
  * For more information, Cypress highly
  * recommends starting with these documents.
  *
- * * <a href="https://github.com/cypresssemiconductorco/lpa">
+ * * <a href="https://github.com/Infineon/lpa">
  *   <b>Cypress GitHub LPA Middleware</b></a>
  *
  * * <a href="https://www.cypress.com/products/modustoolbox-software-environment">
  *   <b>ModusToolbox Software Environment, Quick Start Guide, Documentation,
  *   and Videos</b></a>
  *
- * * <a href="https://github.com/cypresssemiconductorco/mbed-os-example-wlan-lowpower">
+ * * <a href="https://github.com/Infineon/mbed-os-example-wlan-lowpower">
  *   <b>LPA Middleware Code Example for MBED OS </b></a>
  *
- * * <a href="https://github.com/cypresssemiconductorco/mtb-example-anycloud-wlan-lowpower">
+ * * <a href="https://github.com/Infineon/mtb-example-anycloud-wlan-lowpower">
  *   <b>LPA Middleware Code Example for FREERTOS </b></a>
  *
- * * <a href="https://github.com/cypresssemiconductorco/afr-example-wlan-lowpower">
+ * * <a href="https://github.com/Infineon/afr-example-wlan-lowpower">
  *   <b>LPA Middleware Code Example for AMAZON FREERTOS </b></a>
  *
- * * <a href="https://github.com/cypresssemiconductorco">
+ * * <a href="https://github.com/Infineon">
  *   <b>LPA Middleware Code Examples at GITHUB</b></a>
  *
  * * <a href="https://www.cypress.com/ModusToolboxDeviceConfig">

@@ -4,7 +4,7 @@
 * Version: 1.0
 *
 * Description: This file contains the macros, enumerations and function
-* prototypes used by network_activity_handler file for mbedos and AnyCloud SDK.
+* prototypes used by network_activity_handler.
 *
 ********************************************************************************
 * Copyright 2020 Cypress Semiconductor Corporation

@@ -4,7 +4,7 @@
 * Version: 1.0
 *
 * Description: This file implements the functions needed to suspend
-* network stack and wait till external event or timeout for AnyCloud SDK
+* network stack and wait till external event or timeout
 *
 ********************************************************************************
 * Copyright 2020 Cypress Semiconductor Corporation
@@ -45,15 +45,6 @@
  ******************************************************/
 
 #define IDLE_POWER_MODE_STRING_LEN (32)
-
-#define sleep_manager_lock_deep_sleep() \
-        cy_nw_act_handler_deepsleep_lock = true
-
-#define sleep_manager_unlock_deep_sleep() \
-        cy_nw_act_handler_deepsleep_lock = false
-
-#define sleep_manager_can_deep_sleep() \
-        (cy_nw_act_handler_deepsleep_lock == true ? true:false)
 
 #define PACKET_PAYLOAD 1500
 /* TCP user data buffer to send to server */
@@ -174,62 +165,13 @@ cy_mutex_t cy_lp_mutex;
 /* This variable is used to track total time spent in deep sleep */
 uint32_t cy_dsleep_nw_suspend_time;
 
-/* This variable blocks deep sleep for freertos */
-bool cy_nw_act_handler_deepsleep_lock = false;
-
-/* callback for SysPM to block deep sleep */
-cy_stc_syspm_callback_t cy_deepsleepPMCallback;
 
 /******************************************************
  *               Function Definitions
  ******************************************************/
-cy_en_syspm_status_t cylpa_nw_activity_handler_pm_callback(cy_stc_syspm_callback_params_t *callbackParams, cy_en_syspm_callback_mode_t mode)
-{
-    cy_en_syspm_status_t retStatus = CY_SYSPM_FAIL;
-
-    switch(mode)
-    {
-        case CY_SYSPM_CHECK_READY:
-        {
-            if(!cy_nw_act_handler_deepsleep_lock)
-            {
-                retStatus = CY_SYSPM_SUCCESS;
-            }
-        }
-        break;
-
-        case CY_SYSPM_CHECK_FAIL:
-        {
-            retStatus = CY_SYSPM_SUCCESS;
-        }
-        break;
-
-        case CY_SYSPM_BEFORE_TRANSITION:
-        break;
-
-        case CY_SYSPM_AFTER_TRANSITION:
-        {
-        }
-        break;
-
-        default:
-            break;
-    }
-
-    return (retStatus);
-}
 
 void cylpa_network_act_handler_init(void)
 {
-    //register pm callback     
-    cy_deepsleepPMCallback.callback = &cylpa_nw_activity_handler_pm_callback;
-    cy_deepsleepPMCallback.callbackParams = NULL;
-    cy_deepsleepPMCallback.type = CY_SYSPM_DEEPSLEEP;
-    cy_deepsleepPMCallback.order = 0; 
-
-    /* Register for SysPM and handle deep sleep based on cy_nw_act_handler_deepsleep_lock variable*/
-    Cy_SysPm_RegisterCallback(&cy_deepsleepPMCallback);
-
     /* Register for network activity callback */
     cylpa_register_network_activity_callback();
 }
@@ -427,7 +369,7 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
         emac_activity_callback_registered = true;
     }
 
-    sleep_manager_lock_deep_sleep();
+    cyhal_syspm_lock_deepsleep();
     state = cylpa_wait_net_inactivity(network_inactive_interval_ms, network_inactive_window_ms);
 
     if (ST_SUCCESS == state)
@@ -443,7 +385,7 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
             cylpa_get_idle_power_mode(idle_power_mode, sizeof(idle_power_mode));
             cylpa_olm_dispatch_pm_notification(cy_get_olm_instance(), OL_PM_ST_GOING_TO_SLEEP);
             NW_INFO(("\nNetwork Stack Suspended, MCU will enter %s power mode\n", idle_power_mode));
-            sleep_manager_unlock_deep_sleep();
+            cyhal_syspm_unlock_deepsleep();
             flags = (RX_EVENT_FLAG | TX_EVENT_FLAG);
 
             cy_rtos_get_time( &lp_start_time);
@@ -472,7 +414,7 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
 
             cy_rtos_get_mutex(&cy_lp_mutex, wait_ms);
 
-            sleep_manager_lock_deep_sleep();
+            cyhal_syspm_lock_deepsleep();
             /* Resume the network stack.
              * State data (e.g. caches) may be adjusted here so that the stack resumes properly.
             */
@@ -495,7 +437,7 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
         }
     }
 
-    sleep_manager_unlock_deep_sleep();
+    cyhal_syspm_unlock_deepsleep();
     return state;
 }
 

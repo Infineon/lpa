@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['low_20power_20assistant_20middleware_20library_203_2e1_2e1',['Low Power Assistant Middleware Library 3.1.1',['../index.html',1,'']]],
+  ['low_20power_20assistant_20middleware_20library_203_2e2_2e0',['Low Power Assistant Middleware Library 3.2.0',['../index.html',1,'']]],
   ['local_5fport',['local_port',['../structcy__tko__ol__connect__t.html#a0c22be2daaa3a4baa61bccc472d7b245',1,'cy_tko_ol_connect_t']]],
   ['log_5foffload_5fassist_5flevel_5ft',['LOG_OFFLOAD_ASSIST_LEVEL_T',['../group__group__loglevel__enum.html#gaa45e959559f8cd7cad6413f0f6e759ca',1,'cy_lpa_wifi_olm.h']]],
   ['log_5foffload_5fassist_5ft',['LOG_OFFLOAD_ASSIST_T',['../group__group__loglevel__enum.html#gaed8d713d5472a20438e48a958d960daa',1,'cy_lpa_wifi_olm.h']]],
