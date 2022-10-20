@@ -25,7 +25,8 @@
 
 #include "network_activity_handler.h"
 #include "cyabs_rtos.h"
-#include "cy_lwip.h"
+#include "cy_network_mw_core.h"
+
 #include "cy_OlmInterface.h"
 #include "whd_int.h"
 #include <cycfg_system.h>
@@ -52,6 +53,8 @@
 /* TCP user data buffer to send to server */
 static uint8_t cy_tcp_databuf[PACKET_PAYLOAD];
 #define HARDCODED_STR   "Some random stuff"
+
+extern whd_interface_t cy_olm_get_whd_interface ( void );
 
 /******************************************************
  *                   Enumerations
@@ -202,7 +205,12 @@ static void cylpa_print_whd_bus_stats(struct netif *wifi)
     whd_interface_t ifp = NULL;
     if (wifi->flags & NETIF_FLAG_UP)
     {
-        ifp = (whd_interface_t)wifi->state;
+        ifp = cy_olm_get_whd_interface();
+        if (ifp == NULL)
+        {
+           return;
+        }
+
         NW_INFO(("\n=====================================================\n"));
         (void)whd_print_stats(ifp->whd_driver, WHD_FALSE);
         NW_INFO(("=====================================================\n"));
@@ -343,7 +351,7 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
     uint32_t result, flags;
     char idle_power_mode[IDLE_POWER_MODE_STRING_LEN];
     static bool emac_activity_callback_registered = false;
-    struct netif *wifi = (struct netif *)net_intf;
+    struct netif *wifi = (struct netif *)cy_network_get_nw_interface( CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE );
     cy_time_t lp_start_time;
     cy_time_t lp_end_time;
 

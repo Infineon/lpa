@@ -1,4 +1,4 @@
-# Low Power Assistant Middleware(LPA) Library 3.2.0
+# Low Power Assistant Middleware(LPA) Library 4.0.0
 
 ### What's Included?
 
@@ -13,6 +13,7 @@ Add LPA support for 4373 Kit
 
 |  Version         | Description of Change                                                  | Comments                                                 |
 | ---------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 4.0.0            | Add LPA support for 43439 Kit                                          | ModusToolbox                                               |
 | 3.2.0            | Add LPA support for 4373 Kit                                           | ModusToolbox                                               |
 | 3.1.1            | Fix for wait_net_suspend with TCPIP core locking Configuration         | MBED OS 6.8.0 , ModusToolbox, Amazon FreeRTOS v202007.00  |
 | 3.1.0            | Minor Fixes and documentation update                                   | MBED OS 6.8.0 , ModusToolbox, Amazon FreeRTOS v202007.00  |
@@ -31,15 +32,15 @@ This version of the LPA Middleware was validated for compatibility with the foll
 
 | Software and Tools                                                        | Version   |
 | :---                                                                      | :------:  |
-| ModusToolbox Software Environment                                         |   2.3     |
+| ModusToolbox Software Environment                                         |   3.0     |
 | - ModusToolbox Device Configurator                                        |   3.0     |
 | - ModusToolbox MCU Personality in Device Configurator                     |   1.2     |
 | - ModusToolbox WiFi and BT Personalities in Device Configurator           |   1.0     |
 | GCC compiler for MBED-OS                                                  |   9.2.0   |
-| GCC compiler for ModusToolbox                                             |   9.3.0   |
+| GCC compiler for ModusToolbox                                             |   10.3.1  |
 | GCC compiler for AMAZON FREERTOS                                          |   7.2     |
-| IAR Compiler                                                              |   8.32    |
-| ARM Compiler 6                                                            |   6.14    |
+| IAR Compiler                                                              |   9.3     |
+| ARM Compiler 6                                                            |   6.16    |
 | MBED OS                                                                   |   6.8.0   |
 | AMAZON FREERTOS                                                           | V202007.00|
 

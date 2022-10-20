@@ -15,7 +15,7 @@
 
 /**
  *******************************************************************************
- * \mainpage Low Power Assistant Middleware Library 3.2.0
+ * \mainpage Low Power Assistant Middleware Library 4.0.0
  *******************************************************************************
  * \section section_lpa_overview Overview
  *******************************************************************************
@@ -244,6 +244,11 @@
  * time is larger than needed to perform a transition from
  * System Deep Sleep to Active power mode to perform tasks.
  *
+ * For additional information please refer the SysPm (System Power Management) documentation
+ * https://infineon.github.io/mtb-pdl-cat1/pdl_api_reference_manual/html/group__group__syspm.html
+ *
+ * The LPA library provides features for MCU Low Power, Wi-Fi Low Power and Bluetooth Low Power but the LPA library only needs to be included in applications that use Wi-Fi low power.
+ *
  *******************************************************************************
  * \subsection group_lpa_p1_qsg_general Quick Start Guide
  *******************************************************************************
@@ -380,17 +385,7 @@
  *    #endif
  *    \endcode
  *
- * 5. Update Makefile with below changes
- *    \code
- *    COMPONENTS=FREERTOS PSOC6HAL LWIP MBEDTLS
- *
- *    # For MTB2.2, below change
- *
- *    CY_GETLIBS_SHARED_PATH=../
- *    CY_GETLIBS_SHARED_NAME=mtb_shared
- *    \endcode
- *
- * 6. Set the desired System Idle Power mode (DeepSleep, Sleep or Active).
+ * 5. Set the desired System Idle Power mode (DeepSleep, Sleep or Active).
  *    In FreeRTOS, the System Idle Power mode is set to Deep Sleep by default 
  *    to achieve the best power saving.
  *    This step can be done by using the ModusToolbox Device Configurator 
@@ -400,7 +395,7 @@
  *    + <b>MCU Low power Manual configuration</b>
  *       Refer to \ref group_lpa_p1_cc_manual_flow
  *
- * 7. Replace main.c file with below code
+ * 6. Replace main.c file with below code
  *    \code
  *    #include "cy_pdl.h"
  *    #include "cyhal.h"
@@ -445,14 +440,14 @@
  *    }
  *    \endcode
  *
- * 8. Build the project and program the board.
+ * 7. Build the project and program the board.
  *    The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain:
  *    \code
  *    make getlibs
  *    make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
  *    \endcode
  *
- * 9. Check the board operation. Refer to the \ref section_lpa_measurement How to Measure Power Consumption section for corresponding
+ * 8. Check the board operation. Refer to the \ref section_lpa_measurement How to Measure Power Consumption section for corresponding
  *    instructions. Observe the power consumption in different states of the main thread (Active, Idle).
  *    The illuminated user LED indicates the Active state.The non-illuminated LED indicates the Idle state.
  *    The duration of Active/Idle states can be adjusted by changing the BLINKING_RATE_MS value in the blinky function.
@@ -699,6 +694,9 @@
  *******************************************************************************
  * \section group_lpa_p2 Part 2. Wi-Fi Low Power
  *******************************************************************************
+ *
+ * LPA library provides features for MCU Low Power, Wi-Fi Low Power and Bluetooth Low Power.
+ * LPA library only needs to be included in applications that use Wi-Fi low power.
  *
  * WLAN FW supports various offloads that continue operations on behalf
  * of the host while the host is asleep. Making the best use of these FW
@@ -1080,17 +1078,8 @@
  *    wait_net_suspend(wifi, portMAX_DELAY, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);
  *    \endcode
  *
- * 6. Make sure below Makefile changes present if LPA version used is greater than 3.0.0
- *    \code
- *    COMPONENTS=WCM SECURE_SOCKETS
  *
- *    # For MTB2.2, below change
- *
- *    CY_GETLIBS_SHARED_PATH=../
- *    CY_GETLIBS_SHARED_NAME=mtb_shared
- *    \endcode
- *
- * 7. Verify WLAN_HOST_WAKE pin configurations using device configurator
+ * 6. Verify WLAN_HOST_WAKE pin configurations using device configurator
  *    * Navigate to ModusToolbox installation folder and launch
  *      the ModusToolbox Device Configurator
  *      (\<install_dir\>/tools_2.2/device-configurator).
@@ -1106,7 +1095,7 @@
  *      If you are using a different pioneer kit, refer to its guide
  *      for Host\<-\>Device connection pinout.
  *
- * 8. Build the project and program the board.
+ * 7. Build the project and program the board.
  *    The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain:
  *    \code
  *    make getlibs
@@ -1148,7 +1137,7 @@
  *    Network Stack Suspended, MCU will enter DeepSleep power mode
  *    \endcode
  *
- * 9. PSoC 6 MCU is in System Deep Sleep. Only WLAN OOB can wake Host up
+ * 8. PSoC 6 MCU is in System Deep Sleep. Only WLAN OOB can wake Host up
  *    in this situation. Check the board operation. Use a PC to connect 
  *    to the same Wi-Fi Access Point as the PSoC 6 board.
  *
@@ -1809,17 +1798,8 @@
  *    wait_net_suspend(wifi, portMAX_DELAY, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);
  *    \endcode
  *
- * 6. Make sure below Makefile changes present if LPA version used is greater than 3.0.0
- *    \code
- *    COMPONENTS=WCM SECURE_SOCKETS
  *
- *    # For MTB2.2, below change
- *
- *    CY_GETLIBS_SHARED_PATH=../
- *    CY_GETLIBS_SHARED_NAME=mtb_shared
- *    \endcode
- *
- * 7. Configure the ARP offload. The easiest way to configure ARP offload
+ * 6. Configure the ARP offload. The easiest way to configure ARP offload
  *    is to use the ModusToolbox Device Configurator.
  *    * Navigate to ModusToolbox installation folder and launch
  *      the ModusToolbox Device Configurator
@@ -1846,7 +1826,7 @@
  *    * Set "ARP Offload Cache Entries Expire after (s)" to 1200.
  *    * Save the configuration to generate the necessary code.
  *
- * 8. Build the project and program the board.
+ * 7. Build the project and program the board.
  *    The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain:
  *    \code
  *    make getlibs
@@ -1888,7 +1868,7 @@
  *    Network Stack Suspended, MCU will enter DeepSleep power mode
  *    \endcode
  *
- * 9. Check the board operation. Use a PC to connect to the same
+ * 8. Check the board operation. Use a PC to connect to the same
  *    Wi-Fi Access Point as the PSoC 6 board.
  *
  *    * Send a "ping" command to the board and observe in the serial 
@@ -1961,7 +1941,7 @@
  *      While the WLAN device (purple graph) high spikes responds to each request, 
  *      the PSoC 6 host (blue graph) is in System Deep Sleep mode.
  *
- * 10. Disable the ARP Offload feature and observe that the PSoC 6 Host
+ * 9. Disable the ARP Offload feature and observe that the PSoC 6 Host
  *    wakes up on each request.
  *    Launch the ModusToolbox Device Configurator and open the appropriate 
  *    design.modus file. Select the "CYW943012WKWBG" tab, 
@@ -2756,17 +2736,8 @@
  *    wait_net_suspend(wifi, portMAX_DELAY, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);
  *    \endcode
  *
- * 6. Make sure below Makefile changes present if LPA version used is greater than 3.0.0
- *    \code
- *    COMPONENTS=WCM SECURE_SOCKETS
  *
- *    # For MTB2.2, below change
- *
- *    CY_GETLIBS_SHARED_PATH=../
- *    CY_GETLIBS_SHARED_NAME=mtb_shared
- *    \endcode
- *
- * 7. Configure Packet Filters, the preferred way to is to use ModusToolbox IDE.
+ * 6. Configure Packet Filters, the preferred way to is to use ModusToolbox IDE.
  *
  *    * Navigate to ModusToolbox installation folder and launch
  *      the ModusToolbox Device Configurator
@@ -2794,7 +2765,7 @@
  *      to the Host MCU (PSoC6)
  *    * Save the configuration to generate the necessary code.
  *
- * 8. Build the project and program the board.
+ * 7. Build the project and program the board.
  *    The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain:
  *    \code
  *    make getlibs
@@ -2836,7 +2807,7 @@
  *    Network Stack Suspended, MCU will enter DeepSleep power mode
  *    \endcode
  *
- * 9. Check the board operation. Use a PC to connect to the same
+ * 8. Check the board operation. Use a PC to connect to the same
  *    Wi-Fi Access Point as the PSoC 6 board.
  *
  *    * Send "ping" command to the board and observe in serial terminal 
@@ -2895,7 +2866,7 @@
  *        Network Stack Suspended, MCU will enter DeepSleep power mode
  *        \endcode
  *
- * 10. Verify the packet Filter is working as desired. Refer to the \ref section_lpa_measurement section for corresponding instructions.
+ * 9.  Verify the packet Filter is working as desired. Refer to the \ref section_lpa_measurement section for corresponding instructions.
  *     The following oscilloscope screen capture shows current measurement with the Packet Filter enabled
  *
  *     i. ARP Ping :
@@ -3442,17 +3413,8 @@
  *    python tcp_echo_server.py --port 3360
  *    \endcode
  *
- * 8. Make sure below Makefile changes present if LPA version used is greater than 3.0.0
- *    \code
- *    COMPONENTS=WCM SECURE_SOCKETS
  *
- *    # For MTB2.2, below change
- *
- *    CY_GETLIBS_SHARED_PATH=../
- *    CY_GETLIBS_SHARED_NAME=mtb_shared
- *    \endcode
- *
- * 9. Build the project and program the board.
+ * 8. Build the project and program the board.
  *    The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain:
  *    \code
  *    make getlibs
@@ -3490,7 +3452,7 @@
  *    Network Stack Suspended, MCU will enter DeepSleep power mode
  *    \endcode
  *
- * 10. Verify the TCP Keepalive offload is working as desired.Refer to the \ref section_lpa_measurement section for
+ * 9. Verify the TCP Keepalive offload is working as desired.Refer to the \ref section_lpa_measurement section for
  *    corresponding instructions.The following oscilloscope screen capture shows current measurement with
  *
  * <b>TCP Keepalive Offload enabled with 20 seconds interval configuration and WLAN DTIM configured as 3 :</b>
@@ -4005,6 +3967,8 @@
  *******************************************************************************
  * \section group_lpa_p3 Part 3. Bluetooth Low Power
  *******************************************************************************
+ * LPA library provides features for MCU Low Power, Wi-Fi Low Power and Bluetooth Low Power.
+ * LPA library only needs to be included in applications that use Wi-Fi low power.
  *
  * The Bluetooth low-power feature enables the host to achieve its lowest power
  * consumption with enabled Bluetooth. The BT Low Power personality helps
@@ -4157,7 +4121,7 @@
  *    # MTB2.2 and .mtb approach , make sure below mtb files are present
  *    echo https://github.com/cypresssemiconductorco/TARGET_CY8CKIT-062S2-43012#latest-v2.X#\$\$ASSET_REPO\$\$/TARGET_CY8CKIT-062S2-43012/latest-v2.X > deps/TARGET_CY8CKIT-062S2-43012.mtb
  *    \endcode
- * 3. Update FreeRTOSConfig.h with below changes to enable MCU Deep Sleep Functionality
+ * 3. Check FreeRTOSConfig.h if below changes to enable MCU Deep Sleep Functionality is present
  *
  *	  configUSE_TICKLESS_IDLE : This change to support Tickless Deep Sleep mode
  *    \code
@@ -4181,16 +4145,7 @@
  *    + <b>BT Low power Manual configuration</b>
  *       Refer to \ref group_lpa_p3_cc_manual_flow
  *
- * 5. Update Makefile with below changes
- *    \code
- *    COMPONENTS=WCM SECURE_SOCKETS
- *
- *    # For MTB2.2, below change
- *
- *    CY_GETLIBS_SHARED_PATH=../
- *    CY_GETLIBS_SHARED_NAME=mtb_shared
- *    \endcode
- * 6. Build the project and program the board. The Cypress Board's BT
+ * 5. Build the project and program the board. The Cypress Board's BT
  *    Powersave is configured and enabled by default. The following command
  *    is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as 
  *    the toolchain:
@@ -4199,17 +4154,17 @@
  *    make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
  *    \endcode
  *
- * 7. Open Ble scanner app in phone, Filter by mac address displayed on the serial port for this device. Click <i>bond</i> on the app
+ * 6. Open Ble scanner app in phone, Filter by mac address displayed on the serial port for this device. Click <i>bond</i> on the app
  *     * CySmart BLE APP : https://play.google.com/store/apps/details?id=com.cypress.cysmart&hl=en_US
  *
- * 8. Check the board operation. Refer to the \ref section_lpa_measurement
+ * 7. Check the board operation. Refer to the \ref section_lpa_measurement
  *    section for corresponding instructions.
  *    Following image show current measurement with BLE advertising and connected. \n
  *    High Current Spike in PSoC6 is due to WiFi
  *
  *    \image html ble_beacon_anycloud.png height=500px
  *
- * 9. To disable the BT Low Power feature or to change the
+ * 8. To disable the BT Low Power feature or to change the
  *    BT_HOST_WAKE / BT_DEV_WAKE pins, Cypress recommends using 
  *    the ModusToolbox Device Configurator. Use the appropriate 
  *    connectivity device tab (for the CY8CKIT_062S2_43012 board
@@ -4539,7 +4494,48 @@
  *   * Connect the positive probe to the J8 VCC VBAT pin (Pin 2).
  *   * Power on the board by connecting the KitProg USB cable again.
  *   * Turn on the Ammeter.
- * 
+ *
+ * This section describes how to measure power consumption for
+ * the CY8CEVAL-062S2 kit  + (4339 or 4373).
+ * Refer to the guide of your kit of how to measure power consumption.
+ *
+ * To prepare your equipment and measure the current consumption do
+ * the following steps:
+ *
+ * * DC Power analyzer used:
+ *   * Disconnect the KitProg USB cable to power off the board.
+ *   * Optional: To prevent the current leakages and observe
+ *     the real current consumption remove the following components:
+ *     * For base board versions > Rev04 : Remove the jumper J21 (VDDA - VDD_POT)
+ *
+ *     <b>Note</b> If you do not remove the component you still be able to
+ *     observe approximate current consumption but due to
+ *     the current leakage it is slightly higher.
+ *   * Connect the negative probe to the GND test point(TP6).
+ *   * Remove the J18 jumper (i.e MCU power selection jumper)
+ *   * Remove the J15 jumper and connect the positive probe to the J15 P6.VDD pin for PSoC6 Measurement.
+ *   * Configure the DC Power Analyzer to 3.3 V DC output.
+ *   * Remove the J11 jumper and connect the positive probe to the J11 VBAT 1 pin for WLAN 43012 Measurement.
+ *   * Configure the DC Power Analyzer to 3.6 V DC output.
+ *   * Power on the board by connecting the KitProg USB cable again.
+ *   * Enable DC output on the DC Power Analyzer.
+ *
+ * * Ammeter used:
+ *   * Disconnect the KitProg USB cable to power off the board.
+ *   * Optional: To prevent the current leakages and observe
+ *     the real current consumption remove the following components:
+ *     * For base board versions > Rev04 : Remove the jumper J21 (VDDA - VDD_POT)
+ *
+ *     <b>Note</b> If you do not remove the component you still be able to
+ *     observe approximate current consumption but due to
+ *     the current leakage it is slightly higher.
+ *   * Remove the J15 jumper and connect the negative probe to the J15 P6.VDD pin for PSoC6 Measurement.
+ *   * Connect the positive probe to the J15 VTARG pin.
+ *   * Remove the J11 jumper and connect the negative probe to the J11 VCC VBAT 1 pin for WLAN 43012 Measurement.
+ *   * Connect the positive probe to the J11 VCC VBAT pin (Pin 2).
+ *   * Power on the board by connecting the KitProg USB cable again.
+ *   * Turn on the Ammeter.
+ *
  *******************************************************************************
  * \section section_lpa_performance Performance Data
  *******************************************************************************
@@ -4751,6 +4747,31 @@
  *
  * \image html hostwake_config_4343W_062_kit.png height=400px
  *
+ ********************************************************************************
+ *\subsection section_lpa_hostwake_CY8CEVAL_062S2_4373 CY8CEVAL_062S2_LAI_4373M2
+ *******************************************************************************
+ * * On the PSoC6 MCU Pins tab of the Device Configurator tool , Enable the Host wake pin P4[1] and name it CYBSP_WIFI_HOST_WAKE.
+ * * In the Parameters pane, change the following.
+ *    * Drive Mode: Analog High-Z. Input buffer off.
+ *    * Initial Drive State: High(1).
+ *    * Interrupt Trigger Type: Rising Edge.
+ * * Go to WiFi tab, set Host Device Interrupt Pin to CYBSP_WIFI_HOST_WAKE.
+ *
+ * \image html hostwake_config_4373_062S2_eval_kit.png height=430px
+ *
+ *
+ ********************************************************************************
+ *\subsection section_lpa_hostwake_CY8CEVAL_062S2_43439 CY8CEVAL_062S2_MUR_43439M2
+ *******************************************************************************
+ * * On the PSoC6 MCU Pins tab of the Device Configurator tool , Enable the Host wake pin P4[1] and name it CYBSP_WIFI_HOST_WAKE.
+ * * In the Parameters pane, change the following.
+ *    * Drive Mode: Resistive Pull up. Input buffer off.
+ *    * Initial Drive State: High(1).
+ *    * Interrupt Trigger Type: Falling Edge.
+ * * Go to WiFi tab, set Host Device Interrupt Pin to CYBSP_WIFI_HOST_WAKE.
+ *
+ * \image html hostwake_config_43439_062S2_eval_kit.png height=430px
+ *
  *
  *******************************************************************************
  * \section section_lpa_bt_wakeconfig BT Wake Configuration
@@ -4799,6 +4820,52 @@
  *    * Device Wake-up Polarity : Active low
  *
  * \image html btwake_config_43012_062S2_kit.png height=400px
+ *
+ *
+ *************************************************************************************
+ * \subsection section_lpa_bt_wakeconfig_CY8CEVAL_062S2_4373 CY8CEVAL_062S2_LAI_4373M2
+ *************************************************************************************
+ *
+ * * On the PSoC6 MCU Pins tab of the Device Configurator tool
+ *    * Enable the BT Device wake pin P2[7] and name it CYBSP_BT_DEVICE_WAKE.
+ *        * In the Parameters pane, change the following.
+ *           * Drive Mode: Strong Drive. Input buffer off.
+ *           * Initial Drive State: Low(0).
+ *    * Enable the BT Host wake pin P4[0] and name it CYBSP_BT_HOST_WAKE.
+ *        * In the Parameters pane, change the following.
+ *           * Drive Mode: Analog High-Z. Input buffer off.
+ *           * Initial Drive State: Low(0).
+ * * Go to BT tab in CYW4373EUBGT and change the following.
+ *    * Enable BT Wake up Configurations checkbox
+ *    * Host Wake-Up Signal : CYBSP_BT_HOST_WAKE
+ *    * Host Wake-Up IRQ event:  Failing Edge
+ *    * Device Wake-Up Signal : CYBSP_BT_DEVICE_WAKE
+ *    * Device Wake-up Polarity : Active low
+ *
+ * \image html btwake_config_4373_062S2_eval_kit.png height=400px
+ *
+ *
+ **************************************************************************************
+ * \subsection section_lpa_bt_wakeconfig_CY8CEVAL_062S2_4339 CY8CEVAL_062S2_MUR_43439M2
+ **************************************************************************************
+ *
+ * * On the PSoC6 MCU Pins tab of the Device Configurator tool
+ *    * Enable the BT Device wake pin P3[5] and name it CYBSP_BT_DEVICE_WAKE.
+ *        * In the Parameters pane, change the following.
+ *           * Drive Mode: Strong Drive. Input buffer off.
+ *           * Initial Drive State: Low(0).
+ *    * Enable the BT Host wake pin P4[0] and name it CYBSP_BT_HOST_WAKE.
+ *        * In the Parameters pane, change the following.
+ *           * Drive Mode: Analog High-Z. Input buffer off.
+ *           * Initial Drive State: Low(0).
+ * * Go to BT tab in CYW43439KUBG and change the following.
+ *    * Enable BT Wake up Configurations checkbox
+ *    * Host Wake-Up Signal : CYBSP_BT_HOST_WAKE
+ *    * Host Wake-Up IRQ event:  Failing Edge
+ *    * Device Wake-Up Signal : CYBSP_BT_DEVICE_WAKE
+ *    * Device Wake-up Polarity : Active low
+ *
+ * \image html btwake_config_4339_062S2_eval_kit.png height=400px
  *
  *
  *******************************************************************************
@@ -4905,6 +4972,11 @@
  *
  * <table class="doxtable">
  *   <tr><th>Version</th><th>Changes</th><th>Comments</th></tr>
+ *   <tr>
+ *     <td>4.0.0</td>
+ *     <td> Add LPA support for 43439 Kit </td>
+ *     <td> LPA v4.0.0 </td>
+ *   </tr>
  *   <tr>
  *     <td>3.2.0</td>
  *     <td> Add LPA support for 4373 Kit </td>

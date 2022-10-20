@@ -247,7 +247,7 @@ static void cylpa_pf_ol_pm(void *ol, ol_pm_st_t st)
         /* If always active, then nothing to do. */
         if ( (pf_cfg->bits & (CY_PF_ACTIVE_SLEEP | CY_PF_ACTIVE_WAKE) ) == (CY_PF_ACTIVE_SLEEP | CY_PF_ACTIVE_WAKE) )
         {
-            OL_LOG_PF(LOG_OLA_LVL_INFO, "Filter %d is always on, nothing to do\n", __func__, pf_cfg->id);
+            OL_LOG_PF(LOG_OLA_LVL_INFO, "%s: Filter %d is always on, nothing to do\n", __func__, pf_cfg->id);
         }
         else
         {

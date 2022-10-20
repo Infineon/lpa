@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, Cypress Semiconductor Corporation (an Infineon company) or
+ * Copyright 2022, Cypress Semiconductor Corporation (an Infineon company) or
  * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
  *
  * This software, including source code, documentation and related
@@ -37,8 +37,9 @@
  * Network IP change utility for FreeRTOS
  */
 #include "cy_nw_lpa_helper.h"
-#include "cy_lwip.h"
+#include "cy_network_mw_core.h"
 #include "cy_wcm.h"
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,7 +57,7 @@ static bool is_wcm_callback_registered = false;
 
 void cylpa_nw_ip_status_change_handler ( cylpa_nw_ip_status_change_callback_t *cb )
 {
-    struct netif *iface = cy_lwip_get_interface( CY_LWIP_STA_NW_INTERFACE );
+    struct netif *iface = cy_network_get_nw_interface( CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE );
     if ( cb->cb_func != NULL )
     {
         cb->priv = iface;
@@ -66,7 +67,7 @@ void cylpa_nw_ip_status_change_handler ( cylpa_nw_ip_status_change_callback_t *c
 
 void cylpa_nw_ip_initialize_status_change_callback(cylpa_nw_ip_status_change_callback_t *cb, cylpa_nw_ip_status_change_callback_func_t *cb_func, void *arg)
 {
-    struct netif *iface = cy_lwip_get_interface( CY_LWIP_STA_NW_INTERFACE );
+    struct netif *iface = cy_network_get_nw_interface( CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE );
 
     cb->cb_func = cb_func;
     cb->arg = arg;

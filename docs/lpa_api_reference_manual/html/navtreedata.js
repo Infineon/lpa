@@ -1,6 +1,6 @@
 var NAVTREE =
 [
-  [ "Low Power Assistant Middleware Library 3.2.0", "index.html", [
+  [ "Low Power Assistant Middleware Library 4.0.0", "index.html", [
     [ "Overview", "index.html#section_lpa_overview", [
       [ "Features", "index.html#section_lpa_features", null ]
     ] ],
@@ -84,11 +84,15 @@ var NAVTREE =
     [ "Wi-Fi Host Wake Configuration", "index.html#section_lpa_hostwake", [
       [ "CY8CKIT_062_WIFI_BT", "index.html#section_lpa_hostwake_CY8CKIT_062_WIFI_BT", null ],
       [ "CY8CKIT_062S2_43012", "index.html#section_lpa_hostwake_CY8CKIT_062S2_43012", null ],
-      [ "CY8CPROTO_062_4343W", "index.html#section_lpa_hostwake_CY8CPROTO_062_4343W", null ]
+      [ "CY8CPROTO_062_4343W", "index.html#section_lpa_hostwake_CY8CPROTO_062_4343W", null ],
+      [ "CY8CEVAL_062S2_LAI_4373M2", "index.html#section_lpa_hostwake_CY8CEVAL_062S2_4373", null ],
+      [ "CY8CEVAL_062S2_MUR_43439M2", "index.html#section_lpa_hostwake_CY8CEVAL_062S2_43439", null ]
     ] ],
     [ "BT Wake Configuration", "index.html#section_lpa_bt_wakeconfig", [
       [ "CY8CKIT_062_WIFI_BT", "index.html#section_lpa_bt_wakeconfig_CY8CKIT_062_WIFI_BT", null ],
       [ "CY8CKIT_062S2_43012", "index.html#section_lpa_bt_wakeconfig_CY8CKIT_062S2_43012", null ],
+      [ "CY8CEVAL_062S2_LAI_4373M2", "index.html#section_lpa_bt_wakeconfig_CY8CEVAL_062S2_4373", null ],
+      [ "CY8CEVAL_062S2_MUR_43439M2", "index.html#section_lpa_bt_wakeconfig_CY8CEVAL_062S2_4339", null ],
       [ "CY8CPROTO_062_4343W", "index.html#section_lpa_bt_wakeconfig_CY8CPROTO_062_4343W", null ]
     ] ],
     [ "Supported Software and Tools", "index.html#section_lpa_toolchain", null ],

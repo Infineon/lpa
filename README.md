@@ -2,8 +2,14 @@
 
 ## Overview
 
-The LPA middleware provides an easy way to make the low-power features available to developers in the form of a portable configuration layer.
+The LPA middleware provides an easy way to make the low-power features available to developers in the form of a portable configuration layer. The LPA library functions are only used by Wi-Fi. LPA provides features for MCU Low Power, Wi-Fi Low Power and Bluetooth Low Power but the LPA library only needs to be included in applications that use Wi-Fi low power.
+
+The LPA middleware is essentailly an WiFi offload manager which is instantiated when WiFi-Connection-Manager initialization is done.
+The offload manager gets created and manages the offloads based on the configured offloads using CUSTOM DESIGN MODUS via device configurator created personality in PDL. The PDL personality consists of Pin Configuration for CYBSP_WIFI_HOST_WAKE, CYBSP_WIFI_DEVICE_WAKE, CYBSP_BT_HOST_WAKE and CYBSP_BT_DEVICE_WAKE. The saved design.modus generates the sources (cycfg_connectivity_wifi.h, cycfg_connectivity_wifi.c) which are compiled and linked in the executable for configured Wi-Fi Offloads.
+
+
 LPA middleware consists of the following components:
+
 * Configurator tool (using a personality), which makes the low-power features of the system easy to use (ModusToolbox Device Configurator Tool Guide here  https://www.cypress.com/file/504376/download ). This personality writes data structures and once the configuration is saved it generates cycfg_connectivity_wifi.c and cycfg_connectivity_wifi.h files based on the choices made in the personality.
 * The above generated sources (cycfg_connectivity_wifi.h, cycfg_connectivity_wifi.c) are compiled and linked in the executable. The API in the generated source will be invoked at system initialization.
 * The LPA configuration is applied from host PSOC6 MCU middleware s/w to IoT wifi-bt Firmware during initialization such as BT low power , ARPOL (ARP Offload) and some of the features such as PFOL(Packet Filter Offload) are applied when host WiFi connection is established with WiFi Access point. TKOL ( TCP Keep-alive offload ) is applied when an TCP connection is established with a remote TCP server.
@@ -34,6 +40,7 @@ This library and it's features are supported on following Cypress platforms:
 * [PSoC 62S2 Wi-Fi BT Pioneer Kit](https://www.cypress.com/CY8CKIT-062S2-43012) (CY8CKIT-062S2-43012)
 * [PSoC 6 Wi-Fi BT Pioneer Kit](https://www.cypress.com/CY8CKIT-062-WiFi-BT) (CY8CKIT-062-WIFI-BT)
 * [CY8CEVAL-062S2](https://www.cypress.com/part/cy8ceval-062s2) + [Sterling LWB5Plus](https://www.mouser.com/new/laird-connectivity/laird-connectivity-sterling-lwb5plus) (CY8CEVAL-062S2-LAI-4373M2)
+* [CY8CEVAL-062S2](https://www.cypress.com/part/cy8ceval-062s2) + [1YN M.2 Module](https://www.embeddedartists.com/products/1yn-m-2-module) (CY8CEVAL-062S2-MUR-43439M2)
 
 ##### AMAZON FREERTOS
 * [PSoC 6 Wi-Fi BT Prototyping Kit](https://www.cypress.com/CY8CPROTO-062-4343W) (CY8CPROTO-062-4343W)
@@ -72,7 +79,7 @@ The LPA could be configured by the ModusToolbox MCU, WiFi and BT personalities. 
 ##### FreeRTOS
 Refer to [Wi-Fi middleware core README](https://github.com/cypresssemiconductorco/wifi-mw-core/blob/master/README.md) for basic makefile changes required .
 
-MCU Deep Sleep Functionality can be enabled by adding below changes to FreeRTOSConfig.h
+MCU Deep Sleep Functionality is enabled by default in FreeRTOSConfig.h as below 
 
 ```
 #include <cycfg_system.h>

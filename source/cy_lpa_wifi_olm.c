@@ -169,7 +169,7 @@ void cylpa_olm_init(olm_t *olm, const ol_desc_t *ol_list)
         OL_LOG_OLM(LOG_OLA_LVL_DEBUG, "whd interface is null!! connect STA to AP\n");
     }
 
-    OL_LOG_OLM(LOG_OLA_LVL_DEBUG, "cylpa_olm_init() Done iface:%x\n", iface );
+    OL_LOG_OLM(LOG_OLA_LVL_DEBUG, "cylpa_olm_init() Done iface:%p\n", iface );
 }
 
 /*******************************************************************************
@@ -432,7 +432,7 @@ void cylpa_olm_init_wlan_config ( void *whd )
 void cylpa_olm_configure_wlan_pmode ( void *whd , uint32_t value, bool min_power )
 {
     whd_interface_t ifp = whd;
-    uint32_t lpa_pm2_value;
+    uint32_t lpa_pm2_value = 0;
 
     if ( whd != NULL )
     {

@@ -400,9 +400,6 @@ static void cylpa_arp_ol_pm(void *ol, ol_pm_st_t st)
     arp_ol_t *arp_ol = (arp_ol_t *)ol;
     arp_ol_config_state_t new_arp_ol_state;
 
-    OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "cylpa_arp_ol_pm(arp:%p, cfg:%p st:%d - %s)\n", (void *)arp_ol, (void *)arp_ol->config, st,
-               (st == OL_PM_ST_AWAKE) ? "Awake" : "Sleep");
-
     /* We have a non-hardware build that we need to handle - "OLM_NO_HARDWARE" defined in app/olm-sanity/Makefile */
     if ( (arp_ol == NULL) || (arp_ol->config == NULL)
 #if !defined(OLM_NO_HARDWARE)
@@ -413,6 +410,9 @@ static void cylpa_arp_ol_pm(void *ol, ol_pm_st_t st)
         OL_LOG_ARP(LOG_OLA_LVL_ERR, "cylpa_arp_ol_pm() Bad Args!\n");
         return;
     }
+
+    OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "cylpa_arp_ol_pm(arp:%p, cfg:%p st:%d - %s)\n", (void *)arp_ol, (void *)arp_ol->config, st,
+                  (st == OL_PM_ST_AWAKE) ? "Awake" : "Sleep");
 
     new_arp_ol_state = (st == OL_PM_ST_AWAKE) ? ARP_OL_STATE_AWAKE : ARP_OL_STATE_GOING_TO_SLEEP;
     if (new_arp_ol_state == arp_ol->state)
