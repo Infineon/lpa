@@ -57,7 +57,6 @@ typedef struct tko
     void             *whd;   /**< Pointer to system handle */
 } tko_ol_t;
 
-/** \} */
 
 extern const ol_fns_t tko_ol_fns;
 int cylpa_tko_ol_update_config(const char *remote_ip, uint16_t remote_port, uint16_t local_port, cy_tko_ol_cfg_t *cfg );

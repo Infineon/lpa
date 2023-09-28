@@ -84,11 +84,6 @@ static cylpa_nw_ip_status_change_callback_t cy_arp_ol_cb;
 static cy_timer_t cy_delay_dhcp_timer;
 #endif
 
-#if defined(MBED_CONF_APP_OLM_TEST)
-/* 0 means do not use callback, defaults ON */
-uint32_t arp_ol_test_enable_net_callback = 1;
-#endif
-
 /*******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -251,16 +246,6 @@ static void cylpa_arp_ol_nw_ip_change_callback(cy_nw_ip_interface_t iface, void 
     {
         return;
     }
-    /* extra stuff for testing */
-#if defined(MBED_CONF_APP_OLM_TEST)
-    /* To verify no callback for setting Host IP (F3 - snoop test) */
-    if (arp_ol_test_enable_net_callback == 0)
-    {
-        OL_LOG_ARP(LOG_OLA_LVL_NOTICE, "ARPOL Callback Disabled.\n");
-        return;
-    }
-    OL_LOG_ARP(LOG_OLA_LVL_NOTICE, "GOT ARPOL Callback.\n");
-#endif
 
     /* set up timer for future to handle timing of DHCP issue */
     if (cy_delay_dhcp_timer != 0)

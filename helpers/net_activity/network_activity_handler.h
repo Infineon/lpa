@@ -127,36 +127,6 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
  * \{
  *
  *
- * \section subsection_lpa_code_snippets Code Snippets
- * \subsection subsection_lpa_snippet_1 Code Snippet 1: Using wait_net_suspend for suspend/resume network stack
- * The following code snippet demonstrates an example for Suspending Network stack to allow MCU to go to Deep Sleep.
- * LPA API \b cylpa_on_emac_activity should be called to resume network stack in order to queue packets to LwIP.
- * \snippet wifi_low_power.c snippet_cylpa_wait_net_suspend
- *
- * \subsection subsection_lpa_snippet_2 Code Snippet 2: Read OLM configuration from device configurator.
- * The following code snippet demonstrates an example for reading OLM configuration from device configurator and makes a
- * local copy of the list.
- * \snippet wifi_low_power.c snippet2_cylpa_read_olm
- *
- * \subsection subsection_lpa_snippet_3 Code Snippet 3: Search for TCP KA offload in the device configurator list.
- * The following code snippet demonstrates an example for searching the "TKO" string in the device configurator list
- * and if not present it add manual TCP KA offload configuration.
- * \snippet wifi_low_power.c snippet3_cylpa_add_tko_olm
- *
- * \subsection subsection_lpa_snippet_4 Code Snippet 4: Use cylpa_restart_olm when the OLM configuration is changed by the user application.
- * The following code snippet demonstrates an example for Restarting OLM interface with user defined configuration.
- * \snippet wifi_low_power.c snippet4_cylpa_restart_olm
- *
- * \subsection subsection_lpa_snippet_5 Code Snippet 5: Use cy_tcp_create_socket_connection to offload TCP Keep-alive to WiFi Firmware
- * The following code snippet demonstrates an example for creating TCP connection(s) and offloads TCP keep-alive when host MCU enters sleep/deepsleep via
- * wait_net_suspend API call.
- * \snippet wifi_low_power.c snippet5_cy_tcp_create_socket_connection
- *
- * \subsection subsection_lpa_snippet_6 Code Snippet 6: Read OLM configuration from device configurator.
- *  The following code snippet demonstrates an example for reading OLM configuration from device configurator and makes a
- * local copy of the list.
- * \snippet wifi_low_power.c snippet6_cylpa_read_olm
- *
  */
 
 /** Network Monitor Function

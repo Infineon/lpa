@@ -24,9 +24,7 @@
 #include "whd_buffer_api.h"
 #include "cy_nw_helper.h"
 #include "whd_wlioctl.h"
-#ifndef MBED_CONF_APP_OLM_NO_HW
 #include "lwip/tcp.h"
-#endif
 #include "ip4string.h"
 
 #ifdef __cplusplus

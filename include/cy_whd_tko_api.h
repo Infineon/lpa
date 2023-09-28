@@ -22,11 +22,7 @@ extern "C" {
 #define USE_HW
 #endif
 
-#if defined(__MBED__)
-#define IP_ADDR_STATS(ipaddr)   (ipaddr.addr)
-#else
 #define IP_ADDR_STATS(ipaddr)   (ipaddr.u_addr.ip4.addr)
-#endif
 
 /** Get TCP socket sequence number info from network stack.  */
 typedef struct sock_seq

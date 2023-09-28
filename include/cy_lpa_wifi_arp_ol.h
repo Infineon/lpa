@@ -78,12 +78,6 @@ extern "C" {
 /** \addtogroup group_lpa_macros_arp *//** \{ */
 /******************************************************************************/
 
-/* For internal testing */
-#if defined(MBED_CONF_APP_OLM_TEST)
-/* 0 means do not use callback */
-extern uint32_t arp_ol_test_enable_net_callback;
-#endif
-
 #define ARP_ID                              (0xaaccooddUL)          /**< Unique ID for ARP packet */
 
 #define CY_ARP_OL_HOSTIP_MAX_ENTRIES        ARP_MULTIHOMING_MAX     /**< Maximum Number of Host IP addresses in WLAN Device (8) */
@@ -153,7 +147,6 @@ typedef struct arp_ol_s
 
 extern const ol_fns_t arp_ol_fns;   /**< ARP Offload function table */
 
-/**@} */
 
 #ifdef __cplusplus
 }

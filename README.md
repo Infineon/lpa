@@ -10,7 +10,7 @@ The offload manager gets created and manages the offloads based on the configure
 
 LPA middleware consists of the following components:
 
-* Configurator tool (using a personality), which makes the low-power features of the system easy to use (ModusToolbox Device Configurator Tool Guide here  https://www.cypress.com/file/504376/download ). This personality writes data structures and once the configuration is saved it generates cycfg_connectivity_wifi.c and cycfg_connectivity_wifi.h files based on the choices made in the personality.
+* Configurator tool (using a personality), which makes the low-power features of the system easy to use [ModusToolbox Device Configurator Tool Guide](https://www.infineon.com/dgdl/Infineon-ModusToolbox_Device_Configurator_4.0_User_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c8386267f0183a960bd41598f&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-files&redirId=180683&redirId=VL144). This personality writes data structures and once the configuration is saved it generates cycfg_connectivity_wifi.c and cycfg_connectivity_wifi.h files based on the choices made in the personality.
 * The above generated sources (cycfg_connectivity_wifi.h, cycfg_connectivity_wifi.c) are compiled and linked in the executable. The API in the generated source will be invoked at system initialization.
 * The LPA configuration is applied from host PSOC6 MCU middleware s/w to IoT wifi-bt Firmware during initialization such as BT low power , ARPOL (ARP Offload) and some of the features such as PFOL(Packet Filter Offload) are applied when host WiFi connection is established with WiFi Access point. TKOL ( TCP Keep-alive offload ) is applied when an TCP connection is established with a remote TCP server.
 
@@ -24,60 +24,31 @@ LPA middleware consists of the following components:
 For More Release specific information, refer to [RELEASE.md](./RELEASE.md)
 
 ## Requirements
-- [ModusToolbox™ software](https://www.cypress.com/products/modustoolbox-software-environment) v2.3
+- [ModusToolbox™ software](https://www.infineon.com/cms/en/design-support/tools/sdk/modustoolbox-software/) v3.1
 - Programming Language: C
 
 ## Supported Platforms
-This library and it's features are supported on following Cypress platforms:
+This library and it's features are supported on following Infineon platforms:
 
-##### MBEDOS
-* [PSoC 6 Wi-Fi BT Prototyping Kit](https://www.cypress.com/CY8CPROTO-062-4343W) (CY8CPROTO-062-4343W) 
-* [PSoC 62S2 Wi-Fi BT Pioneer Kit](https://www.cypress.com/CY8CKIT-062S2-43012) (CY8CKIT-062S2-43012)
-* [PSoC 6 Wi-Fi BT Pioneer Kit](https://www.cypress.com/CY8CKIT-062-WiFi-BT) (CY8CKIT-062-WIFI-BT)
-
-##### FREERTOS
-* [PSoC 6 Wi-Fi BT Prototyping Kit](https://www.cypress.com/CY8CPROTO-062-4343W) (CY8CPROTO-062-4343W) 
-* [PSoC 62S2 Wi-Fi BT Pioneer Kit](https://www.cypress.com/CY8CKIT-062S2-43012) (CY8CKIT-062S2-43012)
-* [PSoC 6 Wi-Fi BT Pioneer Kit](https://www.cypress.com/CY8CKIT-062-WiFi-BT) (CY8CKIT-062-WIFI-BT)
-* [CY8CEVAL-062S2](https://www.cypress.com/part/cy8ceval-062s2) + [Sterling LWB5Plus](https://www.mouser.com/new/laird-connectivity/laird-connectivity-sterling-lwb5plus) (CY8CEVAL-062S2-LAI-4373M2)
-* [CY8CEVAL-062S2](https://www.cypress.com/part/cy8ceval-062s2) + [1YN M.2 Module](https://www.embeddedartists.com/products/1yn-m-2-module) (CY8CEVAL-062S2-MUR-43439M2)
-
-##### AMAZON FREERTOS
-* [PSoC 6 Wi-Fi BT Prototyping Kit](https://www.cypress.com/CY8CPROTO-062-4343W) (CY8CPROTO-062-4343W)
-* [PSoC 62S2 Wi-Fi BT Pioneer Kit](https://www.cypress.com/CY8CKIT-062S2-43012) (CY8CKIT-062S2-43012)
-* [PSoC 6 Wi-Fi BT Pioneer Kit](https://www.cypress.com/CY8CKIT-062-WiFi-BT) (CY8CKIT-062-WIFI-BT)
+* [PSoC 6 Wi-Fi BT Prototyping Kit](https://www.infineon.com/cms/en/product/evaluation-boards/cy8cproto-062-4343w/) (CY8CPROTO-062-4343W) 
+* [PSoC 62S2 Wi-Fi BT Pioneer Kit](https://www.infineon.com/cms/en/product/evaluation-boards/cy8ckit-062s2-43012/) (CY8CKIT-062S2-43012)
+* [PSoC 6 Wi-Fi BT Pioneer Kit](https://www.infineon.com/cms/en/product/evaluation-boards/cy8ckit-062-wifi-bt/) (CY8CKIT-062-WIFI-BT)
+* [CY8CEVAL-062S2](https://www.infineon.com/cms/en/product/evaluation-boards/cy8ceval-062s2/) + [Sterling LWB5Plus](https://www.mouser.com/new/laird-connectivity/laird-connectivity-sterling-lwb5plus) (CY8CEVAL-062S2-LAI-4373M2)
+* [CY8CEVAL-062S2](https://www.infineon.com/cms/en/product/evaluation-boards/cy8ceval-062s2/) + [1YN M.2 Module](https://www.embeddedartists.com/products/1yn-m-2-module) (CY8CEVAL-062S2-MUR-43439M2)
 
 ## Limitations
-Refer to the [Low Power Assistant Middleware Library Limitations](https://cypresssemiconductorco.github.io/lpa/lpa_api_reference_manual/html/index.html#group_lpa_p2_cc_limitations).
+Refer to the [Low Power Assistant Middleware Library Limitations](https://infineon.github.io/lpa/lpa_api_reference_manual/html/index.html).
 
 ## Dependent libraries
 This section provides the list of dependent libraries required for this middleware library.
 
-##### FreeRTOS
-* [Wi-Fi Connection Manager](https://github.com/Infineon/wifi-connection-manager)
-* [Wi-Fi middleware core](https://github.com/Infineon/wifi-mw-core)
-* [Connectivity middleware utilities](https://github.com/Infineon/connectivity-utilities)
-
-##### MBEDOS
-* [Connectivity middleware utilities](https://github.com/Infineon/connectivity-utilities)
-
-##### Amazon FreeRTOS
-* [Connectivity middleware utilities](https://github.com/Infineon/connectivity-utilities)
-
-## Supported Software and Tools
-```
-ToolChain : GCC_ARM, IAR and ARMC6 (FreeRTOS)
-            GCC_ARM and ARMC6 (MBEDOS)
-            GCC_ARM, IAR and ARMC6 (Amazon FreeRTOS)
-OS        : MBEDOS , FreeRTOS and Amazon FreeRTOS
-```
-Refer to the [Low Power Assistant Middleware Library Software and Tools](https://cypresssemiconductorco.github.io/lpa/lpa_api_reference_manual/html/index.html#section_lpa_toolchain).
+* [wifi-core-freertos-lwip-mbedtls](https://github.com/Infineon/wifi-core-freertos-lwip-mbedtls): To use LPA library, the application should pull the wifi-core-freertos-lwip-mbedtls library which will internally pull wifi-connection-manager, FreeRTOS, lwIP, mbed TLS, and other dependent modules.
 
 ## Quick Start
-The LPA could be configured by the ModusToolbox MCU, WiFi and BT personalities. Refer to the [Low Power Assistant Middleware Library Configuration Considerations](https://cypresssemiconductorco.github.io/lpa/lpa_api_reference_manual/html/index.html#group_lpa_p2_cc).
+The LPA could be configured by the ModusToolbox MCU, WiFi and BT personalities. Refer to the [Low Power Assistant Middleware Library Configuration Considerations](https://infineon.github.io/lpa/lpa_api_reference_manual/html/index.html).
 
 ##### FreeRTOS
-Refer to [Wi-Fi middleware core README](https://github.com/cypresssemiconductorco/wifi-mw-core/blob/master/README.md) for basic makefile changes required .
+Refer to [wifi-core-freertos-lwip-mbedtls README](https://github.com/Infineon/wifi-core-freertos-lwip-mbedtls/blob/master/README.md#quick-start) Quick start section for basic makefile changes required .
 
 MCU Deep Sleep Functionality is enabled by default in FreeRTOSConfig.h as below 
 
@@ -85,26 +56,6 @@ MCU Deep Sleep Functionality is enabled by default in FreeRTOSConfig.h as below
 #include <cycfg_system.h>
 #if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_SLEEP) || (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)
 extern void vApplicationSleep( uint32_t xExpectedIdleTime );
-#define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )
-#define configUSE_TICKLESS_IDLE  2
-#endif
-
-/* Deep Sleep Latency Configuration */
-#if CY_CFG_PWR_DEEPSLEEP_LATENCY > 0
-#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   CY_CFG_PWR_DEEPSLEEP_LATENCY
-#endif
-```
-##### Amazon FreeRTOS
-MCU Deep Sleep Functionality can be enabled by adding below changes to FreeRTOSConfig.h
-```
-#include <cycfg_system.h>
-#if defined(__STDC__) || defined(__cplusplus__)
-#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_SLEEP) || (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)
-extern void vApplicationSleep( uint32_t xExpectedIdleTime );  //This is to prevent IAR toolchain Compile error with CMake
-#endif
-#endif
-
-#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_SLEEP) || (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)
 #define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )
 #define configUSE_TICKLESS_IDLE  2
 #endif
@@ -128,16 +79,12 @@ ol_log_level[LOG_OLA_TKO] = LOG_OLA_LVL_DEBUG;
 ## More information
 The following resources contain more information:
 * [LPA Middleware RELEASE.md](./RELEASE.md)
-* [Low Power Assistant Middleware Library](https://cypresssemiconductorco.github.io/lpa/lpa_api_reference_manual/html/index.html)
-* [ModusToolbox Software Environment, Quick Start Guide, Documentation, and Videos](https://www.cypress.com/products/modustoolbox-software-environment)
-* [LPA Middleware Code Example for MBED OS](https://github.com/Infineon/mbed-os-example-wlan-lowpower)
+* [Low Power Assistant Middleware Library](https://infineon.github.io/lpa/lpa_api_reference_manual/html/index.html)
+* [ModusToolbox Software Environment, Quick Start Guide, Documentation, and Videos](https://www.infineon.com/cms/en/design-support/tools/sdk/modustoolbox-software/)
 * [LPA Middleware Code Example for FREERTOS](https://github.com/Infineon/mtb-example-anycloud-wlan-lowpower)
-* [LPA Middleware Code Example for AMAZON FREERTOS](https://github.com/Infineon/afr-example-wlan-offloads)
-* [ModusToolbox Device Configurator Tool Guide](https://www.cypress.com/ModusToolboxDeviceConfig)
-* [PSoC 6 Technical Reference Manual](https://www.cypress.com/documentation/technical-reference-manuals/psoc-6-mcu-psoc-63-ble-architecture-technical-reference)
-* [PSoC 63 with BLE Datasheet Programmable System-on-Chip datasheet](http://www.cypress.com/ds218787)
-
----
+* [ModusToolbox Device Configurator Tool Guide](https://www.infineon.com/dgdl/Infineon-ModusToolbox_Device_Configurator_4.0_User_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c8386267f0183a960bd41598f&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-files&redirId=180683&redirId=VL144)
+* [PSoC 6 Technical Reference Manual](https://www.infineon.com/dgdl/Infineon-PSoC_6_MCU_PSoC_63_with_BLE_Architecture_Technical_Reference_Manual-AdditionalTechnicalInformation-v11_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f946fea01ca&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-technical_reference_manual&redirId=TRM148)
+* [PSoC 63 with BLE Datasheet Programmable System-on-Chip datasheet](https://www.infineon.com/dgdl/Infineon-PSoC_6_MCU_PSoC_63_with_BLE_Datasheet_Programmable_System-on-Chip_(PSoC)-DataSheet-v16_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0ee4efe46c37&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-datasheet&redirId=VL4079)
 
 ------
 

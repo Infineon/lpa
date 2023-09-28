@@ -28,9 +28,6 @@
 #endif
 
 #if !defined(OLM_NO_HARDWARE)
-#if defined(__MBED__)
-#include "mbed_toolchain.h"
-#endif
 #include "cy_worker_thread.h"
 #endif
 

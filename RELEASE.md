@@ -1,18 +1,19 @@
-# Low Power Assistant Middleware(LPA) Library 4.0.0
+# Low Power Assistant Middleware(LPA) Library
 
 ### What's Included?
 
-Please refer to the [README.md](./README.md) and the [Low Power Assistant Middleware Library](https://cypresssemiconductorco.github.io/lpa/lpa_api_reference_manual/html/index.html) for a complete description of the LPA Middleware.
-The revision history of the LPA Middleware is also available on the [Low Power Assistant Middleware Library Changelog](https://cypresssemiconductorco.github.io/lpa/lpa_api_reference_manual/html/index.html#group_lpa_changelog).
+Please refer to the [README.md](./README.md) and the [Low Power Assistant Middleware Library](https://infineon.github.io/lpa/lpa_api_reference_manual/html/index.html) for a complete description of the LPA Middleware.
+The revision history of the LPA Middleware is also available on the [Low Power Assistant Middleware Library Changelog](https://infineon.github.io/lpa/lpa_api_reference_manual/html/index.html#group_lpa_changelog).
 
 New in this release:
-Add LPA support for 4373 Kit  
+Removed support for MBED OS and Amazon FreeRTOS
 
 
 ### Release Versions
 
 |  Version         | Description of Change                                                  | Comments                                                 |
 | ---------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 5.0.0            | Removed support for MBED OS and Amazon FreeRTOS                        | ModusToolbox                                               |
 | 4.0.0            | Add LPA support for 43439 Kit                                          | ModusToolbox                                               |
 | 3.2.0            | Add LPA support for 4373 Kit                                           | ModusToolbox                                               |
 | 3.1.1            | Fix for wait_net_suspend with TCPIP core locking Configuration         | MBED OS 6.8.0 , ModusToolbox, Amazon FreeRTOS v202007.00  |
@@ -21,7 +22,6 @@ Add LPA support for 4373 Kit
 | 2.1.0(ER)        | Add AFR SDK Support (Wi-Fi Only LPA) and WLAN low power configurations | Amazon FreeRTOS v202002.00                                     |
 | 2.0.0            | Add TCP Keepalive offload Feature                                      | ModusToolbox SDK                                          |
 | 1.0.0            | New LPA Middleware. Only ARP and Packet Filter offloads supported      | MBEDOS upto 5.15.2                                             |
-
 
 ### Known Issues
 
@@ -32,33 +32,24 @@ This version of the LPA Middleware was validated for compatibility with the foll
 
 | Software and Tools                                                        | Version   |
 | :---                                                                      | :------:  |
-| ModusToolbox Software Environment                                         |   3.0     |
-| - ModusToolbox Device Configurator                                        |   3.0     |
-| - ModusToolbox MCU Personality in Device Configurator                     |   1.2     |
-| - ModusToolbox WiFi and BT Personalities in Device Configurator           |   1.0     |
-| GCC compiler for MBED-OS                                                  |   9.2.0   |
-| GCC compiler for ModusToolbox                                             |   10.3.1  |
-| GCC compiler for AMAZON FREERTOS                                          |   7.2     |
-| IAR Compiler                                                              |   9.3     |
+| ModusToolbox Software Environment                                         |   3.1     |
+| - ModusToolbox Device Configurator                                        |   4.10    |
+| - ModusToolbox MCU Personality in Device Configurator                     |   4.10    |
+| - ModusToolbox WiFi and BT Personalities in Device Configurator           |   4.10    |
+| GCC compiler for ModusToolbox                                             |   11.3.1  |
+| IAR Compiler                                                              |   9.30    |
 | ARM Compiler 6                                                            |   6.16    |
-| MBED OS                                                                   |   6.8.0   |
-| AMAZON FREERTOS                                                           | V202007.00|
 
 ### More information
 The following resources contain more information:
 * [LPA Middleware RELEASE.md](./RELEASE.md)
-* [Low Power Assistant Middleware Library](https://cypresssemiconductorco.github.io/lpa/lpa_api_reference_manual/html/index.html)
-* [ModusToolbox Software Environment, Quick Start Guide, Documentation, and Videos](https://www.cypress.com/products/modustoolbox-software-environment)
-* [LPA Middleware WLAN Low power Code Example for MBED OS](https://github.com/Infineon/mbed-os-example-wlan-lowpower)
-* [LPA Middleware WLAN ARP Offload Example for MBED OS](https://github.com/Infineon/mbed-os-example-wlan-offload-arp)
-* [LPA Middleware WLAN Packet Filter Offload Example for MBED OS](https://github.com/Infineon/mbed-os-example-wlan-offload-packet-filter)
+* [Low Power Assistant Middleware Library](https://infineon.github.io/lpa/lpa_api_reference_manual/html/index.html)
+* [ModusToolbox Software Environment, Quick Start Guide, Documentation, and Videos](https://www.infineon.com/cms/en/design-support/tools/sdk/modustoolbox-software/)
 * [LPA Middleware WLAN Low power Code Example for FREERTOS](https://github.com/Infineon/mtb-example-anycloud-wlan-lowpower)
 * [LPA Middleware WLAN TCP Keepalive Offload Example for FREERTOS](https://github.com/Infineon/mtb-example-anycloud-offload-tcp-keepalive)
-* [LPA Middleware WLAN Low power Code Example for AMAZON FREERTOS](https://github.com/Infineon/afr-example-wlan-lowpower)
-* [LPA Middleware WLAN Offload Example for AMAZON FREERTOS](https://github.com/Infineon/afr-example-wlan-offloads)
-* [ModusToolbox Device Configurator Tool Guide](https://www.cypress.com/ModusToolboxDeviceConfig)
-* [PSoC 6 Technical Reference Manual](https://www.cypress.com/documentation/technical-reference-manuals/psoc-6-mcu-psoc-63-ble-architecture-technical-reference)
-* [PSoC 63 with BLE Datasheet Programmable System-on-Chip datasheet](http://www.cypress.com/ds218787)
+* [ModusToolbox Device Configurator Tool Guide](https://www.infineon.com/dgdl/Infineon-ModusToolbox_Device_Configurator_4.0_User_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c8386267f0183a960bd41598f&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-files&redirId=180683&redirId=VL144)
+* [PSoC 6 Technical Reference Manual](https://www.infineon.com/dgdl/Infineon-PSoC_6_MCU_PSoC_63_with_BLE_Architecture_Technical_Reference_Manual-AdditionalTechnicalInformation-v11_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f946fea01ca&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-technical_reference_manual&redirId=TRM148)
+* [PSoC 63 with BLE Datasheet Programmable System-on-Chip datasheet](https://www.infineon.com/dgdl/Infineon-PSoC_6_MCU_PSoC_63_with_BLE_Datasheet_Programmable_System-on-Chip_(PSoC)-DataSheet-v16_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0ee4efe46c37&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-datasheet&redirId=VL4079)
   
 ---
 

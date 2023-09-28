@@ -21,11 +21,6 @@
 #define CYPRESS_WEAK            __WEAK
 #define CYPRESS_PACKED(struct)  __packed struct
 
-#elif defined(__MBED__)
-#include "mbed_toolchain.h"
-#define CYPRESS_WEAK            MBED_WEAK
-#define CYPRESS_PACKED          MBED_PACKED
-
 #else
 #define CYPRESS_WEAK           __attribute__((weak))
 #define CYPRESS_PACKED(struct) struct __attribute__((packed))
