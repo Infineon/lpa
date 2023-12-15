@@ -28,57 +28,52 @@ var NAVTREE =
     [ "Overview", "index.html#section_lpa_overview", [
       [ "Features", "index.html#section_lpa_features", null ]
     ] ],
-    [ "Getting Started", "index.html#section_lpa_getting_started", null ],
+    [ "Getting started", "index.html#section_lpa_getting_started", null ],
     [ "Prerequisites", "index.html#section_lpa_Prerequisites", null ],
     [ "Definitions", "index.html#group_lpa_definitions", null ],
-    [ "LPA project Updation", "index.html#group_quick_start_guide", null ],
+    [ "LPA project Updates", "index.html#group_quick_start_guide", null ],
+    [ "ModusToolbox™ Device Configurator flow", "index.html#group_device_configurator_flow", null ],
     [ "Part 1. MCU Low Power", "index.html#group_lpa_p1", [
-      [ "Quick Start Guide", "index.html#group_lpa_p1_mcu_qsg", null ],
+      [ "Quick start guide", "index.html#group_lpa_p1_mcu_qsg", null ],
       [ "MCU Low Power Configuration Considerations", "index.html#group_lpa_p1_cc", [
-        [ "ModusToolbox Device Configurator Flow", "index.html#group_lpa_p1_cc_mt_flow", null ],
-        [ "Manual Configuration Flow", "index.html#group_lpa_p1_cc_manual_flow", null ],
         [ "Configuration Parameters", "index.html#group_lpa_p1_cc_parameters", null ]
       ] ]
     ] ],
-    [ "Part 2. Wi-Fi Low Power", "index.html#group_lpa_p2", [
-      [ "Wi-Fi Host-wake Signal", "index.html#group_lpa_p2_host_wake", [
-        [ "Quick Start Guide", "index.html#group_lpa_p2_host_wake_qsg", null ]
+    [ "Part 2. Wi-Fi low power", "index.html#group_lpa_p2", [
+      [ "Wi-Fi host-wake signal", "index.html#group_lpa_p2_host_wake", [
+        [ "Quick start guide", "index.html#group_lpa_p2_host_wake_qsg", null ]
       ] ],
-      [ "Wi-Fi Address Resolution Protocol (ARP) Offload", "index.html#group_lpa_p2_arp_offload", [
+      [ "Wi-Fi ARP Offload", "index.html#group_lpa_p2_arp_offload", [
         [ "Awake vs. Sleeping", "index.html#group_lpa_p2_awake_sleeping", null ],
         [ "Host Auto Reply", "index.html#group_lpa_p2_hostautoreply", null ],
         [ "Peer Auto Reply", "index.html#group_lpa_p2_peerautoreply", null ],
         [ "Host and Peer Auto Reply", "index.html#group_lpa_p2_hostpeerautoreply", null ],
         [ "Host IP Snoop", "index.html#group_lpa_p2_hostsnoop", null ],
-        [ "Quick Start Guide", "index.html#group_lpa_p2_arp_offload_qsg", null ]
+        [ "Quick start guide", "index.html#group_lpa_p2_arp_offload_qsg", null ]
       ] ],
-      [ "Wi-Fi Packet Filter Offload", "index.html#group_lpa_p2_packet_filter", [
-        [ "Filter Types", "index.html#group_lpa_p2_filtertypes", null ],
-        [ "Action (Keep vs Toss)", "index.html#group_lpa_p2_keeptoss", null ],
+      [ "Wi-Fi Packet filter offload", "index.html#group_lpa_p2_packet_filter", [
+        [ "Filter types", "index.html#group_lpa_p2_filtertypes", null ],
+        [ "Action (keep vs toss)", "index.html#group_lpa_p2_keeptoss", null ],
         [ "When Active (Sleep vs Wake)", "index.html#group_lpa_p2_sleepwake", null ],
-        [ "Quick Start Guide", "index.html#group_lpa_p2_packet_filter_qsg", null ]
+        [ "Quick start guide", "index.html#group_lpa_p2_packet_filter_qsg", null ]
       ] ],
-      [ "Wi-Fi TCP Keep Alive Offload", "index.html#group_lpa_p2_tcp_keepalive", [
-        [ "Quick Start Guide", "index.html#group_lpa_p2_tcp_keepalive_qsg", null ]
+      [ "Wi-Fi TCP keepalive offload", "index.html#group_lpa_p2_tcp_keepalive", [
+        [ "Quick start guide", "index.html#group_lpa_p2_tcp_keepalive_qsg", null ]
       ] ],
-      [ "Wi-Fi Low Power Configuration Considerations", "index.html#group_lpa_p2_cc", [
-        [ "ModusToolbox Device Configurator Flow", "index.html#group_lpa_p2_cc_mt_flow", [
-          [ "Host Wake Configuration Notes", "index.html#group_lpa_p1_cc_mt_flow_host_wake", null ]
-        ] ],
-        [ "Manual Configuration Flow", "index.html#group_lpa_p2_cc_manual_flow", null ],
+      [ "Wi-Fi low power configuration considerations", "index.html#group_lpa_p2_cc", [
+        [ "Host Wake Configuration Notes", "index.html#group_lpa_p2_cc_host_wake", null ],
         [ "Limitations", "index.html#group_lpa_p2_cc_limitations", null ],
         [ "IPv6 Packet Filter for MCU Deep Sleep", "index.html#group_lpa_p2_ipv6_filter", null ],
-        [ "WLAN Low Power Configuration", "index.html#group_lpa_p2_wlan_lowpower", null ],
-        [ "Configuration Parameters", "index.html#group_lpa_p2_cc_parameters", null ]
+        [ "WLAN low power configuration", "index.html#group_lpa_p2_wlan_lowpower", null ],
+        [ "Configuration parameters", "index.html#group_lpa_p2_cc_parameters", null ]
       ] ]
     ] ],
-    [ "BT Low Power Configuration Considerations", "index.html#group_lpa_p3_cc", [
-      [ "ModusToolbox Device Configurator Flow", "index.html#group_lpa_p3_cc_mt_flow", null ],
-      [ "Manual Configuration Flow", "index.html#group_lpa_p3_cc_manual_flow", null ],
-      [ "Configuration Parameters", "index.html#group_lpa_p3_cc_parameters", null ]
+    [ "Part 3. Bluetooth® Low Power", "index.html#group_lpa_p3", [
+      [ "BT Low Power Configuration considerations", "index.html#group_lpa_p3_cc", null ],
+      [ "Configuration parameters", "index.html#group_lpa_p3_cc_parameters", null ]
     ] ],
-    [ "How to Measure Power Consumption", "index.html#section_lpa_measurement", null ],
-    [ "Wi-Fi Host Wake Configuration", "index.html#section_lpa_hostwake", [
+    [ "How to measure power consumption", "index.html#section_lpa_measurement", null ],
+    [ "Wi-Fi host wake configuration", "index.html#section_lpa_hostwake", [
       [ "CY8CKIT_062S2_43012", "index.html#section_lpa_hostwake_CY8CKIT_062S2_43012", null ]
     ] ],
     [ "BT Wake Configuration", "index.html#section_lpa_bt_wakeconfig", [
@@ -86,7 +81,7 @@ var NAVTREE =
     ] ],
     [ "MISRA-C Compliance", "index.html#group_lpa_misra", null ],
     [ "Errata", "index.html#group_lpa_errata", null ],
-    [ "More Information", "index.html#section_lpa_more_information", null ],
+    [ "More information", "index.html#section_lpa_more_information", null ],
     [ "Code Snippets", "index.html#section_lpa_code_snippets", [
       [ "Code Snippet 1: Using wait_net_suspend for suspend/resume network stack", "index.html#subsection_lpa_snippet_1", null ],
       [ "Code Snippet 2: Read OLM configuration from device configurator.", "index.html#subsection_lpa_snippet_2", null ],

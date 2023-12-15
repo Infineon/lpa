@@ -15,29 +15,24 @@
 
 /**
  *******************************************************************************
- * \mainpage Low Power Assistant Middleware Library 5.0.0
+ * \mainpage Low Power Assistant Middleware Library 5.0.0 
  *******************************************************************************
  * \section section_lpa_overview Overview
  *******************************************************************************
  *
  * Power consumption is a key operational factor for embedded devices.
- * The Low Power Assistant (LPA) allows you to configure a PSoC 6 MCU
- * and WLAN (Wi-Fi / BT Radio) device to provide low-power features. This
+ * The Low Power Assistant (LPA) allows you to configure a PSoC&trade; 6 MCU
+ * and WLAN (Wi-Fi / Bluetooth&reg; radio) device to provide low-power features. This
  * framework presents a unified, low-overhead, user-friendly way to
- * configure, connect, and operate within multiple tasks / cases.
+ * configure, connect, and operate within multiple tasks/cases.
  *
  * The key points for LPA include:
  *
- * * Applies to MCU, Wi-Fi, and BT
- * * This is for RTOS-oriented applications
- *   (FreeRTOS).
- * * Only the configuration is required; no functions should be called
- *   in runtime. Once the LPA middleware is configured, it is transparent
- *   to the application. Application code changes are not needed and
- *   the application runs as normal.
- * * There are different flows:
- *   * ModusToolbox Device Configurator Flow.
- *   * Manual Configuration Flow.
+ * * Applies to MCU, Wi-Fi, and Bluetooth&reg;
+ * * For RTOS-oriented applications (FreeRTOS).
+ * * Configuration of LPA middleware is required. Application code changes are needed 
+ *   to call LPA middleware functions in runtime.
+ * * Configurations are done using ModusToolbox&trade; Device Configurator flow.
  *
  *******************************************************************************
  * \subsection section_lpa_features Features
@@ -45,23 +40,21 @@
  *
  * There are various use cases for the LPA covered in
  * the following sections. The LPA allows you to configure different parts
- * of your design to be energy efficient.
+ * of the design to be energy-efficient.
  *
  * * \ref group_lpa_p1
- *   Provides the integration between the low-power firmware and
- *   the IoT framework (most notably, the RTOS) used in the system
- *   to be energy efficient.
+ *   Allowa you to configure MCU to enter low-power mode to 
+ *   achieve maximum power savings.
  *
  * * \ref group_lpa_p2
  *
  *   * \ref group_lpa_p2_host_wake
- *     Provides a way for a WLAN device to wake up the Host MCU
+ *     Allows the WLAN device to wake up the Host MCU
  *     from its low-power state.
  *   * \ref group_lpa_p2_arp_offload
- *     Improves the power consumption of your connected system
- *     by reducing the time the Host needs to stay awake due to ARP
- *     broadcast traffic. In general, the
- *     ARP Offload reduces broadcast traffic.
+ *     Improves the power consumption of the connected system
+ *     by reducing the time that the host needs to stay awake because of ARP
+ *     broadcast traffic.
  *   * \ref group_lpa_p2_packet_filter
  *     Allows the host processor to limit which types of
  *     packets get passed up to the host processor from the WLAN subsystem.
@@ -69,8 +62,11 @@
  *     that might otherwise wake up the host out of a power saving
  *     Deep Sleep mode, or prevent it from entering Deep Sleep mode.
  *   * \ref group_lpa_p2_tcp_keepalive
- *     Improves the power consumption of your Host MCU by offloading
- *     TCP Keepalive to WLAN Firmware
+ *     Improves the power consumption of the host MCU by offloading
+ *     TCP keepalive to WLAN firmware.
+ *
+ * * \ref group_lpa_p3
+ *   Enable the Bluetooth&reg; wake-up pins by configuring the Bluetooth&reg; host wake pin and Bluetooth&reg; device wake pin.
  *
  * The listed capabilities make the LPA middleware useful for a
  * variety of applications, including automotive, IoT, and industrial.
@@ -83,83 +79,81 @@
  *   (using a personality), which makes the low-power features of
  *   the system easy to use
  *   (<a href="https://www.infineon.com/ModusToolboxDeviceConfig">
- *   <b>ModusToolbox Device Configurator Tool Guide</b></a>).
+ *   <b>ModusToolbox&trade; Device Configurator Tool Guide</b></a>).
  *   This personality writes data structures
- *   that are processed by firmware and implement the
+ *   that are processed by the firmware and implement the
  *   choices made in the personality.
  * * This firmware is another component of the LPA feature. The firmware
  *   is used at system initialization and does not require user interaction.
- * * A small firmware module provides
- *   the integration between the low-power firmware and the IoT framework
- *   (most notably the RTOS) used in the system. This final piece of
- *   firmware will be part of the IoT framework you are using.
+ * * A small firmware module provides integration between the low-power 
+ *   firmware and the user application. This final piece of firmware will be part of 
+ *   the end-user application.
  *
  *******************************************************************************
- * \section section_lpa_getting_started Getting Started
+ * \section section_lpa_getting_started Getting started
  *******************************************************************************
  *
- * The LPA middleware can be used in various software environments
- * including FreeRTOS. The quickest way to get started is by using
- * the Code Examples.
+ * The LPA middleware can be used in various software environments. 
+ * The quickest way to get started is by using the Code Examples.
  * Infineon continuously extends its portfolio
  * of code examples at the <a href="http://www.infineon.com">
  * <b>Infineon website</b></a> and at the
  * <a href="https://github.com/Infineon">
  * <b>Infineon  GitHub</b></a> website.
- * The following Quick Start Guide sections describe several use cases
+ * The following quick start guide sections describe several use cases
  * for using the LPA features:
- * * MCU Low Power \ref group_lpa_p1_mcu_qsg
- * * Wi-Fi Host Wake Signal \ref group_lpa_p2_host_wake_qsg
+ * * MCU low power \ref group_lpa_p1_mcu_qsg
+ * * Wi-Fi host wake signal \ref group_lpa_p2_host_wake_qsg
  * * Wi-Fi Address Resolution Protocol (ARP)
  *   Offload \ref group_lpa_p2_arp_offload_qsg
- * * Wi-Fi Packet Filter Offload \ref group_lpa_p2_packet_filter_qsg
- * * Wi-Fi TCP Keepalive Offload \ref group_lpa_p2_tcp_keepalive_qsg
- * * Bluetooth Low Power
+ * * Wi-Fi packet filter offload \ref group_lpa_p2_packet_filter_qsg
+ * * Wi-Fi TCP keepalive offload \ref group_lpa_p2_tcp_keepalive_qsg
+ * * Bluetooth&reg; low power
  *
- * For more details about LPA and ModusToolbox, refer to
+ * For more details about LPA and ModusToolbox&trade;, refer to
  * the \ref section_lpa_more_information section.
  *
  *******************************************************************************
  * \section section_lpa_Prerequisites Prerequisites
  *******************************************************************************
  *
- * * ModusToolbox development environment configured for FreeRTOS.
- * * Availability of the CY8CKIT-062S2-43012 pioneer kit (or other kits 
- *   that supports PSoC 6 power consumption measurement).\n
- *   The CY8CKIT-062S2-43012 kit is recommended, since this section 
- *   documents measurement instructions for this kit. If other kit 
- *   is used, refer to its documentation and learn how to measure 
+ * * ModusToolbox&trade; development environment configured for FreeRTOS.
+ * * Availability of the CY8CKIT-062S2-43012 Pioneer Kit (or other kits 
+ *   that support the PSoC&trade; 6 power consumption measurement).\n
+ *   The CY8CKIT-062S2-43012 Kit is recommended because this section 
+ *   documents the measurement instructions for this kit. If another kit 
+ *   is used, refer to its documentation and learn how to measure the 
  *   current consumed.
  *
  *******************************************************************************
  * \section group_lpa_definitions Definitions
  *******************************************************************************
  *
- * This section lists definitions used throughout this document.
+ * This section lists the definitions used in this document.
  *
  * <table class="doxtable">
  *   <tr><th>Acronym/Term</th><th>Definition</th><th>Remark</th></tr>
  *   <tr><td>AP</td>
  *       <td>Access Point</td>
- *       <td>Wireless Access Point connection for the Device
- *           (e.g., Wireless Router).</td></tr>
+ *       <td>Wireless AP connection for the device
+ *           (e.g., Wireless router).</td></tr>
  *   <tr><td>ARP</td>
  *       <td>Address Resolution Protocol</td>
- *       <td>ARP is a procedure for mapping a dynamic Internet Protocol
- *           (IP) address to a permanent physical machine address in a
+ *       <td>ARP is a procedure for mapping a dynamic IP
+ *           address to a permanent physical machine address in a
  *           local area network (LAN).</td></tr>
  *   <tr><td>TKO</td>
- *       <td>TCP Keepalive Offload</td>
+ *       <td>TCP keepalive offload</td>
  *       <td></td></tr>
  *   <tr><td>BT</td>
- *       <td>Bluetooth</td>
+ *       <td>Bluetooth&trade;</td>
  *       <td>Bluetooth is a wireless technology standard.</td></tr>
  *   <tr><td>Device</td>
- *       <td>WLAN Device</td>
- *       <td>The Wi-Fi and/or BT radio module (WLAN Processor).</td></tr>
+ *       <td>WLAN device</td>
+ *       <td>The Wi-Fi and/or Bluetooth&reg; radio module (WLAN processor)</td></tr>
  *   <tr><td>Host</td>
- *       <td>Host Processor</td>
- *       <td>The Host (or Application) processor (e.g., PSoC 6).</td></tr>
+ *       <td>Host processor</td>
+ *       <td>The host (or application) processor (e.g., PSoC&trade; 6).</td></tr>
  *   <tr><td>LPA</td>
  *       <td>Low Power Assistant</td>
  *       <td></td></tr>
@@ -170,41 +164,40 @@
  *       <td>Out-Of-Band</td>
  *       <td></td></tr>
  *   <tr><td>Configurator</td>
- *       <td>Infineon Configuration Tool</td>
+ *       <td>Infineon configuration tool</td>
  *       <td>Configurators are a set of powerful but intuitive tools
  *           that work together to set up various MCU features. Each
  *           Configurator generates very readable, user-modifiable firmware to
  *           initialize the whole device with a single function call. Refer to
- *           <a href="https://www.infineon.com/products/modustoolbox-software-environment"><b>ModusToolBox</b></a></td></tr>
+ *           <a href="https://www.infineon.com/products/modustoolbox-software-environment"><b>ModusToolBox&trade;</b></a></td></tr>
  *   <tr><td>Personality</td>
- *       <td>Information File</td>
+ *       <td>Information file</td>
  *       <td>Personalities are files that define how resources are used by a
- *           Configurator. The Low Power Assistant functionality is
+ *           configurator. The Low Power Assistant functionality is
  *           embedded in the Device Configurator as a personality.</td></tr>
  *   <tr><td>SDIO</td>
- *       <td>Secure Digital Input / Output</td>
+ *       <td>Secure Digital Input/Output</td>
  *       <td></td></tr>
  *   <tr><td>WLAN</td>
  *       <td>Wireless Local Area Network</td>
- *       <td>WLAN means any wireless local area network no matter what
- *           technology is used and Wi-Fi is a type of WLAN that follows
- *           the IEEE 802.11 standards</td></tr>
+ *       <td>Any WLAN, including Wi-Fi, which is a type of WLAN and
+ *           adheres to the IEEE 802.11 standards, can be wireless.</td></tr>
  *   <tr><td>MTB</td>
- *       <td>ModusToolbox</td>
+ *       <td>ModusToolbox&trade;</td>
  *       <td>Refer to
- *           <a href="https://www.infineon.com/products/modustoolbox-software-environment"><b>ModusToolBox</b></a></td></tr>
+ *           <a href="https://www.infineon.com/products/modustoolbox-software-environment"><b>ModusToolBox&trade;</b></a></td></tr>
  * </table>
  *
  *******************************************************************************
- * \section group_quick_start_guide LPA project Updation
+ * \section group_quick_start_guide LPA project Updates
  *******************************************************************************
  *
  * This section provides step-by-step instructions for how to create a project, 
- * modify the application and program it to the device. \n
+ * modify the application, and program it to the device. \n
  * 
- * Perform the following steps while creating a project to evaluate the LPA features with different MCU Low Power and Wi-Fi Low Power configurations:
+ * Follow these steps while creating a project to evaluate the LPA features with different MCU Low Power and Wi-Fi Low Power configurations:
  *
- * 1. Add attached (<a href="FreeRTOSConfig.h" rel="stylesheet" type="text/css" ><b>FreeRTOSConfig.h</b></a>) to mtb-example-psoc6-empty-app
+ * 1. Copy the latest <a href="https://github.com/Infineon/freertos/tree/master/Source/portable"><b> FreeRTOSConfig.h</b></a> and update with the below changes
  *
  *	  configUSE_TICKLESS_IDLE : This change to support Tickless Deep Sleep mode
  *    \code
@@ -221,7 +214,12 @@
  *    #endif
  *    \endcode
  *
- * 2. For <b>MCU Low Power</b> application, replace main.c file with below code
+ * 2. For FreeRTOS application, Add the following file to the deps folder for CY8CKIT_062S2_43012:
+ *    \code
+ *    echo https://github.com/Infineon/freertos/#latest-v10.X#\$\$ASSET_REPO\$\$/freertos/latest-v10.X > deps/freertos.mtb
+ *    \endcode
+ *
+ * 3. For <b>MCU Low Power</b>, Replace main.c file with the following code. FreeRTOS-based application is needed for the system to enter low-power during system idling. LED ON/OFF state is used to measure the power when system is in active and sleep state.
  *    \code
  *    #include "cy_pdl.h"
  *    #include "cyhal.h"
@@ -266,8 +264,13 @@
  *    }
  *    \endcode
  *
- * 3. For <b>Wi-Fi Low Power</b> application,
- *    * Modify the example for your Wi-Fi SSID parameters in lowpower_task.h
+ * 4. For <b>Wi-Fi Low Power</b> application,
+ *    * Add the following file to the deps folder for CY8CKIT_062S2_43012:
+ *    \code
+ *    echo mtb://wifi-core-freertos-lwip-mbedtls#release-v1.1.0#$$ASSET_REPO$$/wifi-core-freertos-lwip-mbedtls/release-v1.1.0
+ *    \endcode
+ *
+ *    * Modify the example for the Wi-Fi SSID parameters in lowpower_task.h
  *    \code
  *    #define WIFI_SSID                         "SSID"
  *    #define WIFI_PASSWORD                     "PASSWORD"
@@ -279,156 +282,48 @@
  *    wait_net_suspend(wifi, portMAX_DELAY, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);
  *    \endcode
  *
- * 7. Build the project and program the board.
- *    The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain:
- *    \code
- *    make getlibs
- *    make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
- *    \endcode
- *
  *******************************************************************************
- * \section group_lpa_p1 Part 1. MCU Low Power
+ * \section group_device_configurator_flow ModusToolbox&trade; Device Configurator flow
  *******************************************************************************
- *
- * The MCU low-power feature allows you to take advantage of the power
- * saving features of a PSoC MCU simply by configuring a few parameters.
- * Using the MCU low-power feature, you can configure the system to achieve 
- * maximum power savings during system idling or to establish maximum 
- * performance by operating only in Active power mode. This feature works in 
- * conjunction with real time operating systems (RTOS), such as FreeRTOS.
- *
- * There are two parameters available: System Idle Power Mode and Deep Sleep
- * Latency.
- *
- * The System Idle Power Mode parameter defines the power state that the MCU
- * needs to enter automatically any time the system is idle. Setting it
- * to Active power mode disables power saving and allows the system to perform
- * tasks with less intervention, since there are no transitions to / from
- * CPU Sleep / System Deep Sleep states.
- *
- * The Deep Sleep Latency parameter controls if the desired deep sleep
- * time is larger than needed to perform a transition from
- * System Deep Sleep to Active power mode to perform tasks.
- *
- * For additional information please refer the SysPm (System Power Management) documentation
- * https://infineon.github.io/mtb-pdl-cat1/pdl_api_reference_manual/html/group__group__syspm.html
- *
- * The LPA library provides features for MCU Low Power, Wi-Fi Low Power and Bluetooth Low Power but the LPA library only needs to be included in applications that use Wi-Fi low power.
- *
- *******************************************************************************
- * \subsection group_lpa_p1_mcu_qsg Quick Start Guide
- *******************************************************************************
- *
- * This Quick Start Guide demonstrates how to configure and use 
- * the WLAN_HOST_WAKE pin for the MCU Low Power feature in 
- * the FreeRTOS environment. This guide also shows the feature's impact 
- * on the system's low power.
- *
- * 1. Checkout mtb-example-psoc6-empty-app application and add FreeRTOS library. \n
- * <b>For Example:</b>
- *    \code
- *    git clone https://github.com/Infineon/mtb-example-psoc6-empty-app.git
- *    cd mtb-example-psoc6-empty-app
- *    \endcode
- * 
- * 2. Add below files to deps folder for CY8CKIT_062S2_43012
- *    \code
- *    # .mtb approach(MTB3.0 and later)
- *    echo https://github.com/Infineon/TARGET_CY8CKIT-062S2-43012#latest-v4.X#\$\$ASSET_REPO\$\$/TARGET_CY8CKIT-062S2-43012/latest-v4.X > deps/TARGET_CY8CKIT-062S2-43012.mtb
- *    echo https://github.com/Infineon/freertos/#latest-v10.X#\$\$ASSET_REPO\$\$/freertos/latest-v10.X > deps/freertos.mtb
- *    echo https://github.com/Infineon/wifi-core-freertos-lwip-mbedtls#release-v1.x#\$\$ASSET_REPO\$\$/wifi-core-freertos-lwip-mbedtls/release-v1.x > deps/wifi-core-freertos-lwip-mbedtls.mtb
- *
- *    # lib approach(MTB2.1 and MTB2.4)
- *
- *    abstraction-rtos.lib :  https://github.com/Infineon/abstraction-rtos/#latest-v1.X
- *    TARGET_CY8CKIT-062S2-43012.lib : https://github.com/Infineon/TARGET_CY8CKIT-062S2-43012/#latest-v4.X
- *    freertos.lib : https://github.com/Infineon/freertos/#latest-v10.X
- *    \endcode
- * 
- * 3. Delete below libs from deps folder
- *    \code
- *    deps/TARGET_CY8CPROTO-062-4343W.lib
- *    \endcode
- *
- * 4. Refer section \ref group_quick_start_guide for LPA changes in the application.
- * 5. Refer section \ref section_lpa_hostwake to verify WLAN_HOST_WAKE pin configurations using device configurator.
- * 6. Set the desired System Idle Power mode (DeepSleep, Sleep or Active).
- *    In FreeRTOS, the System Idle Power mode is set to Deep Sleep by default 
- *    to achieve the best power saving.
- *    This step can be done by using the ModusToolbox Device Configurator 
- *    or by manually updating the code. 
- *    + <b>MCU Low power using the ModusToolbox Device Configurator</b>
- *       Refer to \ref group_lpa_p1_cc_mt_flow
- *    + <b>MCU Low power Manual configuration</b>
- *       Refer to \ref group_lpa_p1_cc_manual_flow
- * 7. Build the project and program the board.
- *    The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain:
- *    \code
- *    make getlibs
- *    make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
- *    \endcode
- * 8. Check the board operation. Refer to the \ref section_lpa_measurement How to Measure Power Consumption section for corresponding
- *    instructions. Observe the power consumption in different states of the main thread (Active, Idle).
- *    The illuminated user LED indicates the Active state.The non-illuminated LED indicates the Idle state.
- *    The duration of Active/Idle states can be adjusted by changing the BLINKING_RATE_MS value in the blinky function.
- *    Refer to the following picture for an example of the DC Power Analyzer output:
- *
- *    \image html FreeRTOS_blinky_current.png height=500px
- *
- *******************************************************************************
- * \subsection group_lpa_p1_cc MCU Low Power Configuration Considerations
- *******************************************************************************
- *
- * The following are the different flows to configure LPA middleware:
- * * \ref group_lpa_p1_cc_mt_flow. Generating the initialization
- *   code using the ModusToolbox Device Configurator
- *   greatly simplifies configuring the PSoC and
- *   enabling the LPA features. The ModusToolbox Device Configurator
+ * Generating the initialization code using the ModusToolbox&trade; Device Configurator
+ *   greatly simplifies configuring the PSoC&trade; and
+ *   enabling the LPA features. The ModusToolbox&trade; Device Configurator
  *   provides the user interface to set up and automatically generate
  *   the initialization code (including analog routing) and
  *   configuration structures.
  *
- * * \ref group_lpa_p1_cc_manual_flow. Manually adding settings into
- *   configuration files. Manual implementation of the
- *   initialization code (including analog routing) and configuration
- *   structures is recommended for expert users only.
- *
  * <b>Note</b> 
- * If you modify the output of the ModusToolbox Device Configurator, 
+ * If you modify the output of the ModusToolbox&trade; Device Configurator, 
  * you cannot import it back into the tool.
  *
- *******************************************************************************
- * \subsubsection group_lpa_p1_cc_mt_flow ModusToolbox Device Configurator Flow
- *******************************************************************************
+ * * The following are steps to avoid the design.modus file modification in the checkout repo:
  *
- * * Mandatory steps to avoid design.modus file modification in checkout repo
- *
- *   1. Copy contents of folder mtb-example-psoc6-empty-app/libs/TARGET_CY8CKIT-062S2-43012/COMPONENT_BSP_DESIGN_MODUS to mtb-example-psoc6-empty-app/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT_062S2_43012 folder
- *   2. Delete design.cyqspi and design.cycapsense file in mtb-example-psoc6-empty-app/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS
- *   3. update Makefile in mtb-example-psoc6-empty-app folder with below details (This will tell build to ignore the BSP configuration inside libs folder)
+ *   1. Copy contents of the mtb-example-psoc6-empty-app/libs/TARGET_CY8CKIT-062S2-43012/COMPONENT_BSP_DESIGN_MODUS folder to mtb-example-psoc6-empty-app/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT_062S2_43012 folder.
+ *   2. Delete design.cyqspi and design.cycapsense files in mtb-example-psoc6-empty-app/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS.
+ *   3. Update the Makefile in the mtb-example-psoc6-empty-app folder with the following details (This informs the build to ignore the BSP configuration inside the libs folder)
  *      \code
  *      COMPONENTS+=CUSTOM_DESIGN_MODUS
  *      DISABLE_COMPONENTS=BSP_DESIGN_MODUS 
  *      \endcode 
  *
- * * Navigate to the ModusToolbox installation folder and launch 
- *   the ModusToolbox Device Configurator
+ * * Navigate to the ModusToolbox&trade; installation folder and launch 
+ *   the ModusToolbox&trade; Device Configurator
  *   (\<install_dir\>/tools_3.1/device-configurator).
  * * Select File-\>Open, navigate to the board's design.modus file,
  *   and open it: \n
  *   <i>mtb-example-psoc6-empty-app/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT_062S2_43012/design.modus</i> \n
- * * If the design.modus file does not open and pops with a error message <i>No device support library path provided </i>,
- *    For MTB3.0 and later, point to the mtb-pdl-cat1 folder inside the mtb_shared/mtb-pdl-cat1/<>/props.json and  .modustoolbox/global/device-db/release-v4.6.0/props.json files in the window popup.
- *    For MTB below 3.0, point to the psoc6pdl folder inside the mtb-example-anycloud-wlan-lowpower/libs/psoc6pdl/devicesupport.xml(For MTB2.2, point to mtb_shared/mtb-pdl-cat1/<>/devicesupport.xml) file in the window popup.
+ * * If the design.modus file does not open and pops with an error message <i>No device support library path provided </i>,
+ *    For ModusToolbox&trade; v3.0 and later, point to the mtb-pdl-cat1 folder inside the mtb_shared/mtb-pdl-cat1/<>/props.json and  .modustoolbox/global/device-db/release-v4.6.0/props.json files in the window popup.
+ *    For ModusToolbox&trade; below v3.0, point to the psoc6pdl folder inside the mtb-example-anycloud-wlan-lowpower/libs/psoc6pdl/devicesupport.xml (For ModusToolbox&trade; v2.2, point to mtb_shared/mtb-pdl-cat1/<>/devicesupport.xml) file in the window popup.
  *   This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.
- * * Select the Host device tab, and then select the System tab for
+ * * Select the host device tab, and then select the System tab for
  *    that device.
  * * Enable the Power personality (if disabled) and go to the Power Parameters
  *    pane to configure the LPA Middleware.
  * * Configure RTOS related parameters:
  *    1. System Idle Power Mode (Active/Sleep/DeepSleep)
  *    2. Deep Sleep Latency
- * * Perform File-\>Save to generate initialization code.
+ * * Select File-\>Save to generate the initialization code.
  *
  * \image html Power_Personality.png
  *
@@ -440,38 +335,83 @@
  * * C Header File:
  *   GeneratedSource/cycfg_platform.h
  *
- *******************************************************************************
- * \subsubsection group_lpa_p1_cc_manual_flow Manual Configuration Flow
- *******************************************************************************
- *
- * Manual configuration is only recommended for experts.
- * To configure the MCU LPA Middleware related parameters not using the
- * ModusToolbox Device Configurator, do the following steps:
- *
- * 1. Find and open the cycfg_system.h file under .../GeneratedSource/ folder
- *    with a text editor.
- * 2. Configure the System Idle Power Mode parameter value by adding / modifying
- *    the following macro with one of the possible options:
- *    \code
- *    // Possible options
- *    #define CY_CFG_PWR_MODE_ACTIVE 0x04UL
- *    #define CY_CFG_PWR_MODE_SLEEP 0x08UL
- *    #define CY_CFG_PWR_MODE_DEEPSLEEP 0x10UL
- *    // Selected option
- *    #define CY_CFG_PWR_SYS_IDLE_MODE CY_CFG_PWR_MODE_DEEPSLEEP
- *    \endcode
- *
- * 3. Configure the Deep Sleep Latency parameter value by adding / modifying
- *    the following macro with a value from a range 0-10:
- *    \code
- *    #define CY_CFG_PWR_DEEPSLEEP_LATENCY 0UL
- *    \endcode
- *
- * 4. Save changes.
- *
  * <b>Note</b> 
- * Using the ModusToolbox Device Configurator overwrites changes
+ * Using the ModusToolbox&trade; Device Configurator overwrites changes that
  * you made in the cycfg_system.h file.
+ *
+ *******************************************************************************
+ * \section group_lpa_p1 Part 1. MCU Low Power
+ *******************************************************************************
+ *
+ * The MCU low-power feature allows you to take advantage of the power
+ * saving features of a PSoC&trade; MCU simply by configuring a few parameters.
+ * Using the MCU low-power feature, you can configure the system to achieve 
+ * maximum power savings during system idling or to establish maximum 
+ * performance by operating only in Active power mode. This feature works in 
+ * conjunction with FreeRTOS.
+ *
+ * There are two parameters available: System Idle Power Mode and Deep Sleep
+ * Latency.
+ *
+ * The System Idle Power Mode parameter defines the power state that the MCU
+ * needs to enter automatically any time the system is idle. Setting it
+ * to Active power mode disables power saving and allows the system to perform
+ * tasks with less intervention because there are no transitions to/from
+ * CPU Sleep/System Deep Sleep states.
+ *
+ * The Deep Sleep Latency parameter controls if the desired deep sleep
+ * time is larger than needed to perform a transition from
+ * System Deep Sleep to Active power mode to perform tasks.
+ *
+ * For more information, refer the SysPm (System Power Management) documentation
+ * https://infineon.github.io/mtb-pdl-cat1/pdl_api_reference_manual/html/group__group__syspm.html
+ *
+ * The LPA library provides features for MCU Low Power, Wi-Fi Low Power and Bluetooth&reg; Low Power; however, the LPA library only needs to be included in applications that use Wi-Fi low power.
+ *
+ *******************************************************************************
+ * \subsection group_lpa_p1_mcu_qsg Quick start guide
+ *******************************************************************************
+ *
+ * This quick start guide demonstrates how to configure and use 
+ * the WLAN_HOST_WAKE pin for the MCU Low Power feature in 
+ * the FreeRTOS environment. This guide also shows the feature's impact 
+ * on the system's low power.
+ *
+ * 1. Refer readme of <a href="https://github.com/Infineon/mtb-example-psoc6-empty-app.git"><b>mtb-example-psoc6-empty-app</b></a> for project creation on <a href="https://www.infineon.com/dgdl/Infineon-CY8CKIT-062S2-43012_PSoC_62S2_Wi-Fi_BT_Pioneer_Kit_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f01c8f11927"><b>CY8CKIT-062S2-43012</b></a> pioneer kit.
+ * 
+ * 2. Delete the following libs from the deps folder:
+ *    \code
+ *    deps/TARGET_CY8CPROTO-062-4343W.lib
+ *    \endcode
+ *
+ * 3. Refer the \ref group_quick_start_guide section for LPA changes in the application.
+ * 4. Refer the \ref section_lpa_hostwake section to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.
+ * 5. Set the desired System Idle Power mode (DeepSleep, Sleep or Active).
+ *    In FreeRTOS, the System Idle Power mode is set to Deep Sleep by default 
+ *    to achieve the best power saving.
+ *    This step can be done by using the ModusToolbox&trade; Device Configurator 
+ *    <b>MCU Low power using the ModusToolbox&trade; Device Configurator</b>
+ *       Refer to \ref group_device_configurator_flow
+ * 6. Refer mtb-example-psoc6-empty-app <a href="https://github.com/Infineon/mtb-example-empty-app/blob/master/README.md"><b>readme</b></a> to build the project and program the board.
+ *    The following command is an example for the CY8CKIT_062S2_43012 Board, using GCC_ARM as the toolchain:
+ *    \code
+ *    make getlibs
+ *    make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
+ *    \endcode
+ *
+ * 7. Check the board operation. Refer to the \ref section_lpa_measurement section for corresponding
+ *    instructions. Observe the power consumption in different states of the main thread (Active and Idle).
+ *    The illuminated user LED indicates the Active state. The non-illuminated LED indicates the Idle state.
+ *    The duration of Active/Idle states can be adjusted by changing the BLINKING_RATE_MS value in the blinky function.
+ *    Refer to the following picture for an example of the DC Power Analyzer output:
+ *
+ *    \image html FreeRTOS_blinky_current.png height=500px
+ *
+ *******************************************************************************
+ * \subsection group_lpa_p1_cc MCU Low Power Configuration Considerations
+ *******************************************************************************
+ * Refer to the section \ref group_device_configurator_flow to configure
+ * MCU low power using desgin.modus
  *
  *******************************************************************************
  * \subsubsection group_lpa_p1_cc_parameters Configuration Parameters
@@ -505,19 +445,19 @@
  * </table>
  *
  *******************************************************************************
- * \section group_lpa_p2 Part 2. Wi-Fi Low Power
+ * \section group_lpa_p2 Part 2. Wi-Fi low power
  *******************************************************************************
  *
- * LPA library provides features for MCU Low Power, Wi-Fi Low Power and Bluetooth Low Power.
+ * LPA library provides features for MCU low power, Wi-Fi low power, and Bluetooth&reg; low power.
  * LPA library only needs to be included in applications that use Wi-Fi low power.
  *
- * WLAN FW supports various offloads that continue operations on behalf
+ * The WLAN FW supports various offloads that continue operations on behalf
  * of the host while the host is asleep. Making the best use of these FW
  * offloads requires proper configuration, as well as coordination with 
- * the host OS and host power management systems. Up until now it has been the
- * responsibility of each application developer to realize FW offloads
- * even exist, figure out how to use and configure them, and coordinate
- * with the power management system on the host.
+ * the host OS and host power management systems. Until now, each application
+ * developer was responsible for discovering the existence of FW offloads,
+ * learning how to use and configure them, and coordinating
+ * with the host's power management system.
  * The offloads manager (OLM) is responsible for:
  * * Encapsulating the configuration, coordination, and knowledge of WLAN
  *   offloads into a single, portable, easy-to-use middleware.
@@ -532,28 +472,28 @@
  * offload.
  *
  * Power consumption is a key operational factor for embedded devices.
- * WLAN offloads play a key role in determining host power consumption
- * since offloads let the host go into System Deep Sleep for extended
+ * WLAN offloads play a key role in determining the host power consumption
+ * because offloads let the host go into System Deep Sleep mode for extended
  * periods of time while handling things like 802.11 roaming, ARP,
- * IPV6 neighbor resolution, key rotation, TCP keep alive, etc. on behalf
+ * IPV6 neighbor resolution, key rotation, and TCP keep alive, on behalf
  * of the host.
  *
  * However, each one of these different offloads needs to be recognized,
  * configured, connected to the power management subsystem, and debugged.
- * Currently, this needs be done by each individual application developer.
- * Due to this high overhead, offloads are often overlooked and therefore
- * power consumption not as low as it could be.
+ * Currently, this needs to be done by each individual application developer.
+ * Because of the high overhead, offloads are often overlooked, and therefore
+ * power consumption is not as low as it could be.
  *
  * The LPA middleware provides a framework that manages WLAN offloads,
  * reduces the overhead incurred by application developers, and makes
- * our offloads more usable while reducing host power consumption.
+ * the offloads more usable while reducing host power consumption.
  *
  * The framework:
  * * Encapsulates the programming for all low-power offloads it supports.
- *   Applications writers don't need to know these details.
- * * Uses the ModusToolbox Device Configurator and personalities to configure:
- *   * which offloads will get compiled in.
- *   * parameters for each offload.
+ *   Application writers do not need to know these details.
+ * * Uses the ModusToolbox&trade; Device Configurator and personalities to configure:
+ *   * which offloads will get compiled in
+ *   * Parameters for each offload
  * * Each offload has its own set of configured parameters and its
  *   own implementation. Offloads do not call functionality contained
  *   in another offload.
@@ -572,21 +512,21 @@
  * Each offload can be enabled or disabled at build-time.
  *
  *******************************************************************************
- * \subsection group_lpa_p2_host_wake Wi-Fi Host-wake Signal
+ * \subsection group_lpa_p2_host_wake Wi-Fi host-wake signal
  *******************************************************************************
  *
- * Host-wake provides a way for a WLAN device to wake up the Host MCU from
+ * Host-wake provides a way for a WLAN device to wake up the host MCU from
  * its low-power state. Host-wake is implemented using a GPIO on the MCU that
  * is connected to the WLAN device. The WLAN device asserts the host-wake GPIO
  * to bring the host MCU out of its low-power state. This interrupt is
- * called an out-of-band (OOB) interrupt. This configuration is critical for all the WLAN Low power offload
- * like ARP, Packet Filter, TCP Keep alive to wake up Host MCU out of its low power state.
+ * called as an out-of-band (OOB) interrupt. This configuration is critical for all the WLAN Low power offload
+ * such as ARP, Packet Filter, TCP keepalive to wake up host MCU out of its low-power state.
  *
  * Refer to the \ref group_lpa_p2_cc section to configure the Host-wake
  * pin on the Host. The Host-wake pin polarity is configurable.
  * The WLAN device is configured to re-route the SDIO in-band card
  * interrupt to WL_HOST_WAKE (OOB GPIO interrupt). The following diagram shows
- * connections between the Host and WLAN device:
+ * connections between the host and WLAN device:
  *
  * \image html HostWakeSignal.png height=150px
  *
@@ -595,11 +535,11 @@
  * * WL_HOST_WAKE: OOB interrupt line to wake Host for service
  *
  *******************************************************************************
- * \subsubsection group_lpa_p2_host_wake_qsg Quick Start Guide
+ * \subsubsection group_lpa_p2_host_wake_qsg Quick start guide
  *******************************************************************************
  *
- * This Quick Start Guide demonstrates how to configure and use 
- * the WLAN_HOST_WAKE pin for the MCU Low Power feature in 
+ * This quick start guide demonstrates how to configure and use 
+ * the WLAN_HOST_WAKE pin for the MCU low power feature in 
  * the FreeRTOS environment. This guide also shows the feature's impact 
  * on the system's low power.
  *
@@ -607,8 +547,8 @@
  * mtb-example-anycloud-wlan-lowpower</b></a> for project creation. 
  * 2. Refer section \ref group_quick_start_guide for LPA changes in the application.
  * 3. Refer section \ref section_lpa_hostwake to verify WLAN_HOST_WAKE pin configurations using device configurator.
- * 4. Build the project and program the board.
- *    The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain:
+ * 4. Refer mtb-example-anycloud-wlan-lowpower <a href="https://github.com/Infineon/mtb-example-anycloud-wlan-lowpower/blob/master/README.md"><b>readme</b></a> to build the project and program the board.
+ *    The following command is an example for the CY8CKIT_062S2_43012 Board, using GCC_ARM as the toolchain:
  *    \code
  *    make getlibs
  *    make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
@@ -616,8 +556,8 @@
  *
  *    When the modified mtb-example-anycloud-wlan-lowpower starts, the console output 
  *    shows that it connects to the specified 
- *    above Wi-Fi Access Point, and then the PSoC 6 MCU goes to 
- *    System Deep Sleep.
+ *    above Wi-Fi Access Point, and then the PSoC&trade; 6 MCU goes to 
+ *    System Deep Sleep mode.
  *    \code
  *    
  *    =======================================================
@@ -649,12 +589,12 @@
  *    Network Stack Suspended, MCU will enter DeepSleep power mode
  *    \endcode
  *
- * 5. PSoC 6 MCU is in System Deep Sleep. Only WLAN OOB can wake Host up
+ * 5. PSoC&trade; 6 MCU is in System Deep Sleep mode. Only WLAN OOB can wake up the host
  *    in this situation. Check the board operation. Use a PC to connect 
- *    to the same Wi-Fi Access Point as the PSoC 6 board.
+ *    to the same Wi-Fi AP as the PSoC&trade; 6 board.
  *
  *    Send a "ping" command to the board and observe in the serial 
- *    terminal that the PSoC 6 MCU wakes up each command:
+ *    terminal that the PSoC&trade; 6 MCU wakes up each command:
  *    \code
  *    C:\>ping -n 3 10.0.0.201
  *    Pinging 10.0.0.201 with 32 bytes of data:
@@ -679,17 +619,16 @@
  *    oob_intrs:93, sdio_intrs:187, error_intrs:0, read_aborts:0
  *    =====================================================
  *    
- *    Network Stack Suspended, MCU will enter Deep sleep power mode
+ *    Network Stack Suspended, MCU will enter Deep sleep power mode.
  *    \endcode
- *    Ping traffic causes WLAN OOB periodically wakes up the host, oob_intrs displayed in the serial terminal
+ *    Ping traffic causes WLAN OOB wakes up the host, and oob_intrs displayed in the serial terminal
  *    output shows the number of WLAN OOB interrupts received.
  *
  *******************************************************************************
- * \subsection group_lpa_p2_arp_offload Wi-Fi Address Resolution Protocol (ARP) Offload
+ * \subsection group_lpa_p2_arp_offload Wi-Fi ARP Offload
  *******************************************************************************
  *
- * The Address Resolution Protocol (ARP) Offload part of
- * the Low Power Assistant is designed to improve the power consumption
+ * The ARP Offload part of the LPA is designed to improve the power consumption
  * of your connected system by reducing the time the Host needs to stay
  * awake due to ARP broadcast traffic. In general, the ARP Offload
  * reduces the broadcast traffic. To enable this support, refer to the
@@ -698,73 +637,72 @@
  * <a href="https://github.com/Infineon/lpa">
  * <b>Infineon GitHub LPA Middleware</b></a>.
  *
- * ARP is used for mapping an Internet Protocol address 
- * (IP address; ex: 192.168.1.1)) to a physical machine
- * address (MAC; ex: ac:32:df:14:16:07) lookup. ARP uses broadcast frames
+ * ARP is used for mapping an IP address (e.g., 192.168.1.1)) to a physical machine
+ * address (e.g., ac:32:df:14:16:07) lookup. ARP uses broadcast frames
  * to accomplish this.
- * * Reduce System Deep Sleep wake-up to reduce Host Processor
+ * * Reduce the System Deep Sleep wake-up to reduce the host processor
  *   power consumption.
- * * Reduce Network traffic. If many IoT devices are in one space,
+ * * Reduce network traffic. If many IoT devices are in one space,
  *   the Wi-Fi bands can get congested with unnecessary broadcast traffic.
  *
- * ARP broadcast traffic is normally forwarded from the Network to
- * the Device (Wi-Fi Radio) and then to the Host (Application CPU)
- * Network Stack. If the Host is sleeping, the Device wakes it up.
- * Having the Device handle some of the ARP traffic will
- * reduce the frequency that the Host sleeps/wakes up, reducing Host power
+ * ARP broadcast traffic is normally forwarded from the network to
+ * the device (Wi-Fi radio) and then to the host (application CPU)
+ * network stack. If the host is sleeping, the device wakes it up.
+ * Having the device handle some of the ARP traffic will
+ * reduce the frequency that the host sleeps/wakes up, reducing the host power
  * consumption by staying in CPU Sleep and System Deep Sleep states longer.
- * Having the Device handle some of the ARP requests from
- * the Host to the network will reduce Network traffic.
+ * Having the device handle some of the ARP requests from
+ * the host to the network will reduce network traffic.
  *
  * \image html ARP1.png height=500px
  *
- * The WLAN ARP Offload feature of the Low Power Assistant will help you
- * to configure the ARP requests handling by the Device.
+ * The WLAN ARP Offload feature of the LPA helps you
+ * configure the ARP requests handled by the device.
  *
  *******************************************************************************
  * \subsubsection group_lpa_p2_awake_sleeping Awake vs. Sleeping
  *******************************************************************************
  *
- * The ARP offload feature of the Low Power Assistant has
+ * The ARP offload feature of the LPA has
  * the following basic modes:
- * * While the Host (Host Processor) is "Awake"
- * * While the Host (Host Processor) is in CPU Sleep or System Deep Sleep.
+ * * While the host (host processor) is "Awake"
+ * * While the host (host processor) is in CPU Sleep or System Deep Sleep mode.
  *
  * It is possible to enable and configure these modes based on
- * the Sleep status of the Application CPU.
+ * the Sleep status of the application CPU.
  *
  *******************************************************************************
  * \subsubsection group_lpa_p2_hostautoreply Host Auto Reply
  *******************************************************************************
  *
  * Host Auto Reply is a power-saving and network traffic reduction feature.
- * Using the ARP Offload Host Auto Reply feature, the Device will answer
- * Host ARP Requests, without broadcasting to the Network. If a Host
- * generated ARP Request results in a cache hit in the Device ARP cache,
- * the Device will fabricate an ARP Response and not forward the request
- * to the Network.
+ * Using the ARP Offload Host Auto Reply feature, the device answers
+ * host ARP requests, without broadcasting to the network. If a host
+ * generated ARP request results in a cache hit in the device ARP cache,
+ * the device fabricates an ARP  response and not forward the request
+ * to the network.
  *
- * This may be useful when the Host ARP cache is cleared to disable
- * the Host ARP table entry timers prior to entering System Deep Sleep.
- * When the Host is woken up, if the Host ARP cache queries in its own
- * Network Stack and results in a cache miss, the Host ARP Request will
- * be sent to the Device. If the ARP Request results in a cache hit in
- * the Device, the Device will respond without soliciting the network.
- * As long as the Device ARP cache entry hasn't expired, the Device will
- * fabricate an ARP Response to the Host, thus reducing broadcast traffic.
+ * This may be useful when the host ARP cache is cleared to disable
+ * the host ARP table entry timers before entering the System Deep Sleep mode.
+ * When the host is woken up, if the host ARP cache queries in its own
+ * network stack and results in a cache miss, the host ARP request will
+ * be sent to the device. If the ARP request results in a cache hit in
+ * the device, the device responds without soliciting the network.
+ * As long as the device ARP cache entry is not expired, the device 
+ * fabricates an ARP response to the host, which therefore reduces the broadcast traffic.
  *
- * The ARP Agent is enabled by setting the ARP Offload Agent flag and
- * ARP Offload Enable in the Device Configurator. The ARP Agent will
- * store "ARP IP : MAC" combos in the Device ARP cache. The Device
- * ARP cache is filled with IP:MAC combos when ARP Offload and ARP Agent
- * are enabled and the Network has responded to a Host ARP Request.
- * There is an "age out" value that you can set in the ARP Offload
+ * The ARP agent is enabled by setting the ARP Offload Agent flag and
+ * ARP Offload Enable in the Device Configurator. The ARP agent 
+ * stores the "ARP IP : MAC" combos in the device ARP cache. The device
+ * ARP cache is filled with IP:MAC combos when ARP offload and ARP agent
+ * are enabled and the network has responded to a host ARP request.
+ * There is an "age out" value that you can set in the ARP offload
  * configuration to determine the length of time the ARP cache entry
  * is valid. This ensures that the WLAN ARP cache is updated appropriately.
  *
- * The size of the WLAN Device ARP Cache is 16. The Host Network Stack
- * maintains an ARP cache regardless if the WLAN Device ARP Agent is turned
- * on or not.
+ * The size of the WLAN device ARP cache is 16. The host network stack
+ * maintains an ARP cache regardless if the WLAN device ARP agent is turned
+ * ON or not.
  *
  * \image html ARP2.png height=550px
  *
@@ -772,23 +710,15 @@
  * \subsubsection group_lpa_p2_peerautoreply Peer Auto Reply
  *******************************************************************************
  *
- * Peer Auto Reply is another power-saving feature so that the Device
- * can respond to ARP requests from Peers (Network) without waking up
- * the Host Processor.
+ * Peer Auto Reply is a power-saving feature that allows the Wi-Fi device
+ * to reply to ARP request from the network peers without waking the host. 
+ * This can be enabled by enabling the 'ARP Offload Enable' and 
+ * 'Peer Auto Reply' flags in the Device Configurator. Once the system connects
+ * to the network, the host instructs the Wi-Fi device to reply to ARP 
+ * requests on its behalf while the host is in low-power state.
  *
- * This is accomplished by setting the ARP Offload Enable and
- * Peer Auto Reply flags in the Device Configurator. When enabled,
- * this feature instructs the Device to answer ARP requests to the Peers
- * without actually asking the Host. This allows the Host to stay in
- * CPU Sleep or System Deep Sleep longer to save power. Once the IP address
- * of the Device is established (that is, the Device has connected to an AP
- * and an IP has been assigned and stored in the Device), the Device will
- * intercept any ARP request sent to the Host, and then fabricate and send an
- * ARP response without involving the Host. If the Host was in
- * CPU Sleep or System Deep Sleep mode, the Host is not awakened.
- *
- * The max number of entries for this feature is set to 8 (defined
- * in the Device Firmware and is not modifiable).
+ * The maximum number of entries for this feature is set to 8 (defined
+ * in the device firmware and cannot be modified).
  *
  * \image html ARP3.png height=600px
  *
@@ -797,35 +727,35 @@
  *******************************************************************************
  *
  * \ref group_lpa_p2_hostautoreply and \ref group_lpa_p2_peerautoreply
- * features can be enabled together for Application CPU Awake mode.
+ * features can be enabled together for the application CPU Awake mode.
  *
  *******************************************************************************
  * \subsubsection group_lpa_p2_hostsnoop Host IP Snoop
  *******************************************************************************
  *
- * When enabled, the Snoop facility watches for ARP Responses from the
- * Host to the Network, and caches them in the WLAN Device Host IP Table.
- * The size of this table is 8 entries, which allows for the Device to
+ * When enabled, the Snoop facility watches for ARP responses from the
+ * host to the network, and caches them in the WLAN device host IP table.
+ * The size of this table is 8 entries, which allows for the device to
  * support multiple IP addresses.
  *
  *******************************************************************************
- * \subsubsection group_lpa_p2_arp_offload_qsg Quick Start Guide
+ * \subsubsection group_lpa_p2_arp_offload_qsg Quick start guide
  *******************************************************************************
- * This Quick Start Guide demonstrates of how to configure and use 
+ * This quick start guide demonstrates how to configure and use 
  * the ARP offload feature in the FreeRTOS environment and its impact 
- * on the system power consumption.
+ * on system power consumption.
  *
- * The following steps are required to set up the wifi-low-power example
+ * Do the following to set up the wifi-low-power example
  * and enable the ARP offload feature:
  *
  * 1. Refer readme of <a href="https://github.com/Infineon/mtb-example-anycloud-wlan-lowpower.git"><b>
  * mtb-example-anycloud-wlan-lowpower</b></a> for project creation. 
  * 2. Refer section \ref group_quick_start_guide for LPA changes in the application.
  * 3. Configure the ARP offload. The easiest way to configure ARP offload
- *    is to use the ModusToolbox Device Configurator. \n
- *    * Refer section \ref section_lpa_hostwake to verify WLAN_HOST_WAKE pin configurations using device configurator.
+ *    is to use the ModusToolbox&trade; Device Configurator. \n
+ *    * Refer section \ref section_lpa_hostwake to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.
  *    * In design.modus, switch to the connectivity device "CYW943012WKWBG" tab 
- *      (in case the CY8CKIT_062S2_43012 board is used).
+ *      (if the CY8CKIT_062S2_43012 Board is used).
  *    * Enable Power-\>Wi-Fi.
  *    * In "Wi-Fi - Parameters" pane enable "Host Wake Configuration" and 
  *      set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".
@@ -835,8 +765,8 @@
  *    * Set "ARP Offload Cache Entries Expire after (s)" to 1200.
  *    * Save the configuration to generate the necessary code.
  *
- * 4. Build the project and program the board.
- *    The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain:
+ * 4. Refer mtb-example-anycloud-wlan-lowpower <a href="https://github.com/Infineon/mtb-example-anycloud-wlan-lowpower/blob/master/README.md"><b>readme</b></a> to build the project and program the board.
+ *    The following command is an example for the CY8CKIT_062S2_43012 Board, using GCC_ARM as the toolchain:
  *    \code
  *    make getlibs
  *    make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
@@ -844,8 +774,8 @@
  *
  *    When the modified mtb-example-anycloud-wlan-lowpower starts, the console output 
  *    shows that it connects to the specified 
- *    above Wi-Fi Access Point, and then the PSoC 6 MCU goes to 
- *    System Deep Sleep.
+ *    above Wi-Fi AP, and then the PSoC&trade; 6 MCU goes to 
+ *    System Deep Sleep mode.
  *    \code
  *    
  *    =======================================================
@@ -878,10 +808,10 @@
  *    \endcode
  *
  * 5. Check the board operation. Use a PC to connect to the same
- *    Wi-Fi Access Point as the PSoC 6 board.
+ *    Wi-Fi AP as the PSoC&trade: 6 board.
  *
  *    * Send a "ping" command to the board and observe in the serial 
- *      terminal that the PSoC 6 MCU wakes up for each command:
+ *      terminal that the PSoC&trade; 6 MCU wakes up for each command:
  *      \code
  *      C:\>ping -n 3 10.0.0.201
  *    
@@ -912,7 +842,7 @@
  *      Network Stack Suspended, MCU will enter DeepSleep power mode
  *      \endcode
  *
- *    * Send an "arping" command as follows and observe that the PSoC 6 MCU 
+ *    * Send an "arping" command as follows and observe that the PSoC&trade; 6 MCU 
  *      is in Deep Sleep mode.
  *      \code
  *      C:\>arp-ping.exe -n 3 10.0.0.201
@@ -932,7 +862,7 @@
  *        * Mac : http://macappstore.org/arping/
  *        * linux : sudo apt install arping; arping [ip address]
  *
- *      Since the WLAN device’s ARP cache is empty on the initial ARP request 
+ *      Because the WLAN device’s ARP cache is empty on the initial ARP request 
  *      from the peer, it looks up the IP details from the host and updates 
  *      its ARP cache. This causes the host to wake up because of network 
  *      activity between the host MCU and the WLAN device. On subsequent 
@@ -948,34 +878,39 @@
  *      \image html FreeRTOS_ARP_Enable.png height=500px
  * 
  *      While the WLAN device (purple graph) high spikes responds to each request, 
- *      the PSoC 6 host (blue graph) is in System Deep Sleep mode.
+ *      the PSoC&trade; 6 host (blue graph) is in System Deep Sleep mode.
  *
- * 6. Disable the ARP Offload feature and observe that the PSoC 6 Host
+ * 6. Disable the ARP Offload feature and observe that the PSoC&trade; 6 host
  *    wakes up on each request.
- *    Launch the ModusToolbox Device Configurator and open the appropriate 
+ *    Launch the ModusToolbox&trade; Device Configurator and open the appropriate 
  *    design.modus file. Select the "CYW943012WKWBG" tab, 
  *    select Power-\>Wi-Fi personality, and disable ARP offload by 
- *    de-selecting the check box next to "ARP offload".
+ *    deselecting the check box next to "ARP offload".
  *    Save the configuration. Then, build and program the application.
- *    With ARP offload disabled, the Host MCU (PSoC 6) will wake for 
+ *    With ARP offload disabled, the host MCU (PSoC&trade; 6) wakes up for 
  *    every ARP request.
  *
  *    \image html FreeRTOS_ARP_Disable.png height=500px
  *
+ * <b>Note:</b> \n
+ * For CY8CEVAL-062S2-CYW43022CUB device, ARP offload is enabled by default 
+ * with configuration set to \ref group_lpa_p2_hostpeerautoreply. Hence for this device, 
+ * ARP offload configurations are not present in the ModusToolbox&trade; Device Configurator.
+ *
  *******************************************************************************
- * \subsection group_lpa_p2_packet_filter Wi-Fi Packet Filter Offload
+ * \subsection group_lpa_p2_packet_filter Wi-Fi Packet filter offload
  *******************************************************************************
  *
  * Packet filters allow the host processor to limit which types of
  * packets get passed up to the host processor from the WLAN subsystem.
- * This is useful to keep out unwanted / unneeded packets from the network
+ * This is useful to keep out unrequired packets from the network
  * that might otherwise wake the host out of a power-saving System
- * Deep Sleep mode or prevent it from entering System Deep Sleep mode.
+ * Deep Sleep mode or prevent it from entering the System Deep Sleep mode.
  *
  * Packet filters are useful when:
- * * Trying to keep the host processor in System Deep Sleep for as long as
+ * * Trying to keep the host processor in the System Deep Sleep mode for as long as
  *   possible.
- * * Trying to get the host processor into System Deep Sleep as soon as
+ * * Trying to get the host processor into System Deep Sleep mode as soon as
  *   possible.
  *
  * Whenever a WLAN packet is destined for the host, the WLAN processor
@@ -987,7 +922,7 @@
  * and discarded by the WLAN processor so the host is not interrupted.
  *
  *******************************************************************************
- * \subsubsection group_lpa_p2_filtertypes Filter Types
+ * \subsubsection group_lpa_p2_filtertypes Filter types
  *******************************************************************************
  *
  * The following types of packet filters are supported, based on
@@ -1005,7 +940,7 @@
  * data types are in use. Multiple filters may be configured to
  * operate simultaneously.
  *
- * <b>Network Layer / Ether Types</b>
+ * <b>Network layer/Ether types</b>
  *
  * The EtherType filter is based on a 16-bit ethertype field
  * present in ethernet packets, and it is the lowest level of the TC/IP stack.
@@ -1028,7 +963,7 @@
  * Valid EtherType filters consist of a 16-bit number greater
  * than or equal to 0x800.
  *
- * <b>Transport Layer / IP Protocols</b>
+ * <b>Transport layer/IP protocols</b>
  *
  * The next layer up the stack is the Transport layer, which consists
  * of various IP protocols such as TCP, UDP, and ICMP. Discussions of
@@ -1036,10 +971,10 @@
  * but are widely available. A list of protocol numbers is also
  * widely available, including:
  * <a href="https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers">
- * <b>IP Protocol Numbers</b></a>.
+ * <b>IP Protocol numbers</b></a>.
  *
- * IP Protocol filters consist of a single 8-bit number. No checking
- * is done to see if this number matches a well-known protocol since
+ * IP protocol filters consist of a single 8-bit number. No checking
+ * is done to see if this number matches a well-known protocol because
  * it is possible for vendors to use proprietary numbers and protocols.
  *
  * Filtering on one IP protocol will only match that protocol.
@@ -1052,12 +987,12 @@
  * <b>Applications Layer / TCP & UDP Port Numbers</b>
  *
  * The applications layer distinguishes between various applications
- * based on Port numbers. These are simply well-known numbers used
- * to identify various TCP and UDP based applications. Technical discussions
+ * based on port numbers. These are simply well-known numbers used
+ * to identify various TCP and UDP-based applications. Technical discussions
  * about port numbers and list of numbers that belong to which applications
  * can be found widely on the internet, for example:
  * <a href="https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers">
- * <b>TCP and UDP Port Numbers</b></a>.
+ * <b>TCP and UDP port numbers</b></a>.
  *
  * Port filters are 16-bit port numbers as described above. With a port
  * number filter, you can filter on, for example, only ssh packets (port 22),
@@ -1071,7 +1006,7 @@
  * are the well-known port numbers described in the link above and
  * generally the most useful.  Source ports describe the temporary,
  * ephemeral port numbers used by the host sending the packets. These
- * are generated on the fly and not well known. Since they are not
+ * are generated on the fly and not well known. Because they are not
  * known ahead of time, creating a filter for them is difficult.
  * Port ranges can be used to match a wide range of source ports
  * to cover this case.
@@ -1081,26 +1016,26 @@
  * range will match.  This is most useful for matching a short-lived
  * ephemeral source port number since it will not be known ahead of time.
  *
- * Since both TCP and UDP use port numbers, filters are configured
+ * Because both TCP and UDP use port numbers, filters are configured
  * to match one or the other (TCP or UDP). If both TCP and UDP need
  * to be filtered for a particular port, two filters can be created;
  * one for each.
  *
  *******************************************************************************
- * \subsubsection group_lpa_p2_keeptoss Action (Keep vs Toss)
+ * \subsubsection group_lpa_p2_keeptoss Action (keep vs toss)
  *******************************************************************************
  *
- * Filters can be configured to either Keep (send to host) or Toss
- * (drop / discard). When configured to drop, only the specified packets
+ * Filters can be configured to either keep (send to host) or toss
+ * (drop/discard). When configured to drop, only the specified packets
  * are dropped, while any others not specifically filtered are passed
  * to the host. Likewise, when configured to keep packets, only the
- * specified packets are passed to the host and the rest discarded.
+ * specified packets are passed to the host, and the rest are discarded.
  * The most helpful model is to use only 'keep' filters. In other
  * words, use 'keep' filters to specify the complete list of packet
- * types the host is interested in, and discard the rest. This works
- * because (usually) it is much simpler to list the packets the host
- * wants to receive versus creating a complete list of packets
- * it doesn't want.
+ * types that the host is interested in, and discard the rest. This works
+ * because it is much simpler to list the packets that the host
+ * wants to receive than to create a complete list of packets
+ * it does not want.
  *
  * When using keep filters, use care to allow enough packets
  * through for networking protocols to work properly. For instance,
@@ -1113,36 +1048,36 @@
  * * Keep, EtherType 0x888e            		 \#Allow security packets through
  * * Keep, Port Filter: UDP Dest Port 68     \#Allow DHCP packets through.
  *
- * These additional filters might also be needed depending on your application:
+ * The following additional filters might also be needed depending on the application:
  * * Keep, Port Filter: UDP, Source Port 53   \#Allow DNS packet (use source port)
  * * Keep, Port Filter: TCP Dest Port 8883    \#Allow Secure MQTT packets
  * * Keep, Port Filter: TCP Dest Port 1883    \#Allow Open MQTT packets
  *
  * These 'keep' filters will keep only the packet types as described;
  * all other traffic will be discarded so it is critical to use
- * enough filters to allow your application to receive the traffic it
- * needs. This type of configuration is useful when your system receives
+ * enough filters to allow the application to receive the traffic it
+ * needs. This type of configuration is useful when the system receives
  * many different kinds of traffic and it is easier to describe the traffic
  * to be kept rather than the traffic to be discarded.
  *
  * Alternatively, it is often simpler to describe the specific type of
  * traffic to be discarded and keeping everything else. For example, someone on
  * the network keeps pinging your machine (using ICMP packets) and
- * waking it. You'd like to block ICMP and keep everything else. In this
- * case, just one filter is needed:
+ * waking it. You want to block ICMP and keep everything else. In this
+ * case, the following one filter is needed:
  * * Discard, IPType 1 				\# toss ICMP packet
  *
- * This will discard all incoming ping/ICMP packets and keep all other traffic.
+ * This discards all incoming ping/ICMP packets and keep all other traffic.
  *
- * There are no minimal filters for toss filters because the system will
- * filter the specific packets and everything else gets passed up to the host.
+ * There are no minimal filters for toss filters because the system 
+ * filters the specific packets and everything else gets passed up to the host.
  *
  * <b>Note</b> 
  * All active filters need to be of the same type
  * (keep or toss). Mixing active keep and toss filters will cause
  * unexpected behaviors.
  *
- * Below diagram shows packet filter offload with ICMP packet configured to be discarded
+ * The following diagram shows packet filter offload with ICMP packet configured to be discarded:
  *
  *    \image html pf_ping_packet_discard.png height=500px
  *
@@ -1167,56 +1102,56 @@
  * that is listening for that type of packet. If no applications are
  * listening for that type of packet, the network stack drops the packet.
  *
- * For instance:
+ * For example,
  * * An http packet arrives on port 80, but there is no http server
  *   running that would read the packet (port 80 is default http port).
  * * An ssh packet arrives on port 22, but there is no ssh server
  *   running that would read that packet (port 22 is default ssh port).
  *
- * In both cases, the host would awake from its battery saving
- * System Deep Sleep just to drop a packet. It is not hard to imagine
+ * In both cases, the host would awaken from its battery-saving
+ * System Deep Sleep mode to drop a packet. It is not hard to imagine
  * scenarios where traffic your application doesn't want or doesn't care
  * about ends up penalizing your battery usage by constantly waking the
  * host from System Deep Sleep. Alternatively, these unwanted packets
- * can also prevent the host from entering System Deep Sleep in the
+ * can also prevent the host from entering System Deep Sleep mode in the
  * first place. The host has an idle sleep threshold. When the host
- * has been idle longer than that threshold, it will put itself to sleep.
- * Processing unwanted packets (even just dropping them) will cause the
- * host to come out of idle and prevent it from reaching the idle sleep
+ * has been idle longer than that threshold, it puts itself to sleep.
+ * Processing unwanted packets (even just dropping them) causes the
+ * host to come out of idle and prevents it from reaching the idle sleep
  * threshold, preventing the host from entering sleep. In both
  * cases, traffic patterns keep the processor awake, burning power.
  *
  *******************************************************************************
- * \subsubsection group_lpa_p2_packet_filter_qsg Quick Start Guide
+ * \subsubsection group_lpa_p2_packet_filter_qsg Quick start guide
  *******************************************************************************
  *
- * This Quick Start Guide demonstrates of how to configure and use 
+ * This quick start guide demonstrates how to configure and use 
  * the Packet Filter feature in the FreeRTOS environment and its impact 
  * on the system power consumption. 
  *
- * The following steps are required to setup the wifi-low-power 
+ * Do the following to setup the wifi-low-power 
  * example with enabling the Packet Filter feature:
  *
  * 1. Refer readme of <a href="https://github.com/Infineon/mtb-example-anycloud-wlan-lowpower.git"><b>
  * mtb-example-anycloud-wlan-lowpower</b></a> for project creation. 
  * 2. Refer section \ref group_quick_start_guide for LPA changes in the application.
  * 3. Configure Packet Filters. The easiest way to configure Packet Filters
- *    is to use the ModusToolbox Device Configurator. \n
+ *    is to use the ModusToolbox&trade; Device Configurator. \n
  *    * Refer section \ref section_lpa_hostwake to verify WLAN_HOST_WAKE pin configurations using device configurator.
  *    * In design.modus, switch to the connectivity device "CYW943012WKWBG" tab 
  *      (in case the CY8CKIT_062S2_43012 board is used).
  *    * Enable Power-\>Wi-Fi.
- *    * In "Wi-Fi - Parameters" pane enable "Host Wake Configuration" and 
+ *    * In "Wi-Fi - Parameters" pane, enable "Host Wake Configuration" and 
  *      set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".
  *    * Disable ARP offload.
- *    * Enable "Add minimal set of keep filters", these filters allow ARP, DNS, DHCP and
- *      802.1x security packets to wake up the Host, and are needed to connect to WiFi 
- *      Access point, any other WiFi packets are dropped by WLAN chip and not forwarded 
- *      to the Host MCU (PSoC6)
+ *    * Enable "Add minimal set of keep filters", these filters allow ARP, DNS, DHCP, and
+ *      802.1x security packets to wake up the host, and are needed to connect to Wi-Fi 
+ *      AP, any other Wi-Fi packets are dropped by WLAN chip and not forwarded 
+ *      to the host MCU (PSoC&trade; 6)
  *    * Save the configuration to generate the necessary code.
  *
- * 4. Build the project and program the board.
- *    The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain:
+ * 4. Refer mtb-example-anycloud-wlan-lowpower <a href="https://github.com/Infineon/mtb-example-anycloud-wlan-lowpower/blob/master/README.md"><b>readme</b></a> to build the project and program the board.
+ *    The following command is an example for the CY8CKIT_062S2_43012 Board, using GCC_ARM as the toolchain:
  *    \code
  *    make getlibs
  *    make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
@@ -1224,8 +1159,8 @@
  *
  *    When the modified mtb-example-anycloud-wlan-lowpower starts, the console output 
  *    shows that it connects to the specified 
- *    above Wi-Fi Access Point, and then the PSoC 6 MCU goes to 
- *    System Deep Sleep.
+ *    above Wi-Fi AP, and then the PSoC&trade; 6 MCU goes to 
+ *    System Deep Sleep mode.
  *    \code
  *    
  *    =======================================================
@@ -1258,10 +1193,10 @@
  *    \endcode
  *
  * 5. Check the board operation. Use a PC to connect to the same
- *    Wi-Fi Access Point as the PSoC 6 board.
+ *    Wi-Fi AP as the PSoC&trade; 6 board.
  *
  *    * Send "ping" command to the board and observe in serial terminal 
- *      that it does not wake up the PSoC 6 MCU since there is 
+ *      that it does not wake up the PSoC&trade; 6 MCU because there is 
  *      no "keep" packet filter for ICMP pings, there is no response 
  *      for the pings:
  *      \code
@@ -1277,7 +1212,7 @@
  *
  *      \endcode
  *
- *    * Send an "arping" command as follows and observe that the PSoC 6 MCU 
+ *    * Send an "arping" command as follows and observe that the PSoC&trade; 6 MCU 
  *      is in Deep Sleep mode.
  *      Use any available ARPping tool. As an example:
  *        * Windows: https://www.elifulkerson.com/projects/arp-ping.php
@@ -1296,7 +1231,7 @@
  *            Minimum = 113.209ms, Maximum = 1114.333ms, Average = 451.111ms
  *        \endcode
  *
- *        Observe that PSoC 6 MCU wakes up for each command since there
+ *        Observe that PSoC&trade; 6 MCU wakes up for each command because there
  *        is "keep" packet filter for ARP pings, the ARP pings
  *        are responded back:
  *        \code
@@ -1316,61 +1251,61 @@
  *        Network Stack Suspended, MCU will enter DeepSleep power mode
  *        \endcode
  *
- * 6.  Verify the packet Filter is working as desired. Refer to the \ref section_lpa_measurement section for corresponding instructions.
- *     The following oscilloscope screen capture shows current measurement with the Packet Filter enabled
+ * 6.  Verify that the packet Filter is working as desired. Refer to the \ref section_lpa_measurement section for corresponding instructions.
+ *     The following oscilloscope screen capture shows current measurement with the Packet Filter enabled:
  *
  *     i. ARP Ping :
- *        This wakes up the host as packet filter for ARP is configured
+ *        This wakes up the host as packet filter for ARP is configured.
  *
  *      \image html FreeRTOS_PF_ARP_ping.png height=500px
  *
  *     ii. Ping :
- *        This doesnot wakeup the host as ICMP packet is not configured as packet filter type
+ *        This doesnot wakeup the host as ICMP packet is not configured as packet filter type.
  *      \image html FreeRTOS_PF_ping_nowake.png height=500px
  *
  *******************************************************************************
- * \subsection group_lpa_p2_tcp_keepalive Wi-Fi TCP Keep Alive Offload
+ * \subsection group_lpa_p2_tcp_keepalive Wi-Fi TCP keepalive offload
  *******************************************************************************
- * TCP Keepalive Offload part of the Low Power Assistant is designed to improve the power consumption of your connected system by reducing the time the Host needs to stay awake to support TCP Keepalive Request.
- * This document describes how to enable TCP Keep alive Offload and configure 4 different sockets for TCP keepalive that can be incorporated into your project from
+ * TCP keepalive offload part of the LPA is designed to improve the power consumption of the connected system by reducing the time the host needs to stay awake to support TCP keepalive request.
+ * This document describes how to enable TCP keepalive offload and configure four different sockets for TCP keepalive that can be incorporated into the project from
  * <a href="https://github.com/Infineon/lpa">
  * <b>Infineon GitHub LPA Middleware</b></a>.
  *
- * TCP Keepalive maintains idle TCP connections by periodically passing packets between the client and server. If either the client or server does not respond to a packet,
- * the connection is considered inactive and is terminated. This helps in pruning dead connections. Typically TCP Keepalives are sent every 45 or 60 seconds on an idle TCP connection,
- * and the connection is dropped after 3 sequential ACKs are missed.
- * This means Host MCU has to wake up periodically to send TCP Keepalive packet to maintain TCP connection during idle state.
+ * TCP keepalive maintains idle TCP connections by periodically passing packets between the client and server. If either the client or server does not respond to a packet,
+ * the connection is considered inactive and is terminated. This helps in pruning dead connections. Typically TCP keepalives are sent every 45 or 60 seconds on an idle TCP connection,
+ * and the connection is dropped after three sequential ACKs are missed.
+ * This means host MCU has to wake up periodically to send TCP keepalive packet to maintain TCP connection during idle state.
  *
- * TCP Keepalive Offload helps in moving this functionality to WLAN firmware so that Host MCU doesnot need to wake up periodically to send/receive TCP Keepalive packets.
- * This functionality is offloaded only when Host MCU goes to sleep and network stack is suspended
+ * TCP keepalive offload helps in moving this functionality to WLAN firmware so that host MCU does not need to wake up periodically to send/receive TCP keepalive packets.
+ * This functionality is offloaded only when host MCU goes to Sleep mode and network stack is suspended.
  *
  * \image html TCP_Keepalive_basic_graph.png height=500px
  *
  *******************************************************************************
- * \subsubsection group_lpa_p2_tcp_keepalive_qsg Quick Start Guide
+ * \subsubsection group_lpa_p2_tcp_keepalive_qsg Quick start guide
  *******************************************************************************
  *
- * This Quick Start Guide demonstrates of how to configure and use
- * the TCP Keep alive offload feature in the FreeRTOS environment and its impact
+ * This quick start guide demonstrates how to configure and use
+ * the TCP keepalive offload feature in the FreeRTOS environment and its impact
  * on the system power consumption.
  *
- * The following steps are required to setup the wifi-low-power tcp keepalive offload
- * example and enable the TCP Keepalive offload feature.
+ * Do the following to set up the wifi-low-power tcp keepalive offload
+ * example and enable the TCP keepalive offload feature.
  *
  * 1. Refer readme of <a href="https://github.com/Infineon/mtb-example-anycloud-offload-tcp-keepalive.git"><b> 
  * mtb-example-anycloud-offload-tcp-keepalive</b></a> for project creation. 
  * 2. Refer section \ref group_quick_start_guide for LPA changes in the application.
- * 3. Configure TCP Keepalive offload. The easiest way to configure TCP Keepalive offload
- *    is to use the ModusToolbox Device Configurator. \n
- *    * Refer section \ref section_lpa_hostwake to verify WLAN_HOST_WAKE pin configurations using device configurator.
+ * 3. Configure TCP keepalive offload. The easiest way to configure TCP keepalive offload
+ *    is to use the ModusToolbox&trade; Device Configurator. \n
+ *    * Refer section \ref section_lpa_hostwake to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.
  *    * In design.modus, switch to the connectivity device "CYW943012WKWBG" tab 
  *      (in case the CY8CKIT_062S2_43012 board is used).
  *    * Enable Power-\>Wi-Fi.
- *    * In "Wi-Fi - Parameters" pane enable "Host Wake Configuration" and 
+ *    * In "Wi-Fi - Parameters" pane, enable "Host Wake Configuration" and 
  *      set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".
- *    * Enable TCP Keep Alive Offload.
- *    * Configure Interval, Retry Interval, Retry Count
- *    * Configure Source port, Destination port, Destination IP address (TCP server)
+ *    * Enable TCP keepalive offload.
+ *    * Configure Interval, Retry Interval, and Retry Count.
+ *    * Configure Source port, Destination port, and Destination IP address (TCP server).
  *    * Save the configuration to generate the necessary code.
  *
  *   ii. Manual configuration steps
@@ -1380,19 +1315,19 @@
  *    *  If TCP Keep-alive offload is not present in device configurator then add TCP keep-alive offload list \ref subsection_lpa_snippet_3
  *    *  call the API to restart olm  \ref subsection_lpa_snippet_4
  *    *  Establish TCP connection  \ref subsection_lpa_snippet_5
- *    *  TCP keep-alive offload will be enabled when host MCU goes to sleep \ref subsection_lpa_snippet_1
+ *    *  TCP keepalive offload will be enabled when host MCU goes to sleep \ref subsection_lpa_snippet_1
  *    *  <b>Note</b> The maximum supported TCP connections that can be offloaded to WLAN device is 4 (MAX_TKO) this is WLAN firmware limitation, if the API \ref subsection_lpa_snippet_5 is invoked
  *       more than 4 times then LIFO ( Last In First Out) Algorithm is followed where the MRU(Most Recently Used) TCP connections will only
  *       be offloaded to WLAN device.
  *
- * 7. Use a PC to connect to the same Wi-Fi Access Point as the PSoC 6 board. Run <a href="tcp_echo_server.py" rel="stylesheet" type="text/css" ><b>tcp_echo_server.py</b></a> in that PC to act as TCP Server
+ * 7. Use a PC to connect to the same Wi-Fi Access Point as the PSoC&trade; 6 board. Run <a href="tcp_echo_server.py" rel="stylesheet" type="text/css" ><b>tcp_echo_server.py</b></a> in that PC to act as TCP Server
  *    \code
  *    python tcp_echo_server.py --port 3360
  *    \endcode
  *
  *
- * 8. Build the project and program the board.
- *    The following command is example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain:
+ * 8. Refer mtb-example-connectivity-offload-tcp-keepalive <a href="https://github.com/Infineon/mtb-example-connectivity-offload-tcp-keepalive/blob/master/README.md"><b>readme</b></a> to build the project and program the board.
+ *    The following command is an example for the CY8CKIT_062S2_43012 board, using GCC_ARM as the toolchain:
  *    \code
  *    make getlibs
  *    make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
@@ -1400,8 +1335,8 @@
  *
  *    When the modified mtb-example-connectivity-offload-tcp-keepalive starts, the console output 
  *    lists available Wi-Fi networks. It then connects to the specified 
- *    above Wi-Fi Access Point, and then the PSoC 6 MCU goes to 
- *    System Deep Sleep.
+ *    above Wi-Fi AP, and then the PSoC&trade; 6 MCU goes to 
+ *    System Deep Sleep mode.
  *    \code
  *    
  *    Info: ============================================
@@ -1429,44 +1364,25 @@
  *    Network Stack Suspended, MCU will enter DeepSleep power mode
  *    \endcode
  *
- * 9. Verify the TCP Keepalive offload is working as desired.Refer to the \ref section_lpa_measurement section for
- *    corresponding instructions.The following oscilloscope screen capture shows current measurement with
+ * 9. Verify that the TCP keepalive offload is working as desired. Refer to the \ref section_lpa_measurement section for
+ *    corresponding instructions. The following oscilloscope screen capture shows current measurement with
  *
- * <b>TCP Keepalive Offload enabled with 20 seconds interval configuration and WLAN DTIM configured as 3 :</b>
+ * <b>TCP keepalive offload enabled with 20 seconds interval configuration and WLAN DTIM configured as 3 :</b>
  *      \image html FreeRTOS_TKO_Enable.png height=500px
  *
  *******************************************************************************
- * \subsection group_lpa_p2_cc Wi-Fi Low Power Configuration Considerations
+ * \subsection group_lpa_p2_cc Wi-Fi low power configuration considerations
  *******************************************************************************
  *
- * The following are the different flows to configure LPA middleware:
- * * \ref group_lpa_p2_cc_mt_flow. Generating the initialization
- *   code using the ModusToolbox Device Configurator
- *   greatly simplifies configuring the PSoC and
- *   enabling the LPA features. The ModusToolbox Device Configurator
- *   provides the user interface to set up and automatically generate
- *   the initialization code (including analog routing) and
- *   configuration structures.
- * * \ref group_lpa_p2_cc_manual_flow. Manually adding settings into
- *   configuration files. Manual implementation of the
- *   initialization code (including analog routing) and configuration
- *   structures is recommended for expert Users only.
+ * Refer to the section \ref group_device_configurator_flow to configure
+ * MCU low power using desgin.modus
+ * To open the ModusToolbox&trade; Device Configurator, right-click on the project
+ * in the Project Explorer pane in the ModusToolbox&trade; IDE, and select
+ *   ModusToolbox&trade; Configurators > Device Configurator.
  *
- * <b>Note</b> 
- * If you modify the output of the ModusToolbox Device Configurator, 
- * you cannot import it back to the tool.
- *
- *******************************************************************************
- * \subsubsection group_lpa_p2_cc_mt_flow ModusToolbox Device Configurator Flow
- *******************************************************************************
- *
- * To open the ModusToolbox Device Configurator, right-click on the project
- * in the Project Explorer pane in the ModusToolbox IDE, and select
- *   ModusToolbox Configurators > Device Configurator.
- *
- * 1. Select the Wi-Fi Radio device tab (e.g., CYW4343WKUBG).
+ * 1. Select the Wi-Fi radio device tab (e.g., CYW4343WKUBG).
  * 2. Enable the Wi-Fi personality and go to the Wi-Fi Parameters pane
- *    to configure the LPA Middleware.
+ *    to configure the LPA middleware.
  * 3. Set Host Wake Configuration. Enable and assign the Host Device
  *    Interrupt Pin. Refer to the kit datasheet to find out which pin
  *    is routed on board PCB.
@@ -1484,6 +1400,14 @@
  *
  * \image html WIFI_Personality.png
  *
+ * For CY8CEVAL-062S2-CYW43022CUB device, do below additional changes.
+ *
+ * 1. Select the Wi-Fi radio device tab (e.g., CYW43022CUB).
+ * 2. ULP support is enabled by default. Set the wait time.
+ * 3. Perform File-\>Save to generate initialization code.
+ *
+ * \image html ULP_Personality.png
+ *
  * After saving the configuration file, the generated code is available under
  * the GeneratedSource folder, located next to the design.modus file
  * in the BSP:
@@ -1493,19 +1417,12 @@
  *   /GeneratedSource/cycfg_connectivity_wifi.h
  *
  *********************************************************************************
- * \paragraph group_lpa_p1_cc_mt_flow_host_wake Host Wake Configuration Notes
+ * \subsubsection group_lpa_p2_cc_host_wake Host Wake Configuration Notes
  *********************************************************************************
  * By Default, WLAN host wake is configured properly and below device configurator support allows user to modify it to different GPIOs.
  * But if user selects <b><i>Host Wake Configuration Enable</i></b> checkbox and doesnot select any pin for <b><i>Host Device Interrupt Pin</i></b>, System will Hang and this should be avoided by the user
  *
  * \image html hostwake_MTConfigure.png height=150px
- *
- *******************************************************************************
- * \subsubsection group_lpa_p2_cc_manual_flow Manual Configuration Flow
- *******************************************************************************
- *
- * Manual implementation of the initialization code (including analog routing)
- * and configuration structures is recommended for expert Users only.
  *
  *******************************************************************************
  * \subsubsection group_lpa_p2_cc_limitations Limitations
@@ -1517,18 +1434,18 @@
  * maximum numbers of filters. It is possible to add 20 filters on a
  * CY8CKIT_062S2_43012 kit without any issue.
  *
- * 2. Network stack suspend/resume functionality which is called in main.c function which enables Host MCU
- * to remain in deep sleep for more duration (wake up only for external event).
- * (Maximum sleep-time possible is 36 hours(1.5 days). This means Host MCU will wake up without interrupt from external event after 36 hrs
- * and then immediately goes back to sleep. This has very less power impact.
+ * 2. Network stack suspend/resume functionality, which is called in the main.c function, enables the host MCU
+ * to remain in Deep Sleep for longer durations (wake up only for external events).
+ * (Maximum sleep-time possible is 36 hours (1.5 days). This means the host MCU will wake up without an interrupt from an external event after 36 hours
+ * and then immediately go back to sleep. This has a very low power impact.
  * 
  ********************************************************************************
  * \subsubsection group_lpa_p2_ipv6_filter IPv6 Packet Filter for MCU Deep Sleep
  ********************************************************************************
  * * MCU will wake for IPv6 packets intermittently, So add packet filter for IPv6 packets to avoid unnecessary wakeup. \n
  *    How to configure packet Filter for IPv6 packets: \n
- *    * Navigate to ModusToolbox installation folder and launch
- *      the ModusToolbox Device Configurator
+ *    * Navigate to ModusToolbox&trade; installation folder and launch
+ *      the ModusToolbox&trade; Device Configurator
  *      (\<install_dir\>/tools_3.1/device-configurator).
  *    * Select File-\>Open, navigate to the board's design.modus file,
  *      and open it:
@@ -1544,12 +1461,12 @@
  *    * Save the configuration to generate the necessary code
  *
  ********************************************************************************
- * \subsubsection group_lpa_p2_wlan_lowpower WLAN Low Power Configuration
+ * \subsubsection group_lpa_p2_wlan_lowpower WLAN low power configuration
  ********************************************************************************
- *   WLAN Firmware support two different low power modes like (legacy) 802.11 PS-Poll mode and high throughput powersave mode.
+ *   The WLAN firmware supports two different low-power modes: (legacy) 802.11 PS-Poll mode and high throughput powersave mode.
  *   Refer to <a href="https://Infineon.github.io/wifi-host-driver/API/group__wifipowersave.html"> <b> WLAN Powersave API </b></a>
  *
- *   These can be configured using below Wi-Fi Host Driver APIs: \n
+ *   These can be configured using the following Wi-Fi host driver APIs: \n
  *   1. <b> 802.11 PS-Poll mode </b>
  *   \code
  *   // ifp : Pointer to WHD Interface
@@ -1570,7 +1487,7 @@
  *   \endcode
  *   
  *******************************************************************************
- * \subsubsection group_lpa_p2_cc_parameters Configuration Parameters
+ * \subsubsection group_lpa_p2_cc_parameters Configuration parameters
  *******************************************************************************
  *
  * The following parameters and their mapping to macros are available:
@@ -1791,59 +1708,30 @@
  * </table>
  *
  *******************************************************************************
- * \section group_lpa_p3_cc BT Low Power Configuration Considerations
+ * \section group_lpa_p3 Part 3. Bluetooth&reg; Low Power
  *******************************************************************************
  *
- * The following are the different flows to configure LPA middleware:
- * * \ref group_lpa_p3_cc_mt_flow. Generating the initialization
- *   code using the ModusToolbox Device Configurator
- *   greatly simplifies configuring the PSoC and
- *   enabling the LPA features. The ModusToolbox Device Configurator
- *   provides the user interface to set up and automatically generate
- *   the initialization code (including analog routing) and
- *   configuration structures.
- * * \ref group_lpa_p3_cc_manual_flow. Manually adding settings into
- *   configuration files. Manual implementation of the
- *   initialization code (including analog routing) and configuration
- *   structures is recommended for expert Users only.
- *
- * <b>Note</b> 
- * If you modify the output of the ModusToolbox Device Configurator, 
- * you cannot import it back to the tool.
+ * The Bluetooth low-power feature enables the host to achieve its lowest power
+ * consumption with enabled Bluetooth. The BT Low Power personality helps
+ * configure the pin connections between the MCU host and BT device.
  *
  *******************************************************************************
- * \subsection group_lpa_p3_cc_mt_flow ModusToolbox Device Configurator Flow
+ * \subsection group_lpa_p3_cc BT Low Power Configuration considerations
  *******************************************************************************
- *  Steps to avoid design.modus file modification inside checkout repo
  *
- *   Ignore this step if application already added this COMPONENT_CUSTOM_DESIGN_MODUS Folder \n
- *   1. Copy contents of folder mtb-example-anycloud-ble-wifi-onboarding/libs/TARGET_CY8CKIT-062S2-43012/COMPONENT_BSP_DESIGN_MODUS to mtb-example-anycloud-ble-wifi-onboarding/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT_062S2_43012 folder
- *   2. Delete design.cyqspi and design.cycapsense file in mtb-example-anycloud-ble-wifi-onboarding/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS
- *   3. update Makefile in mtb-example-anycloud-ble-wifi-onboarding folder with below details (This will tell build to ignore the BSP configuration inside libs folder)
- *      \code
- *      COMPONENTS+=CUSTOM_DESIGN_MODUS
- *      DISABLE_COMPONENTS=BSP_DESIGN_MODUS 
- *      \endcode 
- *
- * To open the ModusToolbox Device Configurator, right-click on the project
- * in the Project Explorer pane in the ModusToolbox IDE, and select
- * ModusToolbox Configurators > Device Configurator.
- *
- * 1. Open <i>mtb-example-anycloud-ble-wifi-onboarding/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT_062S2_43012/design.modus</i> \n
- *    * If the design.modus file does not open and pops with a error message <i>No device support library path provided </i>, 
- *      For MTB3.0 and later, point to the mtb-pdl-cat1 folder inside the mtb_shared/mtb-pdl-cat1/<>/props.json and  .modustoolbox/global/device-db/release-v4.6.0/props.json files in the window popup.
- *      For MTB below 3.0, point to the psoc6pdl folder inside the mtb-example-anycloud-wlan-lowpower/libs/psoc6pdl/devicesupport.xml(For MTB2.2, point to mtb_shared/mtb-pdl-cat1/<>/devicesupport.xml) file in the window popup.
- *      This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.
- * 2. Select Wi-Fi Radio device tab (for example, CYW4343WKUBG).
- * 3. Enable the BT resource and go to the BT Parameters pane to configure
+ * Follow the below steps for BT Low Power Configuration considerations.
+ * 1. Refer to the section \ref group_device_configurator_flow to configure
+ * MCU low power using desgin.modus
+ * 2. Select Wi-Fi radio device tab (for example, CYW4343WKUBG).
+ * 3. Enable the Bluetooth&reg; resource and go to the Bluetooth&reg; Parameters pane to configure
  *    the LPA Middleware.
- * 4. Enable BT Wake Configuration.
+ * 4. Enable Bluetooth&reg; Wake Configuration.
  * 5. Choose a pin for Host-wake-up signal. Refer to the kit datasheet to
  *    find out which pin is routed on board PCB.
  * 6. Choose a pin for Device-wake-up signal and Device-wake-up trigger
  *    interrupt type. Refer to the kit datasheet to find out which pin is
  *    routed on board PCB.
- * 7. Perform File-\>Save to generate initialization code.
+ * 7. Select File-\>Save to generate initialization code.
  *
  *
  * \image html BT_Personality.png height=250px
@@ -1857,40 +1745,7 @@
  *   /GeneratedSource/cycfg_connectivity_bt.h
  *
  *******************************************************************************
- * \subsection group_lpa_p3_cc_manual_flow Manual Configuration Flow
- *******************************************************************************
- *
- * To configure MCU LPA Middleware related parameters not using ModusToolbox
- * Device Configurator, do the following steps:
- *
- * 1. Find and open the cycfg_connectivity_bt.h file
- *    under .../COMPONENT_BSP_DESIGN_MODUS/GeneratedSource/folder
- *    with a text editor.
- * 2. To configure Host-Wake-Up Signal parameter add/modify
- *    the following macros:
- *    \code
- *    #define CYCFG_BT_HOST_WAKE_GPIO CYBSP_CSD_TX_HAL_PORT_PIN
- *    #define CYCFG_BT_HOST_WAKE_IRQ_EVENT CYCFG_BT_WAKE_EVENT_ACTIVE_LOW
- *    \endcode
- * 3. To configure Device-Wake-Up Signal parameter add/modify the
- *    following macros:
- *    \code
- *    #define CYCFG_BT_DEV_WAKE_GPIO CYBSP_WIFI_SDIO_DAT0_HAL_PORT_PIN
- *    #define CYCFG_BT_DEV_WAKE_POLARITY CYCFG_BT_WAKE_EVENT_ACTIVE_LOW
- *    \endcode
- * 4. Save changes.
- *
- * <b>Note</b> 
- * Using the ModusToolbox Device Configurator overwrites changes
- * you made in the cycfg_connectivity_bt.h file.
- *
- * <b>Note</b> 
- * The board Pin connections must match the manual settings.
- * If the BSP pins are being changed, then it will require some board rework
- * to match the hardware connections to the manually changed connections.
- *
- *******************************************************************************
- * \subsection group_lpa_p3_cc_parameters Configuration Parameters
+ * \subsection group_lpa_p3_cc_parameters Configuration parameters
  *******************************************************************************
  *
  * The following parameters and their mapping to macros are available:
@@ -1929,23 +1784,23 @@
  * </table>
  *
  *******************************************************************************
- * \section section_lpa_measurement How to Measure Power Consumption
+ * \section section_lpa_measurement How to measure power consumption
  *******************************************************************************
  *
- * For jumper connections and how to measure power consumption refer to the guide of your kit. \n
+ * For jumper connections and how to measure power consumption, refer to the guide of the respective kit. \n
  * <b>For Example:</b> 
- * To measure power consumption for the CY8CKIT-062S2-43012 kit, refer to section <i>3.2.5 Power Supply System</i> in the kit guide
+ * To measure the power consumption for the CY8CKIT-062S2-43012 Kit, refer to section <i>3.2.5 Power Supply System</i> in the kit guide
  * <a href="https://www.infineon.com/dgdl/Infineon-CY8CKIT-062S2-43012_PSoC_62S2_Wi-Fi_BT_Pioneer_Kit_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f01c8f11927">
- * <b>User Manual</b></a>.
+ * <b>User manual</b></a>.
  *
  *
  *******************************************************************************
- * \section section_lpa_hostwake Wi-Fi Host Wake Configuration
+ * \section section_lpa_hostwake Wi-Fi host wake configuration
  *******************************************************************************
  *
- * This section explains how to enable the Wi-Fi Host Wake Configuration using the device configurator tool. \n
+ * This section explains how to enable the Wi-Fi host wake configuration using the Device Configurator tool. \n
  * \n
- * Below table lists the Device name and its corresponding Wi-Fi Host Wake pin.
+ * The following table lists the Device name and its corresponding Wi-Fi wost wake pin.
  * <table class="doxtable">
  *   <tr>
  *     <th>Infineon platform</th>
@@ -1973,13 +1828,13 @@
  *   </tr>
  * </table>
  * \n
- * Below is an example of CY8CKIT_062S2_43012 device to how to enable the Wi-Fi Host Wake configuration.
+ * The following is an example of the CY8CKIT_062S2_43012 device to how to enable the Wi-Fi host wake configuration:
  *******************************************************************************
  * \subsection section_lpa_hostwake_CY8CKIT_062S2_43012 CY8CKIT_062S2_43012
  *******************************************************************************
  *
- * * On the PSoC6 MCU Pins tab of the Device Configurator tool , Enable the Host wake pin P4[1] and name it CYBSP_WIFI_HOST_WAKE.
- * * In the Parameters pane, change the following.
+ * * On the PSoC&trade; 6 MCU Pins tab of the Device Configurator tool , Enable the Host wake pin P4[1] and name it CYBSP_WIFI_HOST_WAKE.
+ * * In the Parameters pane, change the following:
  *    * Drive Mode: Analog High-Z. Input buffer off.
  *    * Initial Drive State: High(1).
  *    * Interrupt Trigger Type: Rising Edge.
@@ -1992,9 +1847,9 @@
  * \section section_lpa_bt_wakeconfig BT Wake Configuration
  *******************************************************************************
  *
- * This section explains how to enable the BT Wake configuration using the device configurator tool. \n
+ * This section explains how to enable the Bluetooth&reg; wake configuration using the device configurator tool. \n
  * \n
- * Below table lists the Device name and its corresponding BT Host wake pin and BT Device wake pin.
+ * The following table lists the device name and its corresponding Bluetooth&reg; host wake pin and Bluetooth&reg; device wake pin:
  *  <table class="doxtable">
  *   <tr>
  *     <th>Infineon platform</th>
@@ -2028,22 +1883,22 @@
  *   </tr>
  * </table>
  * \n
- * Below table lists the Device name and its corresponding BT Host wake pin and BT Device wake pin.
+ * The following table lists the Device name and its corresponding Bluetooth&reg; host wake pin and Bluetooth&reg; device wake pin:
  *******************************************************************************
  * \subsection section_lpa_bt_wakeconfig_CY8CKIT_062S2_43012 CY8CKIT_062S2_43012
  *******************************************************************************
  *
- * * On the PSoC6 MCU Pins tab of the Device Configurator tool 
- *    * Enable the BT Device wake pin P3[5] and name it CYBSP_BT_DEVICE_WAKE.
+ * * On the PSoC&trade; 6 MCU Pins tab of the Device Configurator tool 
+ *    * Enable the Bluetooth&reg; device wake pin P3[5] and name it CYBSP_BT_DEVICE_WAKE.
  *        * In the Parameters pane, change the following.
  *           * Drive Mode: Strong Drive. Input buffer off.
  *           * Initial Drive State: Low(0).
- *    * Enable the BT Host wake pin P4[0] and name it CYBSP_BT_HOST_WAKE.
+ *    * Enable the Bluetooth&reg; Host wake pin P4[0] and name it CYBSP_BT_HOST_WAKE.
  *        * In the Parameters pane, change the following.
  *           * Drive Mode: Analog High-Z. Input buffer off.
  *           * Initial Drive State: Low(0).
- * * Go to BT tab in CYW43012C0WKWBG and change the following.
- *    * Enable BT Wake up Configurations checkbox
+ * * Go to Bluetooth&reg; tab in CYW43012C0WKWBG and change the following.
+ *    * Enable Bluetooth&reg; wake up configurations checkbox
  *    * Host Wake-Up Signal : CYBSP_BT_HOST_WAKE 
  *    * Host Wake-Up IRQ event:  Failing Edge
  *    * Device Wake-Up Signal : CYBSP_BT_DEVICE_WAKE
@@ -2056,7 +1911,7 @@
  * \section group_lpa_misra MISRA-C Compliance
  *******************************************************************************
  *
- * If you need a MISRA compliance report for this library, please
+ * If you need a MISRA compliance report for this library,
  * create a ticket at <a href="https://www.infineon.com/cms/en/about-infineon/company/contacts/support/">
  * <b>Infineon support</b></a>
  *
@@ -2066,7 +1921,7 @@
  * This section lists the known problems with the LPA middleware.
  *
  *******************************************************************************
- * \section section_lpa_more_information More Information
+ * \section section_lpa_more_information More information
  *******************************************************************************
  *
  * For more information, Infineon highly
@@ -2075,8 +1930,8 @@
  * * <a href="https://github.com/Infineon/lpa">
  *   <b>Infineon GitHub LPA Middleware</b></a>
  *
- * * <a href="https://www.infineon.com/cms/en/design-support/tools/sdk/modustoolbox-software/">
- *   <b>ModusToolbox Software Environment, Quick Start Guide, Documentation,
+ * * <a href="https://www.infineon.com/cms/en/design-support/tools/sdk/modustoolbox-software/?redirId=178597">
+ *   <b>ModusToolbox&trade; Software Environment, Quick Start Guide, Documentation,
  *   and Videos</b></a>
  *
  * * <a href="https://github.com/Infineon/mtb-example-anycloud-wlan-lowpower">
@@ -2086,13 +1941,13 @@
  *   <b>LPA Middleware Code Examples at GITHUB</b></a>
  *
  * * <a href="https://www.infineon.com/dgdl/Infineon-ModusToolbox_Device_Configurator_4.0_User_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c8386267f0183a960bd41598f&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-files&redirId=180683&redirId=VL144">
- *   <b>ModusToolbox Device Configurator Tool Guide</b></a>
+ *   <b>ModusToolbox&trade; Device Configurator Tool Guide</b></a>
  *
  * * <a href="https://www.infineon.com/dgdl/Infineon-PSoC_6_MCU_PSoC_63_with_BLE_Architecture_Technical_Reference_Manual-AdditionalTechnicalInformation-v11_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f946fea01ca&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-technical_reference_manual&redirId=TRM148">
- *   <b>PSoC 6 Technical Reference Manual</b></a>
+ *   <b>PSoC&trade; 6 Technical Reference Manual</b></a>
  *
  * * <a href="https://www.infineon.com/dgdl/Infineon-PSoC_6_MCU_PSoC_63_with_BLE_Datasheet_Programmable_System-on-Chip_(PSoC)-DataSheet-v16_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0ee4efe46c37&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-datasheet&redirId=VL4079">
- *   <b>PSoC 63 with BLE Datasheet Programmable System-on-Chip datasheet</b></a>
+ *   <b>PSoC&trade; 63 with BLE Datasheet Programmable System-on-Chip datasheet</b></a>
  *
  * * <a href="https://www.infineon.com">
  *   <b>Infineon</b></a>

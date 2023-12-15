@@ -46,13 +46,13 @@ extern "C" {
 /** \addtogroup group_lpa_macros_arp *//** \{ */
 /******************************************************************************/
 
-#define NULL_IP_ADDRESS                     (0UL)       /**< invalid IP address */
+#define NULL_IP_ADDRESS                     (0UL)       /**< Invalid IP address */
 #define CY_ARPOL_SHORT_DELAY_FOR_DHCP_MS    (500UL)    /**< Delay (ms) wait after link is up for DHCP to start */
 #define CY_ARPOL_DELAY_FOR_DHCP_MS          (1000UL)    /**< Delay (ms) wait after link is up for DHCP to start */
 #define CY_ARPOL_DHCP_RETRY_COUNT           (25UL)    /**< Number of times to retry getting the IP address */
 
 static ol_init_t cylpa_arp_ol_init;            /**< Initialization of an arp_ol instance */
-static ol_deinit_t cylpa_arp_ol_deinit;        /**< De-initialization of an arp_ol instance */
+static ol_deinit_t cylpa_arp_ol_deinit;        /**< Deinitialization of an arp_ol instance */
 static ol_pm_t cylpa_arp_ol_pm;                /**< Power manager change of power status */
 
 /** \} */
@@ -77,10 +77,10 @@ const ol_fns_t arp_ol_fns =
  *
  *****************************************************************************/
 #if !defined(OLM_NO_HARDWARE)
-/* structure for sal callback info */
+/* Structure for sal callback info */
 static cylpa_nw_ip_status_change_callback_t cy_arp_ol_cb;
 
-/* timer for waiting for DHCP to get moving after a link up */
+/* Timer for waiting for DHCP to get moving after a link up */
 static cy_timer_t cy_delay_dhcp_timer;
 #endif
 
@@ -103,8 +103,8 @@ static int cy_dhcp_retry_count = CY_ARPOL_DHCP_RETRY_COUNT;
 * Function Name: cylpa_arp_ol_nw_ip_change_work
 ****************************************************************************//**
 *
-* Called by Worker Thread created in cylpa_olm_init() and stored as ol_info_ptr->worker
-* Deferred to the Worker Thread in cylpa_arp_ol_nw_ip_change_callback() below
+* Called by the worker thread created in cylpa_olm_init() and stored as ol_info_ptr->worker
+* Deferred to the worker thread in cylpa_arp_ol_nw_ip_change_callback() below
 *
 * \param iface
 * Opaque sal pointer use for NetworkStack.
@@ -227,7 +227,7 @@ static void cylpa_arp_ol_nw_ip_change_timer_callback(cy_timer_callback_arg_t arg
 * Function Name: cylpa_arp_ol_nw_ip_change_callback
 *
 * Initialize the callback with sal in cylpa_arp_ol_init()
-* Register/Unregister the callback with sal in cylpa_arp_ol_pm() or cylpa_arp_ol_deinit()
+* Register/unregister the callback with sal in cylpa_arp_ol_pm() or cylpa_arp_ol_deinit()
 * Called by sal when sal receives a callback from the NetworkStack
 * We defer calls to the worker thread, if available.
 *

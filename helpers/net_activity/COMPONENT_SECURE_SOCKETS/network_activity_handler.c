@@ -39,6 +39,8 @@
 #include <lwip/priv/tcp_priv.h>
 #include "cy_nw_helper.h"
 
+#include "cy_wcm.h"
+
 /* secure socket Header files */
 #include "cy_secure_sockets.h"
 #include "cy_tls.h"
@@ -211,9 +213,11 @@ static void cylpa_print_whd_bus_stats(struct netif *wifi)
            return;
         }
 
+#ifndef ULP_SUPPORT
         NW_INFO(("\n=====================================================\n"));
         (void)whd_print_stats(ifp->whd_driver, WHD_FALSE);
         NW_INFO(("=====================================================\n"));
+#endif
     }
     else
     {
@@ -299,6 +303,16 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
     cy_time_t lp_end_time;
     uint32_t state = ST_SUCCESS;
 
+#ifdef ULP_SUPPORT
+    whd_interface_t ifp = NULL;
+
+    ifp = cy_olm_get_whd_interface();
+    if (ifp == NULL)
+    {
+       return ST_BAD_STATE;
+    }
+#endif
+
     if (inactive_interval_ms > inactive_window_ms)
     {
         /* Clear event flags to start with an initial state of no activity. */
@@ -318,6 +332,23 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
                to monitor for inactivity.
             */
             flags = (TX_EVENT_FLAG | RX_EVENT_FLAG);
+
+            /* Configure ULP mode on specified interface */
+#ifdef ULP_SUPPORT
+            if(cy_wcm_is_connected_to_ap() == true)
+            {
+                uint32_t set_ulp_mode = CY_ULP_MODE_SUPPORT;
+                uint32_t ulp_wait_time = inactive_window_ms;
+
+                if(inactive_window_ms < CY_ULP_WAIT_TIME)
+                {
+                    ulp_wait_time = CY_ULP_WAIT_TIME;
+                }
+
+                whd_wifi_config_ulp_mode(ifp, &set_ulp_mode, &ulp_wait_time);
+            }
+#endif
+
             result = cy_rtos_waitbits_event(&cy_lp_wait_net_event, &flags, true, false, inactive_window_ms);
             if (CY_RTOS_TIMEOUT == result)
             {
