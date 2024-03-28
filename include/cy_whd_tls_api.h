@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, Cypress Semiconductor Corporation (an Infineon company) or
+ * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
  * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
  *
  * This software, including source code, documentation and related
@@ -29,84 +29,55 @@
  * including Cypress's product in a High Risk Product, the manufacturer
  * of such system or application assumes all risk of such use and in doing
  * so agrees to indemnify Cypress against all liability.
- * 
  */
 
 /**
-* @file cy_OlmInterface.c
-* @brief Offload Manager Interface
+* @file cy_whd_tls_api.h
+* @brief WHD MQTT TLS Offload API.
 */
 
-#include <stdio.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include "cy_OlmInterface.h"
-#include "cy_lpa_compat.h"
-#include "cy_lpa_wifi_ol.h"
-#include "cy_lpa_wifi_ol_common.h"
-#include "cy_lpa_wifi_pf_ol.h"
-#include "cy_lpa_wifi_olm.h"
-#include "cy_lpa_wifi_arp_ol.h"
-#include "cy_result_mw.h"
-#include "network_activity_handler.h"
+#ifndef WHD_TLSOE_API_H__
+#define WHD_TLSOE_API_H__  (1)
 
-olm_t cy_olm;
-whd_interface_t cylpa_iface = NULL;
+#include "cy_lpa_wifi_tls_ol.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-CYPRESS_WEAK const struct ol_desc *cycfg_get_default_ol_list()
+/** Get TCP socket sequence number info from network stack.  */
+typedef struct  cy_tls_sock_seq
 {
-    return NULL;
+    whd_mac_t src_mac;  /**< local mac address */
+    whd_mac_t dst_mac;  /**< remote mac address */
+    uint32_t srcip;     /**< local IP address */
+    uint32_t dstip;     /**< destination IP address */
+    uint16_t srcport;   /**< Local TCP port */
+    uint16_t dstport;   /**< Remote TCP port */
+    uint32_t seqnum;    /**< Current sequence number for this socket */
+    uint32_t acknum;    /**< Current ack number for this socket */
+    uint16_t rx_window; /**< Current TCP rx window size */
+} cy_tls_sock_seq_t;
+
+whd_result_t
+whd_tlsoe_update_sock_seq(uint16_t local_port, uint16_t remote_port, const char *remote_ip, uint32_t seq_num, uint32_t ack_num, uint8_t reset);
+
+whd_result_t
+whd_tlsoe_get_sock_stats(cy_tls_sock_seq_t *seq, uint16_t local_port, uint16_t remote_port, const char *remote_ip);
+
+whd_result_t
+whd_tlsoe_set_wowl_pattern(whd_t *whd, uint8_t* pattern, uint16_t pattern_len, uint16_t pattern_rule, uint16_t patttern_offset);
+
+whd_result_t
+whd_tlsoe_del_wowl_pattern(whd_t *whd, uint8_t* pattern, uint16_t pattern_size, uint16_t pattern_rule,  uint16_t patttern_offset);
+
+whd_result_t
+whd_tlsoe_disable(whd_t *whd, uint16_t local_port, uint16_t remote_port, const char *remote_ip, void* socket);
+
+whd_result_t
+whd_tlsoe_activate(whd_t *whd, uint16_t local_port, uint16_t remote_port, const char *remote_ip, uint32_t interval, uint8_t* pkt, uint32_t pkt_len, void* socket);
+
+#ifdef __cplusplus
 }
+#endif
 
-CYPRESS_WEAK const struct ol_desc *get_default_ol_list()
-{
-    return cycfg_get_default_ol_list();
-}
-
-
-void *cy_get_olm_instance()
-{
-    return &cy_olm;
-}
-
-cy_rslt_t cy_olm_create(void *ifp, ol_desc_t *oflds_list)
-{
-    ol_desc_t *olm_desc;
-    cy_rslt_t result = CY_RSLT_SUCCESS;
-
-    // Get Offload configuration from device configurator
-    olm_desc = (ol_desc_t *)get_default_ol_list();
-    if (olm_desc == NULL)
-    {
-        printf("Offloads not configured \n");
-		olm_desc = oflds_list;
-    }
-
-    /* Offload Manager init */
-    cy_olm.ol_info.whd = ifp;
-    cylpa_iface = ifp;
-    cylpa_olm_init(&cy_olm, olm_desc);
-
-    return result;
-}
-
-cy_rslt_t cy_olm_init_ols(olm_t *olm, void *whd, void *ip)
-{
-    return cylpa_olm_init_ols(olm, whd, ip);
-}
-
-void cy_olm_deinit_ols(olm_t *olm)
-{
-    cylpa_olm_deinit_ols(olm);
-}
-
-void cy_olm_pm_notification_callback(olm_t *olm, ol_pm_st_t st)
-{
-    cylpa_olm_dispatch_pm_notification(olm, st);
-}
-
-whd_interface_t cy_olm_get_whd_interface ( void )
-{
-	return cylpa_iface;
-}
+#endif /* !WHD_TLSOE_API_H__ */

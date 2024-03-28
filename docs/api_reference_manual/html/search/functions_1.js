@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['ol_5flog_5fget_5flevel_0',['ol_log_get_level',['../group__group__lpa__log__level.html#gad72047bf5ca91a1c3b3e1f99b07f6e77',1,'cy_lpa_wifi_olm.h']]],
-  ['ol_5flog_5fset_5flevel_1',['ol_log_set_level',['../group__group__lpa__log__level.html#ga066150dba6c2efeca654cac95808702c',1,'cy_lpa_wifi_olm.h']]],
-  ['ol_5flogging_2',['ol_logging',['../group__group__lpa__log__level.html#ga125e251b0e7d9f20a923cc4b75a2466f',1,'cy_lpa_wifi_olm.h']]]
+  ['wait_5fnet_5fsuspend_0',['wait_net_suspend',['../group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f',1,'wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inactive_interval_ms, uint32_t network_inactive_window_ms):&#160;network_activity_handler.c'],['../group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f',1,'wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t inactive_interval_ms, uint32_t inactive_window_ms):&#160;network_activity_handler.c']]]
 ];

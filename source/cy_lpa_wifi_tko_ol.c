@@ -1,17 +1,40 @@
-/***************************************************************************//**
-* \file cy_lpa_wifi_pf_ol.c
-* \version 1.0
-*
-* \brief
-* Low Power Offload Packet Filter Assist Implementation
-*
-********************************************************************************
-* \copyright
-* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
-* You may use this file only in accordance with the license, terms, conditions,
-* disclaimers, and limitations in the end user license agreement accompanying
-* the software package with which this file was provided.
-*******************************************************************************/
+/*
+ * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
+ * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
+ *
+ * This software, including source code, documentation and related
+ * materials ("Software") is owned by Cypress Semiconductor Corporation
+ * or one of its affiliates ("Cypress") and is protected by and subject to
+ * worldwide patent protection (United States and foreign),
+ * United States copyright laws and international treaty provisions.
+ * Therefore, you may use this Software only as provided in the license
+ * agreement accompanying the software package from which you
+ * obtained this Software ("EULA").
+ * If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
+ * non-transferable license to copy, modify, and compile the Software
+ * source code solely for use in connection with Cypress's
+ * integrated circuit products.  Any reproduction, modification, translation,
+ * compilation, or representation of this Software except as specified
+ * above is prohibited without the express written permission of Cypress.
+ *
+ * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Cypress
+ * reserves the right to make changes to the Software without notice. Cypress
+ * does not assume any liability arising out of the application or use of the
+ * Software or any product or circuit described in the Software. Cypress does
+ * not authorize its products for use in any products where a malfunction or
+ * failure of the Cypress product may reasonably be expected to result in
+ * significant property damage, injury or death ("High Risk Product"). By
+ * including Cypress's product in a High Risk Product, the manufacturer
+ * of such system or application assumes all risk of such use and in doing
+ * so agrees to indemnify Cypress against all liability.
+ */
+
+/**
+* @file cy_lpa_wifi_tko_ol.c
+* @brief Low Power Offload TCP keep-alive Assist Implementation
+*/
 
 #include "string.h"
 #include "cy_lpa_wifi_ol_debug.h"
@@ -20,11 +43,6 @@
 #include "cy_lpa_wifi_tko_ol.h"
 #include "cy_lpa_wifi_result.h"
 
-#if !defined(OLM_NO_HARDWARE)
-#define USE_HW
-#endif
-
-#ifdef USE_HW
 #include "lwip/ip.h"
 #include "whd_sdpcm.h"
 #include "cy_whd_tko_api.h"
@@ -32,7 +50,6 @@
 #include "whd_wlioctl.h"
 #include "whd_endian.h"
 #include "whd_types.h"
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -98,7 +115,6 @@ uint8_t cy_tko_ol_cfg_index = 0;
  ********************************************************************************/
 static int cylpa_tko_ol_init(void *ol, ol_info_t *info, const void *cfg)
 {
-#ifdef USE_HW
     tko_ol_t *ctxt = (tko_ol_t *)ol;
     cy_tko_ol_cfg_t *tko_cfg;
     int i;
@@ -106,13 +122,16 @@ static int cylpa_tko_ol_init(void *ol, ol_info_t *info, const void *cfg)
     uint8_t max;
     whd_tko_retry_t retry;
 
+    ctxt->ol_info_ptr = info;
+
     OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "%s\n", __func__);
+
     memset(ctxt, 0, sizeof(tko_ol_t) );
 
     if ( cfg == NULL )
     {
-    	OL_LOG_TKO(LOG_OLA_LVL_ERR, "TCP Keep Alive offload not configured!!\n", __func__);
-    	return RESULT_OK;
+        OL_LOG_TKO(LOG_OLA_LVL_ERR, "TCP Keep Alive offload not configured!!\n", __func__);
+        return RESULT_OK;
     }
 
     ctxt->cfg = (cy_tko_ol_cfg_t *)cfg;
@@ -141,38 +160,31 @@ static int cylpa_tko_ol_init(void *ol, ol_info_t *info, const void *cfg)
                    __func__, max, MAX_TKO);
     }
 
-    retry.tko_interval = tko_cfg->interval;
-    retry.tko_retry_interval = tko_cfg->retry_interval;
-    retry.tko_retry_count = tko_cfg->retry_count;
-
-    /* Set params */
-    result = whd_tko_param(ctxt->whd, &retry, 1);
-    if (result != WHD_SUCCESS)
+    /* Do not configure TKO parameters for new infra */
+    if( ctxt->ol_info_ptr->fw_new_infra == 0 )
     {
-        OL_LOG_TKO(LOG_OLA_LVL_ERR, "Set whd_tko_param returned failure\n");
-        return RESULT_OK;
+        retry.tko_interval = tko_cfg->interval;
+        retry.tko_retry_interval = tko_cfg->retry_interval;
+        retry.tko_retry_count = tko_cfg->retry_count;
+
+        /* Set params */
+        result = whd_tko_param(ctxt->whd, &retry, 1);
+        if (result != WHD_SUCCESS)
+        {
+            OL_LOG_TKO(LOG_OLA_LVL_ERR, "Set whd_tko_param returned failure\n");
+            return RESULT_OK;
+        }
+
+        memset(&retry, 0, sizeof(retry) );
+        /* Get params */
+        result = whd_tko_param(ctxt->whd, &retry, 0);
+        if (result != WHD_SUCCESS)
+        {
+            OL_LOG_TKO(LOG_OLA_LVL_ERR, "Get whd_tko_param returned failure\n");
+            return RESULT_OK;
+        }
     }
 
-    memset(&retry, 0, sizeof(retry) );
-    /* Get params */
-    result = whd_tko_param(ctxt->whd, &retry, 0);
-    if (result != WHD_SUCCESS)
-    {
-        OL_LOG_TKO(LOG_OLA_LVL_ERR, "Get whd_tko_param returned failure\n");
-        return RESULT_OK;
-    }
-
-    /*
-       if ((retry.tko_interval != tko_cfg->interval) ||
-            (retry.tko_retry_interval != tko_cfg->retry_interval) ||
-            (retry.tko_retry_count != tko_cfg->retry_count)) {
-        printf("%s: Set & Get values are different!\n", __func__);
-        printf("Interval: %d\n",         retry.tko_interval);
-        printf("Retry_interval: %d\n",   retry.tko_retry_interval);
-        printf("Retry_count: %d\n",      retry.tko_retry_count);
-       }
-     */
-#endif
     return RESULT_OK;
 }
 
@@ -188,14 +200,13 @@ static int cylpa_tko_ol_init(void *ol, ol_info_t *info, const void *cfg)
  ********************************************************************************/
 static void cylpa_tko_ol_deinit(void *ol)
 {
-#ifdef USE_HW
     tko_ol_t *ctxt = (tko_ol_t *)ol;
     if ((ctxt == NULL) || (ctxt->whd == NULL))
     {
         return;
     }
+
     whd_tko_disable(ctxt->whd);
-#endif
 }
 
 #define print_ip4(ipaddr)  \
@@ -216,7 +227,6 @@ static void cylpa_tko_ol_deinit(void *ol)
  ********************************************************************************/
 static void cylpa_tko_ol_pm(void *ol, ol_pm_st_t st)
 {
-#ifdef USE_HW
     tko_ol_t *ctxt = (tko_ol_t *)ol;
     cy_tko_ol_cfg_t *tko_cfg = &cy_tko_ol_cfg;
     whd_result_t result;
@@ -232,22 +242,32 @@ static void cylpa_tko_ol_pm(void *ol, ol_pm_st_t st)
     {
         /* Sleeping case */
         OL_LOG_TKO(LOG_OLA_LVL_INFO, "TKO: Enter Sleep\n");
-        for (int i = 0; i < MAX_TKO; i++)
+
+        /* Do not configure parameters to WHD for new infra */
+        if( ctxt->ol_info_ptr->fw_new_infra == 0)
         {
-            result = whd_tko_activate(ctxt->whd, i, tko_cfg->ports[i].local_port, tko_cfg->ports[i].remote_port,
-                                      tko_cfg->ports[i].remote_ip);
-            if (result != WHD_SUCCESS)
+            for (int i = 0; i < MAX_TKO; i++)
             {
-                OL_LOG_TKO(LOG_OLA_LVL_ERR, "%s: No such connection: %s local %d remote %d\n", __func__,
-                           tko_cfg->ports[i].remote_ip, tko_cfg->ports[i].local_port, tko_cfg->ports[i].remote_port);
-            }
-            else
-            {
-                found++;
-                OL_LOG_TKO(LOG_OLA_LVL_WARNING, "%s: Activated: %s local %d remote %d\n", __func__,
-                           tko_cfg->ports[i].remote_ip, tko_cfg->ports[i].local_port, tko_cfg->ports[i].remote_port);
+                result = whd_tko_activate(ctxt->whd, i, tko_cfg->ports[i].local_port, tko_cfg->ports[i].remote_port,
+                                          tko_cfg->ports[i].remote_ip);
+                if (result != WHD_SUCCESS)
+                {
+                    OL_LOG_TKO(LOG_OLA_LVL_ERR, "%s: No such connection: %s local %d remote %d\n", __func__,
+                               tko_cfg->ports[i].remote_ip, tko_cfg->ports[i].local_port, tko_cfg->ports[i].remote_port);
+                }
+                else
+                {
+                    found++;
+                    OL_LOG_TKO(LOG_OLA_LVL_WARNING, "%s: Activated: %s local %d remote %d\n", __func__,
+                               tko_cfg->ports[i].remote_ip, tko_cfg->ports[i].local_port, tko_cfg->ports[i].remote_port);
+                }
             }
         }
+        else
+        {
+            found = 1;
+        }
+
         if (!found)
         {
             OL_LOG_TKO(LOG_OLA_LVL_ERR, "TKO PM: No connections to enable.\n");
@@ -286,7 +306,6 @@ static void cylpa_tko_ol_pm(void *ol, ol_pm_st_t st)
             OL_LOG_TKO(LOG_OLA_LVL_ERR, "Leaving Enabled\n");
         }
     }
-#endif
 }
 
 /*******************************************************************************
@@ -313,45 +332,45 @@ static void cylpa_tko_ol_pm(void *ol, ol_pm_st_t st)
  ********************************************************************************/
 int cylpa_tko_ol_update_config(const char *remote_ip, uint16_t remote_port, uint16_t local_port, cy_tko_ol_cfg_t *cfg )
 {
-	cy_tko_ol_connect_t *tko_ol_connect_params = NULL;
+    cy_tko_ol_connect_t *tko_ol_connect_params = NULL;
 
-	if ( ( remote_ip == NULL ) || ( remote_port == 0) || ( local_port == 0 ) || ( cfg == NULL ) )
-	{
-		OL_LOG_TKO(LOG_OLA_LVL_ERR, "TCP Keep Alive offload configuration is NULL!!\n", __func__);
-		return RESULT_OK;
-	}
+    if ( ( remote_ip == NULL ) || ( remote_port == 0) || ( local_port == 0 ) || ( cfg == NULL ) )
+    {
+        OL_LOG_TKO(LOG_OLA_LVL_ERR, "TCP Keep Alive offload configuration is NULL!!\n", __func__);
+        return RESULT_OK;
+    }
 
-	/*
-	 * if the API is called many times more than
-	 * max TCP connections then update the first index
-	 *
-	 */
-	if ( cy_tko_ol_cfg_index == MAX_TKO )
-	{
-		cy_tko_ol_cfg_index = 0;
-	}
+    /*
+     * if the API is called many times more than
+     * max TCP connections then update the first index
+     *
+     */
+    if ( cy_tko_ol_cfg_index == MAX_TKO )
+    {
+        cy_tko_ol_cfg_index = 0;
+    }
 
-	tko_ol_connect_params = &cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index];
-	memset(tko_ol_connect_params, 0, sizeof(cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index]));
-	memcpy(cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].remote_ip, remote_ip, strlen(remote_ip));
-	cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].remote_port = remote_port;
-	cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].local_port  = local_port;
+    tko_ol_connect_params = &cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index];
+    memset(tko_ol_connect_params, 0, sizeof(cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index]));
+    memcpy(cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].remote_ip, remote_ip, strlen(remote_ip));
+    cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].remote_port = remote_port;
+    cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].local_port  = local_port;
 
-	cy_tko_ol_cfg.interval       = cfg->interval;
-	cy_tko_ol_cfg.retry_count    = cfg->retry_count;
-	cy_tko_ol_cfg.retry_interval = cfg->retry_interval;
+    cy_tko_ol_cfg.interval       = cfg->interval;
+    cy_tko_ol_cfg.retry_count    = cfg->retry_count;
+    cy_tko_ol_cfg.retry_interval = cfg->retry_interval;
 
-	OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "\nUpdating...\n");
-	OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "%d: %s, ", cy_tko_ol_cfg_index, cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].remote_ip);
-	OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Local %d, ", cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].local_port);
-	OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Remote %d\n", cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].remote_port);
-	OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Interval:%d Retry_interval:%d Retry_count:%d\n",
-			   cy_tko_ol_cfg.interval, cy_tko_ol_cfg.retry_interval, cy_tko_ol_cfg.retry_count );
-	OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Done \n\n");
+    OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "\nUpdating...\n");
+    OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "%d: %s, ", cy_tko_ol_cfg_index, cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].remote_ip);
+    OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Local %d, ", cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].local_port);
+    OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Remote %d\n", cy_tko_ol_cfg.ports[cy_tko_ol_cfg_index].remote_port);
+    OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Interval:%d Retry_interval:%d Retry_count:%d\n",
+               cy_tko_ol_cfg.interval, cy_tko_ol_cfg.retry_interval, cy_tko_ol_cfg.retry_count );
+    OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Done \n\n");
 
-	cy_tko_ol_cfg_index++;
+    cy_tko_ol_cfg_index++;
 
-	return RESULT_OK;
+    return RESULT_OK;
 }
 
 #ifdef __cplusplus

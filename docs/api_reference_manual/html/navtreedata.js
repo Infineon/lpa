@@ -24,14 +24,13 @@
 */
 var NAVTREE =
 [
-  [ "Low Power Assistant Middleware Library 5.0.0", "index.html", [
+  [ "Low Power Assistant Middleware Library 5.2.0", "index.html", [
     [ "Overview", "index.html#section_lpa_overview", [
       [ "Features", "index.html#section_lpa_features", null ]
     ] ],
     [ "Getting started", "index.html#section_lpa_getting_started", null ],
     [ "Prerequisites", "index.html#section_lpa_Prerequisites", null ],
     [ "Definitions", "index.html#group_lpa_definitions", null ],
-    [ "LPA project Updates", "index.html#group_quick_start_guide", null ],
     [ "ModusToolbox™ Device Configurator flow", "index.html#group_device_configurator_flow", null ],
     [ "Part 1. MCU Low Power", "index.html#group_lpa_p1", [
       [ "Quick start guide", "index.html#group_lpa_p1_mcu_qsg", null ],
@@ -60,6 +59,27 @@ var NAVTREE =
       [ "Wi-Fi TCP keepalive offload", "index.html#group_lpa_p2_tcp_keepalive", [
         [ "Quick start guide", "index.html#group_lpa_p2_tcp_keepalive_qsg", null ]
       ] ],
+      [ "DHCP Lease Time Renew offload", "index.html#group_lpa_p2_dltro", [
+        [ "Quick start guide", "index.html#group_lpa_p2_dltro_qsg", null ]
+      ] ],
+      [ "ICMP offload", "index.html#group_lpa_p2_icmp", [
+        [ "Quick start guide", "index.html#group_lpa_p2_icmp_qsg", null ]
+      ] ],
+      [ "Neighbor Discovery offload", "index.html#group_lpa_p2_ndoe", [
+        [ "Quick start guide", "index.html#group_lpa_p2_ndoe_qsg", null ]
+      ] ],
+      [ "NULL Keepalive offload", "index.html#group_lpa_p2_null_keepalive", [
+        [ "Quick start guide", "index.html#group_lpa_p2_null_keepalive_qsg", null ]
+      ] ],
+      [ "NAT Keepalive offload", "index.html#group_lpa_p2_nat_keepalive", [
+        [ "Quick start guide", "index.html#group_lpa_p2_nat_keepalive_qsg", null ]
+      ] ],
+      [ "Wake on WirelessLAN", "index.html#group_lpa_p2_wowlpf", [
+        [ "Quick start guide", "index.html#group_lpa_p2_wowlpf_qsg", null ]
+      ] ],
+      [ "MQTT keepalive offload", "index.html#group_lpa_p2_mqtt_keepalive", [
+        [ "Quick start guide", "index.html#group_lpa_p2_mqtt_keepalive_qsg", null ]
+      ] ],
       [ "Wi-Fi low power configuration considerations", "index.html#group_lpa_p2_cc", [
         [ "Host Wake Configuration Notes", "index.html#group_lpa_p2_cc_host_wake", null ],
         [ "Limitations", "index.html#group_lpa_p2_cc_limitations", null ],
@@ -86,9 +106,9 @@ var NAVTREE =
       [ "Code Snippet 1: Using wait_net_suspend for suspend/resume network stack", "index.html#subsection_lpa_snippet_1", null ],
       [ "Code Snippet 2: Read OLM configuration from device configurator.", "index.html#subsection_lpa_snippet_2", null ],
       [ "Code Snippet 3: Search for TCP KA offload in the device configurator list.", "index.html#subsection_lpa_snippet_3", null ],
-      [ "Code Snippet 4: Use cylpa_restart_olm when the OLM configuration is changed by the user application.", "index.html#subsection_lpa_snippet_4", null ],
       [ "Code Snippet 5: Use cy_tcp_create_socket_connection to offload TCP Keep-alive to WiFi Firmware", "index.html#subsection_lpa_snippet_5", null ],
-      [ "Code Snippet 6: Read OLM configuration from device configurator.", "index.html#subsection_lpa_snippet_6", null ]
+      [ "Code Snippet 6: Read OLM configuration from device configurator.", "index.html#subsection_lpa_snippet_6", null ],
+      [ "Code Snippet 7: MQTT offload configuration.", "index.html#subsection_lpa_snippet_7", null ]
     ] ],
     [ "LPA API", "index.html#apis", null ]
   ] ]

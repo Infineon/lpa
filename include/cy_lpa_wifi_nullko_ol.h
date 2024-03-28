@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, Cypress Semiconductor Corporation (an Infineon company) or
+ * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
  * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
  *
  * This software, including source code, documentation and related
@@ -29,78 +29,47 @@
  * including Cypress's product in a High Risk Product, the manufacturer
  * of such system or application assumes all risk of such use and in doing
  * so agrees to indemnify Cypress against all liability.
- * 
  */
 
 /**
-* @file cy_OlmInterface.h
-* @brief Offload Manager Interface
+* @file   : cy_lpa_wifi_nullko_ol.h
+* @brief  : Defines the API into NULL Keepalive offloads from personality.
 */
+
+#ifndef LPA_NULLKO_H__
+#define LPA_NULLKO_H__  (1)
+
+#include <stdint.h>
+#include "cy_lpa_compat.h"
+#include "cy_lpa_wifi_ol_common.h"
+#include "whd.h"
+#include "whd_wlioctl.h"
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "cy_result.h"
-#include "cy_lpa_wifi_ol.h"
-#include "cy_lpa_wifi_ol_priv.h"
+#define NULL_KEEPALIVE_DEFALUT_INTERVAL_SEC                (110)
 
-/*********************************************************************************************
-*
-*  Functions
-*
-*********************************************************************************************/
+/** User uses configurator to set these */
+typedef struct cy_nullko_cfg
+{
+    uint16_t interval;                              /**< NULL KeepAlive interval in seconds     */
+} cy_nullko_ol_cfg_t;
 
-/** Get default offload list (Weak function: This is called if Configurator doesnot have offloads)
- *
- * @param[out]   ol_desc        :pointer to Offload Descriptor
- *
- * @return whd_result_t
- */
-extern const struct ol_desc *get_default_ol_list();
+/** Keep pointers to config space, system handle, etc */
+typedef struct nullko_ol
+{
+    cy_nullko_ol_cfg_t  *cfg;                          /**< Pointer to config space                        */
+    void                *whd;                          /**< Pointer to system handle                       */
+    ol_info_t           *ol_info_ptr;                  /**< Offload Manager Info structure  \ref ol_info_t */
+} nullko_ol_t;
 
-/*********************************************************************************************
-*
-*  Functions
-*
-*********************************************************************************************/
-
-/** Offload Manager Configuration 
- *
- * @param[in]    ifp            : interface to whd
- * @param[in]    oflds_list     : Pointer to offload list
- * @param[out]   cy_rslt_t      : Return Success or Failure based on offload configuration in WLAN
- *                                Firmware
- *
- * @return cy_rslt_t
- */
-extern cy_rslt_t cy_olm_create(void *ifp, ol_desc_t *oflds_list);
-
-/** Offload Manager init 
- *
- * @param[in]    olm            : OLM instance pointer
- * @param[in]    whd            : interface to whd
- * @param[int]   ip             : The pointer to ip
- *
- * @return cy_rslt_t
- */
-extern cy_rslt_t cy_olm_init_ols(olm_t *olm, void *whd, void *ip);
-
-/** Offload Manager deinit
- *
- * @param[in]    olm            : OLM instance pointer
- */
-void cy_olm_deinit_ols(olm_t *olm);
-
-/** Offload Manager Configuration 
- *
- * @param[in]    olm            : OLM instance pointer
- * @param[out]   st             : Offload host power-mode status 
- *
- */
-extern void cy_olm_pm_notification_callback(olm_t *olm, ol_pm_st_t st);
+extern const ol_fns_t nullko_ol_fns;
 
 #ifdef __cplusplus
 }
 #endif
 
+#endif /* !LPA_NULLKO_H__ */

@@ -1,17 +1,40 @@
-/***************************************************************************//**
-* \file cy_lpa_wifi_pf_ol.c
-* \version 1.0
-*
-* \brief
-* Low Power Offload Packet Filter Assist Implementation
-*
-********************************************************************************
-* \copyright
-* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
-* You may use this file only in accordance with the license, terms, conditions,
-* disclaimers, and limitations in the end user license agreement accompanying
-* the software package with which this file was provided.
-*******************************************************************************/
+/*
+ * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
+ * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
+ *
+ * This software, including source code, documentation and related
+ * materials ("Software") is owned by Cypress Semiconductor Corporation
+ * or one of its affiliates ("Cypress") and is protected by and subject to
+ * worldwide patent protection (United States and foreign),
+ * United States copyright laws and international treaty provisions.
+ * Therefore, you may use this Software only as provided in the license
+ * agreement accompanying the software package from which you
+ * obtained this Software ("EULA").
+ * If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
+ * non-transferable license to copy, modify, and compile the Software
+ * source code solely for use in connection with Cypress's
+ * integrated circuit products.  Any reproduction, modification, translation,
+ * compilation, or representation of this Software except as specified
+ * above is prohibited without the express written permission of Cypress.
+ *
+ * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Cypress
+ * reserves the right to make changes to the Software without notice. Cypress
+ * does not assume any liability arising out of the application or use of the
+ * Software or any product or circuit described in the Software. Cypress does
+ * not authorize its products for use in any products where a malfunction or
+ * failure of the Cypress product may reasonably be expected to result in
+ * significant property damage, injury or death ("High Risk Product"). By
+ * including Cypress's product in a High Risk Product, the manufacturer
+ * of such system or application assumes all risk of such use and in doing
+ * so agrees to indemnify Cypress against all liability.
+ */
+
+/**
+* @file cy_lpa_wifi_pf_ol.c
+* @brief Low Power Offload Packet Filter Assist Implementation
+*/
 
 #include "string.h"
 #include "cy_lpa_wifi_ol_debug.h"
@@ -20,17 +43,11 @@
 #include "cy_lpa_wifi_pf_ol.h"
 #include "cy_lpa_wifi_result.h"
 
-#if !defined(OLM_NO_HARDWARE)
-#define USE_HW
-#endif
-
-#ifdef USE_HW
 #include "lwip/ip.h"
 #include "whd_sdpcm.h"
 #include "whd_wifi_api.h"
 #include "whd_wlioctl.h"
 #include "whd_endian.h"
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -67,11 +84,9 @@ static int cylpa_dump_filters_stats(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg);
 static void cylpa_run_pf_test(unsigned int pattern, unsigned int mask);
 #endif
 
-#ifdef USE_HW
 static int cylpa_print_packet_filter_stats(whd_t *whd, uint8_t filter_id);
 #ifdef DEBUG
 static void cylpa_print_pat_and_mask(uint8_t id, int mask_len, uint8_t *mask, uint8_t *pat);
-#endif
 #endif
 
 
@@ -146,7 +161,6 @@ static int cylpa_pf_ol_init(void *ol, ol_info_t *info, const void *cfg)
         }
     }
 
-#ifdef USE_HW
     /*
      * Enable any wake filters
      */
@@ -164,7 +178,6 @@ static int cylpa_pf_ol_init(void *ol, ol_info_t *info, const void *cfg)
             }
         }
     }
-#endif /* USE_HW */
 
     cylpa_dump_filters_stats(ctxt->whd, ctxt->cfg);
 
@@ -194,13 +207,11 @@ static void cylpa_pf_ol_deinit(void *ol)
     for (pf_cfg = ctxt->cfg; pf_cfg->feature != CY_PF_OL_FEAT_LAST; pf_cfg++)
     {
         OL_LOG_PF(LOG_OLA_LVL_INFO, "Removing filter %d\n", pf_cfg->id);
-#ifdef USE_HW
         whd_result_t res = whd_pf_remove_packet_filter(ctxt->whd, pf_cfg->id);
         if (res != WHD_SUCCESS)
         {
             OL_LOG_PF(LOG_OLA_LVL_ERR, "%s: Unable to remove filter %d, result = %d\n", __func__, pf_cfg->id, res);
         }
-#endif
     }
 }
 
@@ -227,7 +238,6 @@ static void cylpa_pf_ol_pm(void *ol, ol_pm_st_t st)
         OL_LOG_PF(LOG_OLA_LVL_ERR, "%s : Bad Args!\n", __func__);
         return;
     }
-#ifdef USE_HW
     switch (st)
     {
         case OL_PM_ST_GOING_TO_SLEEP:
@@ -240,7 +250,6 @@ static void cylpa_pf_ol_pm(void *ol, ol_pm_st_t st)
             OL_LOG_PF(LOG_OLA_LVL_DEBUG, "%s: Unknown state change\n", __func__);
             break;
     }
-#endif /* USE_HW */
 
     for (pf_cfg = ctxt->cfg; pf_cfg->feature != CY_PF_OL_FEAT_LAST; pf_cfg++)
     {
@@ -251,7 +260,6 @@ static void cylpa_pf_ol_pm(void *ol, ol_pm_st_t st)
         }
         else
         {
-#ifdef USE_HW
             switch (st)
             {
                 case OL_PM_ST_GOING_TO_SLEEP:
@@ -298,7 +306,6 @@ static void cylpa_pf_ol_pm(void *ol, ol_pm_st_t st)
                     OL_LOG_PF(LOG_OLA_LVL_ERR, "Unknown PM state! %d\n", st);
                     break;
             }
-#endif /* USE_HW */
         }  /* if !(SLEEP && WAKE) */
     }  /* for each configuration */
 }
@@ -309,12 +316,9 @@ static void cylpa_pf_ol_pm(void *ol, ol_pm_st_t st)
 /* The 'EtherType' field is 12 bytes from the start of the ethernet header. */
 #define ETHTYPE_OFFSET 12
 
-#ifdef USE_HW
 static uint8_t cylpa_glob_pat_buf[32];
 static uint8_t cylpa_glob_mask_buf[32];
-#endif
 
-#ifdef USE_HW
 /*******************************************************************************
  * Function Name: common_filter_attrs
  ****************************************************************************//**
@@ -352,8 +356,6 @@ static void common_filter_attrs(cy_pf_ol_cfg_t *pf_cfg, whd_packet_filter_t *fil
     }
 }
 
-#endif
-
 /*******************************************************************************
  * Function Name: cylpa_create_ip_filter
  ****************************************************************************//**
@@ -372,7 +374,6 @@ static void common_filter_attrs(cy_pf_ol_cfg_t *pf_cfg, whd_packet_filter_t *fil
  ********************************************************************************/
 static int cylpa_create_ip_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
 {
-#ifdef USE_HW
     whd_packet_filter_t filter;
 
     struct ether_header ether_hdr_mask;
@@ -413,7 +414,6 @@ static int cylpa_create_ip_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
     {
         OL_LOG_PF(LOG_OLA_LVL_ERR, "Add filter %ld Failed\n", filter.id);
     }
-#endif /* USE_HW */
     return 0;
 }
 
@@ -435,7 +435,6 @@ static int cylpa_create_ip_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
  ********************************************************************************/
 static int cylpa_create_ethtype_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
 {
-#ifdef USE_HW
     whd_packet_filter_t filter;
 
     struct ether_header ether_hdr_mask;
@@ -468,7 +467,6 @@ static int cylpa_create_ethtype_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
     {
         OL_LOG_PF(LOG_OLA_LVL_ERR, "Add filter %ld Failed\n", filter.id);
     }
-#endif /* USE_HW */
     return 0;
 }
 
@@ -496,12 +494,6 @@ static int cylpa_create_ethtype_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg)
  ********************************************************************************/
 static int cylpa_create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t pattern, uint16_t mask)
 {
-#ifndef USE_HW
-    OL_LOG_PF(LOG_OLA_LVL_DEBUG, "Creating filter for Pattern 0x%x, Mask 0x%x, Active during: %s %s\n",
-              pattern, mask,
-              pf_cfg->bits & CY_PF_ACTIVE_WAKE ? "Wake " : "",
-              pf_cfg->bits & CY_PF_ACTIVE_SLEEP ? "Sleep " : "");
-#else
     whd_packet_filter_t filter;
     struct ether_header ether_hdr_mask;
     struct ether_header ether_hdr_pattern;
@@ -550,9 +542,17 @@ static int cylpa_create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t
         udp_hdr_pattern.src_port = hton16(pattern);
         udp_hdr_mask.src_port = hton16(mask);
     }
-    else
+    else if(pf_cfg->u.pf.portnum.direction == PF_PN_PORT_DEST)
     {
         OL_LOG_PF(LOG_OLA_LVL_DEBUG, "Dest Port, ");
+        udp_hdr_pattern.dst_port = hton16(pattern);
+        udp_hdr_mask.dst_port = hton16(mask);
+    }
+    else
+    {
+        OL_LOG_PF(LOG_OLA_LVL_DEBUG, "Source and Dest Port, ");
+        udp_hdr_pattern.src_port = hton16(pattern);
+        udp_hdr_mask.src_port = hton16(mask);
         udp_hdr_pattern.dst_port = hton16(pattern);
         udp_hdr_mask.dst_port = hton16(mask);
     }
@@ -583,7 +583,6 @@ static int cylpa_create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t
     {
         OL_LOG_PF(LOG_OLA_LVL_ERR, "Add filter %ld Failed\n", filter.id);
     }
-#endif /* USE_HW */
 
     return 0;
 }
@@ -707,7 +706,6 @@ static void cylpa_run_pf_test(unsigned int pattern, unsigned int mask)
  */
 static int cylpa_dump_filters_stats(whd_t *whd, cy_pf_ol_cfg_t *base_pf_cfg)
 {
-#ifdef USE_HW
     cy_pf_ol_cfg_t *pf_cfg;
     OL_LOG_PF(LOG_OLA_LVL_ERR, "\n");
     OL_LOG_PF(LOG_OLA_LVL_ERR, "               \t Total    Total\n");
@@ -717,11 +715,9 @@ static int cylpa_dump_filters_stats(whd_t *whd, cy_pf_ol_cfg_t *base_pf_cfg)
     {
         cylpa_print_packet_filter_stats(whd, pf_cfg->id);
     }
-#endif /* USE_HW */
     return 0;
 }
 
-#ifdef USE_HW
 #ifdef DEBUG
 static void cylpa_print_pat_and_mask(uint8_t id, int mask_len, uint8_t *mask, uint8_t *pat)
 {
@@ -770,7 +766,6 @@ static int cylpa_print_packet_filter_stats(whd_t *whd, uint8_t filter_id)
     return status;
 }
 
-#endif /* USE_HW */
 
 #ifdef __cplusplus
 }

@@ -1,18 +1,40 @@
-/***************************************************************************//**
-* \file cy_lpa_wifi_arp_ol.c
-* \version 1.0
-*
-*
-* Low Power Offload ARP Assist implementation.
-*
-********************************************************************************
-* \copyright
-* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
-* You may use this file only in accordance with the license, terms, conditions,
-* disclaimers, and limitations in the end user license agreement accompanying
-* the software package with which this file was provided.
-*******************************************************************************/
+/*
+ * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
+ * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
+ *
+ * This software, including source code, documentation and related
+ * materials ("Software") is owned by Cypress Semiconductor Corporation
+ * or one of its affiliates ("Cypress") and is protected by and subject to
+ * worldwide patent protection (United States and foreign),
+ * United States copyright laws and international treaty provisions.
+ * Therefore, you may use this Software only as provided in the license
+ * agreement accompanying the software package from which you
+ * obtained this Software ("EULA").
+ * If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
+ * non-transferable license to copy, modify, and compile the Software
+ * source code solely for use in connection with Cypress's
+ * integrated circuit products.  Any reproduction, modification, translation,
+ * compilation, or representation of this Software except as specified
+ * above is prohibited without the express written permission of Cypress.
+ *
+ * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Cypress
+ * reserves the right to make changes to the Software without notice. Cypress
+ * does not assume any liability arising out of the application or use of the
+ * Software or any product or circuit described in the Software. Cypress does
+ * not authorize its products for use in any products where a malfunction or
+ * failure of the Cypress product may reasonably be expected to result in
+ * significant property damage, injury or death ("High Risk Product"). By
+ * including Cypress's product in a High Risk Product, the manufacturer
+ * of such system or application assumes all risk of such use and in doing
+ * so agrees to indemnify Cypress against all liability.
+ */
 
+/**
+* @file cy_lpa_wifi_arp_ol.c
+* @brief Low Power Offload ARP Assist implementation.
+*/
 
 #include <stdio.h>
 
@@ -23,16 +45,12 @@
 #include "cy_lpa_wifi_ol_priv.h"
 #include "cy_lpa_wifi_arp_ol.h"
 
-#if !defined(OLM_NO_HARDWARE)
 #include "cy_nw_helper.h"
 #include "cy_nw_lpa_helper.h"
 #include "ip4string.h"
 #include "cy_worker_thread.h"
 #include "whd_wifi_api.h"
 #include "cyabs_rtos.h"
-#else 
-#include "cy_whd_stubs.h"
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -76,29 +94,24 @@ const ol_fns_t arp_ol_fns =
  *         Variables
  *
  *****************************************************************************/
-#if !defined(OLM_NO_HARDWARE)
 /* Structure for sal callback info */
 static cylpa_nw_ip_status_change_callback_t cy_arp_ol_cb;
 
 /* Timer for waiting for DHCP to get moving after a link up */
 static cy_timer_t cy_delay_dhcp_timer;
-#endif
 
 /*******************************************************************************
 * Function Prototypes
 *******************************************************************************/
 
-#if !defined(OLM_NO_HARDWARE)
 static void cylpa_arp_ol_nw_ip_change_timer_callback(cy_timer_callback_arg_t arg);
 static int cy_dhcp_retry_count = CY_ARPOL_DHCP_RETRY_COUNT;
-#endif
 
 /******************************************************************************/
 /** \cond SECTION_LPA_INTERNAL */
 /** \addtogroup group_lpa_internal *//** \{ */
 /******************************************************************************/
 
-#if !defined(OLM_NO_HARDWARE)
 /*******************************************************************************
 * Function Name: cylpa_arp_ol_nw_ip_change_work
 ****************************************************************************//**
@@ -259,7 +272,6 @@ static void cylpa_arp_ol_nw_ip_change_callback(cy_nw_ip_interface_t iface, void 
     return;
 }
 
-#endif /* !defined(OLM_NO_HARDWARE) */
 
 /******************************************************************************/
 /** \addtogroup group_lpa_high_level *//** \{ */
@@ -306,13 +318,19 @@ static int cylpa_arp_ol_init(void *ol, ol_info_t *ol_info, const void *cfg)
     arp_ol->ol_info_ptr = ol_info;
     arp_ol->state   = ARP_OL_STATE_UNINITIALIZED;
 
-#if !defined(OLM_NO_HARDWARE)
+    /* Do not configure ARP offload for new infra */
+    if(arp_ol->ol_info_ptr->fw_new_infra)
+    {
+        /* ARP offload is enabled by default */
+        OL_LOG_ARP(LOG_OLA_LVL_INFO, "ARP offload enabled by default\n");
+        return RESULT_OK;
+    }
+
     /* Initialize the SAL IP change callback
      * - registered in the PM change callback below
      * - only used if SNOOP is off
      */
     cylpa_nw_ip_initialize_status_change_callback(&cy_arp_ol_cb, cylpa_arp_ol_nw_ip_change_callback, arp_ol);
-#endif /* !defined(OLM_NO_HARDWARE) */
 
     /* Clear out all ARP Offload features */
     whd_arp_arpoe_set(arp_ol->ol_info_ptr->whd, 1);
@@ -350,9 +368,14 @@ static void cylpa_arp_ol_deinit(void *ol)
     {
         return;
     }
+
+    if(arp_ol->ol_info_ptr->fw_new_infra)
+    {
+        return;
+    }
+
     arp_ol->state   = ARP_OL_STATE_UNINITIALIZED;
 
-#if !defined(OLM_NO_HARDWARE)
     /* Un-register the ip change callback with sal api */
     cylpa_nw_ip_unregister_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &cy_arp_ol_cb );
     /* deinit timer if needed */
@@ -361,7 +384,6 @@ static void cylpa_arp_ol_deinit(void *ol)
         cy_rtos_deinit_timer(&cy_delay_dhcp_timer);
         cy_delay_dhcp_timer = 0;
     }
-#endif /* !defined(OLM_NO_HARDWARE) */
 
     /* Turn off ARP OL when we de-init ? */
     whd_arp_arpoe_set(arp_ol->ol_info_ptr->whd, 0);
@@ -385,12 +407,19 @@ static void cylpa_arp_ol_pm(void *ol, ol_pm_st_t st)
     arp_ol_t *arp_ol = (arp_ol_t *)ol;
     arp_ol_config_state_t new_arp_ol_state;
 
-    /* We have a non-hardware build that we need to handle - "OLM_NO_HARDWARE" defined in app/olm-sanity/Makefile */
-    if ( (arp_ol == NULL) || (arp_ol->config == NULL)
-#if !defined(OLM_NO_HARDWARE)
-         || (arp_ol->ol_info_ptr->whd == NULL)
-#endif
-          )
+    if ( (arp_ol == NULL) || (arp_ol->ol_info_ptr->whd == NULL) )
+    {
+        OL_LOG_ARP(LOG_OLA_LVL_ERR, "cylpa_arp_ol_pm() Bad Args!\n");
+        return;
+    }
+
+    if (arp_ol->ol_info_ptr->fw_new_infra)
+    {
+        OL_LOG_ARP(LOG_OLA_LVL_INFO, "ARP offload enabled by default\n");
+        return;
+    }
+
+    if ( arp_ol->config == NULL )
     {
         OL_LOG_ARP(LOG_OLA_LVL_ERR, "cylpa_arp_ol_pm() Bad Args!\n");
         return;
@@ -418,19 +447,8 @@ static void cylpa_arp_ol_pm(void *ol, ol_pm_st_t st)
     if ( (arp_ol->state == ARP_OL_STATE_UNINITIALIZED) ||
          (arp_ol->config->awake_enable_mask != arp_ol->config->sleep_enable_mask) )
     {
-        /* Register the ip change callback ? */
-#if !defined(OLM_NO_HARDWARE)
-#if defined(MBED_CONF_APP_OLM_TEST)
-        if (arp_ol_test_enable_net_callback == 0)
-        {
-            cylpa_nw_ip_unregister_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &cy_arp_ol_cb );
-        }
-        else
-#endif
-        {
-        	cylpa_nw_ip_register_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &cy_arp_ol_cb );
-        }
-#endif /* !defined(OLM_NO_HARDWARE) */
+        cylpa_nw_ip_register_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &cy_arp_ol_cb );
+
         /* check that AGENT is on if HOST_AUTO_REPLY or PEER_AUTO_REPLY is on */
         if ( (enable_flags & (CY_ARP_OL_HOST_AUTO_REPLY_ENABLE | CY_ARP_OL_PEER_AUTO_REPLY_ENABLE) ) != 0 )
         {
@@ -441,14 +459,10 @@ static void cylpa_arp_ol_pm(void *ol, ol_pm_st_t st)
         whd_arp_arpoe_set(arp_ol->ol_info_ptr->whd, 1);
 
         /* set the features */
-#if !defined(OLM_NO_HARDWARE)
         OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "whd_arp_features_set(0x%x)!\n", enable_flags);
-#endif
         if (whd_arp_features_set(arp_ol->ol_info_ptr->whd, enable_flags) != WHD_SUCCESS)
         {
-#if !defined(OLM_NO_HARDWARE)
             OL_LOG_ARP(LOG_OLA_LVL_DEBUG, "cylpa_arp_ol_pm() whd_arp_features_set() Failed!\n");
-#endif
         }
     }
     else

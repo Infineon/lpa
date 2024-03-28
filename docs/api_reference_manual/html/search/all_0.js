@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['acknum_0',['acknum',['../structsock__seq__t.html#a74d598287c7c57706b4f158708282bd6',1,'sock_seq_t']]],
+  ['acknum_0',['acknum',['../structsock__seq__t.html#a74d598287c7c57706b4f158708282bd6',1,'sock_seq_t::acknum()'],['../structcy__tls__sock__seq__t.html#a6eb8a79b7786340700383f7f83af4e81',1,'cy_tls_sock_seq_t::acknum()']]],
   ['arp_5fid_1',['ARP_ID',['../group__group__lpa__macros__arp.html#gaf672369d7b608356f0b773eeeff31c5c',1,'cy_lpa_wifi_arp_ol.h']]],
   ['arp_5fol_5fcfg_5ft_2',['arp_ol_cfg_t',['../structarp__ol__cfg__t.html',1,'']]],
   ['arp_5fol_5fconfig_5fstate_5ft_3',['arp_ol_config_state_t',['../group__group__lpa__enums.html#gacaa1d0b548141e9016a65d6e49f1cc46',1,'cy_lpa_wifi_arp_ol.h']]],

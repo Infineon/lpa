@@ -1,27 +1,41 @@
-/*******************************************************************************
-* File Name: network_activity_handler.h
-*
-* Version: 1.0
-*
-* Description: This file contains the macros, enumerations and function
+/*
+ * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
+ * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
+ *
+ * This software, including source code, documentation and related
+ * materials ("Software") is owned by Cypress Semiconductor Corporation
+ * or one of its affiliates ("Cypress") and is protected by and subject to
+ * worldwide patent protection (United States and foreign),
+ * United States copyright laws and international treaty provisions.
+ * Therefore, you may use this Software only as provided in the license
+ * agreement accompanying the software package from which you
+ * obtained this Software ("EULA").
+ * If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
+ * non-transferable license to copy, modify, and compile the Software
+ * source code solely for use in connection with Cypress's
+ * integrated circuit products.  Any reproduction, modification, translation,
+ * compilation, or representation of this Software except as specified
+ * above is prohibited without the express written permission of Cypress.
+ *
+ * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Cypress
+ * reserves the right to make changes to the Software without notice. Cypress
+ * does not assume any liability arising out of the application or use of the
+ * Software or any product or circuit described in the Software. Cypress does
+ * not authorize its products for use in any products where a malfunction or
+ * failure of the Cypress product may reasonably be expected to result in
+ * significant property damage, injury or death ("High Risk Product"). By
+ * including Cypress's product in a High Risk Product, the manufacturer
+ * of such system or application assumes all risk of such use and in doing
+ * so agrees to indemnify Cypress against all liability.
+ */
+
+/**
+* @file network_activity_handler.h
+* @brief This file contains the macros, enumerations and function
 * prototypes used by network_activity_handler.
-*
-********************************************************************************
-* Copyright 2020 Cypress Semiconductor Corporation
-* SPDX-License-Identifier: Apache-2.0
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-********************************************************************************/
+*/
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,6 +54,9 @@ extern "C" {
 #define PKT_FILTER_NAME "Pkt_Filter"
 #define ARP_NAME        "ARP"
 #define TKO_NAME        "TKO"
+#define TLSOE_NAME      "TLSOE"
+#define WOWLPF_NAME      "WOWLPF"
+#define NULLKO_NAME      "NULLKO"
 
 /* This enumeration enlists the different states of the network stack */
 enum network_stack_state_t
@@ -56,6 +73,13 @@ enum network_stack_state_t
     ST_WIFI_NET_RESUMING_FAILED,
     ST_NET_ACTIVITY
 };
+
+/* LPA event notification types */
+typedef enum cylpa_notify_event_type
+{
+    CYLPA_NW_SUSPENDED = 0, /**< State when network stack is suspended */
+    CYLPA_NW_RESUMING  = 1  /**< State when network stack is resuming */
+} cylpa_notify_event_type_t;
 
 /*******************************************************************************
 * Function Name: cylpa_suspend_ns
@@ -129,6 +153,26 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
  *
  */
 
+/** Application callback function.
+ *
+ *  This LPA callback function is used for notification of network stack suspend to the application.
+ *
+ *  @param   notify_type      : notify event type
+ *  @param   *arg             : pointer to WLAN interface
+ *
+ */
+typedef void (*cylpa_suspend_callback_t)(cylpa_notify_event_type_t notify_type, void *arg);
+
+/** Registers suspend notify callback.
+ *
+ *
+ *  @param   *callback        : Application callback function which needs to be called on  network suspend.
+ *  @param   *user_data       : Pointer to user data to be passed in the event callback.
+ *
+ *  @return int32_t           : CY_RSLT_SUCCESS on success, otherwise it returns error.
+ */
+int32_t cylpa_register_suspend_notify_callback( cylpa_suspend_callback_t callback, void *user_data);
+
 /** Network Monitor Function
  *
  *  In this function the network is monitored for inactivity in an interval of
@@ -149,8 +193,9 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
  *
  *  @return int32_t                : Returns status on one of these cases: Network error status if the network stack suspension failed or EMAC activity status as a result of network inactivity monitor.
  */
-extern int32_t   wait_net_suspend(void *net_intf,   uint32_t wait_ms, uint32_t inactive_interval_ms, uint32_t inactive_window_ms);
+extern int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t inactive_interval_ms, uint32_t inactive_window_ms);
 
+/*! \cond */
 /** Network Monitor Function
  *
  *  This function should be used for waking up Network Stack from suspended/lock state.
@@ -163,8 +208,8 @@ extern int32_t   wait_net_suspend(void *net_intf,   uint32_t wait_ms, uint32_t i
  *
  *  @return void
  */
-
 extern void cylpa_on_emac_activity(bool is_tx_activity);
+/*! \endcond */
 
 /** Creates TCP Socket connection
  *
@@ -207,6 +252,7 @@ extern int cylpa_restart_olm( ol_desc_t *offload_list, void *net_intf );
  */
 extern ol_desc_t *cylpa_find_my_descriptor(const char *name, ol_desc_t *offload_list );
 
+/*! \cond */
 /** Get OLM instance
  *
  *  This function returns OLM instance
@@ -214,6 +260,7 @@ extern ol_desc_t *cylpa_find_my_descriptor(const char *name, ol_desc_t *offload_
  *
  */
 extern void *cy_get_olm_instance( void );
+/*! \endcond */
 /** \} */
 #ifdef __cplusplus
 } /* extern C */

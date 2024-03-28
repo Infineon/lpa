@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['peerage_0',['peerage',['../structarp__ol__cfg__t.html#a9dd6b07a43c9a15596db5c35d9c3cce1',1,'arp_ol_cfg_t']]],
-  ['pf_1',['pf',['../structcy__pf__ol__cfg__t.html#aa9802e6b0478279eee94213835fc2173',1,'cy_pf_ol_cfg_t']]],
-  ['portnum_2',['portnum',['../structcy__pf__port__t.html#aaee6c242184bccef5dee844c3e7a61bf',1,'cy_pf_port_t::portnum()'],['../structcy__pf__pn__cfg__t.html#aa1128e070c2c60f21901efe96c1b89c4',1,'cy_pf_pn_cfg_t::portnum()']]],
-  ['ports_3',['ports',['../structcy__tko__ol__cfg__t.html#ad4979c12e1b68e5432f3c806ef2da447',1,'cy_tko_ol_cfg_t']]],
-  ['proto_4',['proto',['../structcy__pf__pn__cfg__t.html#a81243c2826dd108eedb8b71cf6f29e58',1,'cy_pf_pn_cfg_t']]]
+  ['offset_0',['offset',['../structcy__wowlpf__ol__cfg__t.html#aed97587e9fff5f4cf7612c05c4cab730',1,'cy_wowlpf_ol_cfg_t']]],
+  ['ol_1',['ol',['../structol__desc__t.html#a34c59e179d655f125e8613c0136f97ce',1,'ol_desc_t']]],
+  ['ol_5finfo_2',['ol_info',['../structolm__t.html#aee9525f191806455dab9798b5d520e29',1,'olm_t']]],
+  ['ol_5finfo_5fptr_3',['ol_info_ptr',['../structarp__ol__t.html#a44385b0f96b0108b308c80b2a480d4ee',1,'arp_ol_t::ol_info_ptr()'],['../structnko__ol__t.html#aff8b91cf5c2788498597dde32087071a',1,'nko_ol_t::ol_info_ptr()'],['../structnullko__ol__t.html#a8153f58b0cac8bfb4c59f8b57aec4ab2',1,'nullko_ol_t::ol_info_ptr()'],['../structtko__ol__t.html#a34e68d433cd8d48db2c645748cb757d9',1,'tko_ol_t::ol_info_ptr()'],['../structwowlpf__ol__t.html#a936a98ffc10cd34ee76d0dd6b6c038f6',1,'wowlpf_ol_t::ol_info_ptr()']]],
+  ['ol_5flist_4',['ol_list',['../structolm__t.html#a2b190f623aefb6f3c6e51cc62b751789',1,'olm_t']]]
 ];

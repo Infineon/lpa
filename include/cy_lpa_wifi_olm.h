@@ -1,18 +1,40 @@
-/***************************************************************************//**
-* \file cy_lpa_wifi_olm.h
-* \version 1.0
-*
-* \brief
-* Offload Manager API.
-*
-********************************************************************************
-* \copyright
-* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
-* You may use this file only in accordance with the license, terms, conditions,
-* disclaimers, and limitations in the end user license agreement accompanying
-* the software package with which this file was provided.
-*******************************************************************************/
+/*
+ * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
+ * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
+ *
+ * This software, including source code, documentation and related
+ * materials ("Software") is owned by Cypress Semiconductor Corporation
+ * or one of its affiliates ("Cypress") and is protected by and subject to
+ * worldwide patent protection (United States and foreign),
+ * United States copyright laws and international treaty provisions.
+ * Therefore, you may use this Software only as provided in the license
+ * agreement accompanying the software package from which you
+ * obtained this Software ("EULA").
+ * If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
+ * non-transferable license to copy, modify, and compile the Software
+ * source code solely for use in connection with Cypress's
+ * integrated circuit products.  Any reproduction, modification, translation,
+ * compilation, or representation of this Software except as specified
+ * above is prohibited without the express written permission of Cypress.
+ *
+ * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Cypress
+ * reserves the right to make changes to the Software without notice. Cypress
+ * does not assume any liability arising out of the application or use of the
+ * Software or any product or circuit described in the Software. Cypress does
+ * not authorize its products for use in any products where a malfunction or
+ * failure of the Cypress product may reasonably be expected to result in
+ * significant property damage, injury or death ("High Risk Product"). By
+ * including Cypress's product in a High Risk Product, the manufacturer
+ * of such system or application assumes all risk of such use and in doing
+ * so agrees to indemnify Cypress against all liability.
+ */
 
+/**
+* @file cy_lpa_wifi_olm.h
+* @brief Offload Manager API.
+*/
 
 #ifndef OLM_H__
 #define OLM_H__    (1)
@@ -25,8 +47,6 @@ extern "C" {
 #include <stdio.h>
 #include <stdint.h>
 #include "cy_lpa_wifi_ol_common.h" /* for ol_info_t */
-#define OLM_LOG_ENABLED 1
-
 
 /* Number of beacons it can miss 1 to 10 is the range */
 #define LPA_BCNTRIM 9
@@ -148,6 +168,10 @@ typedef enum
     LOG_OLA_ARP,       /**< LOG assist ARP */
     LOG_OLA_PF,        /**< LOG assist PF */
     LOG_OLA_TKO,       /**< LOG assist TKO */
+    LOG_OLA_TLSOE,     /**< LOG assist TLSOE */
+    LOG_OLA_WOWLPF,    /**< LOG assist WOWLPF */
+    LOG_OLA_NKO,       /**< LOG assist NKO */
+    LOG_OLA_NULLKA,    /**< LOG assist NULLKA */
     LOG_OLA_MAX_INDEX  /**< LOG assist MAX */
 } LOG_OFFLOAD_ASSIST_T;
 
@@ -218,8 +242,12 @@ extern int ol_logging(LOG_OFFLOAD_ASSIST_T assist, LOG_OFFLOAD_ASSIST_LEVEL_T le
 #define OL_LOG_ARP(...) ol_logging(LOG_OLA_ARP, __VA_ARGS__)    /**< ex: OL_LOG_ARP(LOG_OLA_LVL_NOTICE, "ARP OL IP: %s\n", ip_string); */
 #define OL_LOG_PF(...) ol_logging(LOG_OLA_PF, __VA_ARGS__)      /**< ex: OL_LOG_PF(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
 #define OL_LOG_TKO(...) ol_logging(LOG_OLA_TKO, __VA_ARGS__)    /**< ex: OL_LOG_TKO(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
+#define OL_LOG_TLSOE(...) ol_logging(LOG_OLA_TLSOE, __VA_ARGS__)    /**< ex: OL_LOG_TKO(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
+#define OL_LOG_WOWLPF(...) ol_logging(LOG_OLA_WOWLPF, __VA_ARGS__)    /**< ex: OL_LOG_WOWLPF(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
+#define OL_LOG_NKO(...) ol_logging(LOG_OLA_NKO, __VA_ARGS__) /**< ex: OL_LOG_NKO(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
+#define OL_LOG_NULLKA(...) ol_logging(LOG_OLA_NULLKA, __VA_ARGS__)    /**< ex: OL_LOG_NULLKAF(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
 
-#else   /* next section is NOT defined(MBED_CONF_APP_OLM_TEST) */
+#else
 
 #define ol_log_get_level(assist)            - 1
 #define ol_log_set_level(assist, level)     - 1
@@ -230,7 +258,10 @@ extern int ol_logging(LOG_OFFLOAD_ASSIST_T assist, LOG_OFFLOAD_ASSIST_LEVEL_T le
 #define OL_LOG_ARP(...)
 #define OL_LOG_PF(...)
 #define OL_LOG_TKO(...)
-
+#define OL_LOG_TLSOE(...)
+#define OL_LOG_WOWLPF(...)
+#define OL_LOG_NKO(...)
+#define OL_LOG_NULLKA(...)
 #endif  /* defined(OLM_LOG_ENABLED) */
 
 #ifdef __cplusplus

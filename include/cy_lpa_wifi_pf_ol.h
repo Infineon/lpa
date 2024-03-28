@@ -1,18 +1,40 @@
-/***************************************************************************//**
-* \file cy_lpa_wifi_pf_ol.h
-* \version 1.0
-*
-* \brief
-* Defines the API into PktFilter offloads from personality.
-*
-********************************************************************************
-* \copyright
-* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
-* You may use this file only in accordance with the license, terms, conditions,
-* disclaimers, and limitations in the end user license agreement accompanying
-* the software package with which this file was provided.
-*******************************************************************************/
+/*
+ * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
+ * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
+ *
+ * This software, including source code, documentation and related
+ * materials ("Software") is owned by Cypress Semiconductor Corporation
+ * or one of its affiliates ("Cypress") and is protected by and subject to
+ * worldwide patent protection (United States and foreign),
+ * United States copyright laws and international treaty provisions.
+ * Therefore, you may use this Software only as provided in the license
+ * agreement accompanying the software package from which you
+ * obtained this Software ("EULA").
+ * If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
+ * non-transferable license to copy, modify, and compile the Software
+ * source code solely for use in connection with Cypress's
+ * integrated circuit products.  Any reproduction, modification, translation,
+ * compilation, or representation of this Software except as specified
+ * above is prohibited without the express written permission of Cypress.
+ *
+ * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Cypress
+ * reserves the right to make changes to the Software without notice. Cypress
+ * does not assume any liability arising out of the application or use of the
+ * Software or any product or circuit described in the Software. Cypress does
+ * not authorize its products for use in any products where a malfunction or
+ * failure of the Cypress product may reasonably be expected to result in
+ * significant property damage, injury or death ("High Risk Product"). By
+ * including Cypress's product in a High Risk Product, the manufacturer
+ * of such system or application assumes all risk of such use and in doing
+ * so agrees to indemnify Cypress against all liability.
+ */
 
+/**
+* @file cy_lpa_wifi_pf_ol.h
+* @brief Defines the API into PktFilter offloads from personality.
+*/
 
 #ifndef PF_OL_H__
 #define PF_OL_H__  (1)
@@ -54,6 +76,7 @@ typedef enum cy_pn_direction
 {
     PF_PN_PORT_DEST        = 1,        /**< Filter Destination Port*/
     PF_PN_PORT_SOURCE      = 2,        /**< Filter Source Port */
+    PF_PN_PORT_SOURCE_DEST = 3,        /**< Filter Source Destination Port */
 } cy_pn_direction_t;
 /** \} */
 
@@ -115,7 +138,7 @@ typedef struct cy_pf_ol_cfg
 #define CY_PF_ACTION_DISCARD     (1 << 2)     /**< Packets that match filter are dropped and NOT passed to host, else they are passed up. */
 
     uint32_t bits;                  /**< Various on/off options applicable to all types of packet filters */
-    uint8_t id;                     /**< Each filter is fiven a unique 8 bit identifier. */
+    uint8_t id;                     /**< Each filter is given a unique 8 bit identifier. */
 
     union
     {

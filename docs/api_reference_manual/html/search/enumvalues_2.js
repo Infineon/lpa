@@ -9,7 +9,11 @@ var searchData=
   ['log_5fola_5flvl_5foff_6',['LOG_OLA_LVL_OFF',['../group__group__loglevel__enum.html#ggaa45e959559f8cd7cad6413f0f6e759caa885ca3b24af3b644a5c3c9ece21d5857',1,'cy_lpa_wifi_olm.h']]],
   ['log_5fola_5flvl_5fwarning_7',['LOG_OLA_LVL_WARNING',['../group__group__loglevel__enum.html#ggaa45e959559f8cd7cad6413f0f6e759caa909182644928c71917421d3c391f7e01',1,'cy_lpa_wifi_olm.h']]],
   ['log_5fola_5fmax_5findex_8',['LOG_OLA_MAX_INDEX',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaaa6ad746031a25a3f74efdcf4b64c3d27',1,'cy_lpa_wifi_olm.h']]],
-  ['log_5fola_5folm_9',['LOG_OLA_OLM',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaaa94b6b90f820054e84209421a8daa735',1,'cy_lpa_wifi_olm.h']]],
-  ['log_5fola_5fpf_10',['LOG_OLA_PF',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaa7985d1e348db8f46ab2c7b99b8c7bda4',1,'cy_lpa_wifi_olm.h']]],
-  ['log_5fola_5ftko_11',['LOG_OLA_TKO',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaae7cbadaf0dc8ae8f78fa67c4c9303dbd',1,'cy_lpa_wifi_olm.h']]]
+  ['log_5fola_5fnko_9',['LOG_OLA_NKO',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaad31e7ccbf46e590626cd1f5f9bdf2071',1,'cy_lpa_wifi_olm.h']]],
+  ['log_5fola_5fnullka_10',['LOG_OLA_NULLKA',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaa929f971e886cbd385614367203850881',1,'cy_lpa_wifi_olm.h']]],
+  ['log_5fola_5folm_11',['LOG_OLA_OLM',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaaa94b6b90f820054e84209421a8daa735',1,'cy_lpa_wifi_olm.h']]],
+  ['log_5fola_5fpf_12',['LOG_OLA_PF',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaa7985d1e348db8f46ab2c7b99b8c7bda4',1,'cy_lpa_wifi_olm.h']]],
+  ['log_5fola_5ftko_13',['LOG_OLA_TKO',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaae7cbadaf0dc8ae8f78fa67c4c9303dbd',1,'cy_lpa_wifi_olm.h']]],
+  ['log_5fola_5ftlsoe_14',['LOG_OLA_TLSOE',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaa3da4c8a9d9060bd8bb87c403516a74c6',1,'cy_lpa_wifi_olm.h']]],
+  ['log_5fola_5fwowlpf_15',['LOG_OLA_WOWLPF',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaae8ee5d116fd95d31f09f690d2e1b830a',1,'cy_lpa_wifi_olm.h']]]
 ];

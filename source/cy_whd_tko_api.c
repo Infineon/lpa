@@ -1,20 +1,43 @@
-/***************************************************************************//**
-* \file cy_whd_tko_api.c
-* \version 1.0
-*
-* \brief
-* WHD TCP Keepalive Offload API
-*
-********************************************************************************
-* \copyright
-* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
-* You may use this file only in accordance with the license, terms, conditions,
-* disclaimers, and limitations in the end user license agreement accompanying
-* the software package with which this file was provided.
-*******************************************************************************/
+/*
+ * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
+ * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
+ *
+ * This software, including source code, documentation and related
+ * materials ("Software") is owned by Cypress Semiconductor Corporation
+ * or one of its affiliates ("Cypress") and is protected by and subject to
+ * worldwide patent protection (United States and foreign),
+ * United States copyright laws and international treaty provisions.
+ * Therefore, you may use this Software only as provided in the license
+ * agreement accompanying the software package from which you
+ * obtained this Software ("EULA").
+ * If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
+ * non-transferable license to copy, modify, and compile the Software
+ * source code solely for use in connection with Cypress's
+ * integrated circuit products.  Any reproduction, modification, translation,
+ * compilation, or representation of this Software except as specified
+ * above is prohibited without the express written permission of Cypress.
+ *
+ * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Cypress
+ * reserves the right to make changes to the Software without notice. Cypress
+ * does not assume any liability arising out of the application or use of the
+ * Software or any product or circuit described in the Software. Cypress does
+ * not authorize its products for use in any products where a malfunction or
+ * failure of the Cypress product may reasonably be expected to result in
+ * significant property damage, injury or death ("High Risk Product"). By
+ * including Cypress's product in a High Risk Product, the manufacturer
+ * of such system or application assumes all risk of such use and in doing
+ * so agrees to indemnify Cypress against all liability.
+ */
 
+/**
+* @file cy_lpa_whd_tko_api.c
+* @brief WHD TCP Keepalive Offload API
+*/
 
 #include "whd_types.h"
+#include "cy_lpa_common_priv.h"
 #include "cy_lpa_wifi_ol_common.h"
 #include "cy_lpa_wifi_ol.h"
 #include "cy_lpa_wifi_tko_ol.h"
@@ -36,28 +59,6 @@ extern "C" {
 *  Defines
 *
 ********************************************************************/
-#define IPV4_ADDR_LEN                4      /* IPV4 address length   */
-
-/* IPV4 field decodes */
-#define IPV4_VER_SHIFT               4      /* IPV4 version shift */
-#define IP_VER_4                     4      /* version number for IPV4 */
-#define IPV4_MIN_HEADER_LEN          20     /* Minimum size for an IP header (no options) */
-#define IPV4_VER_HL_OFFSET           0      /* version and ihl byte offset */
-#define IPV4_HLEN_MASK               0x0f   /* IPV4 header length mask */
-#ifndef IPV4_HLEN
-#define IPV4_HLEN(ipv4_body)        (4 * ( ( (uint8_t *)(ipv4_body) )[IPV4_VER_HL_OFFSET] & IPV4_HLEN_MASK ) )
-#endif
-#define IP_PROTO_TCP                 6      /* TCP PROTOCOL */
-
-/* 8bit TCP flag field */
-#define TCP_FLAG_ACK                0x10
-#define TCP_FLAG_PSH                0x08
-#define TCP_FLAG_RST                0x04
-#define TCP_FLAG_SYN                0x02
-#define TCP_FLAG_FIN                0x01
-
-#define TCP_MIN_HEADER_LEN          20
-#define TCP_HDRLEN_SHIFT            4
 
 /* Default TCP Keepalive retry parameters.  */
 #define TCP_KEEPALIVE_OFFLOAD_INTERVAL_SEC       (20)
@@ -72,16 +73,14 @@ extern "C" {
 ********************************************************************/
 #define IFP_TO_DRIVER(ifp)  ( ( (whd_interface_t)ifp )->whd_driver )
 
-#define TKO_OL_DEBUG
 #ifdef TKO_OL_DEBUG
 #define TKO_ERROR_PRINTF(x) printf x
-#define TKO_DEBUG_PRINTF(x) //printf x
+#define TKO_DEBUG_PRINTF(x) printf x
 #else
 #define TKO_ERROR_PRINTF(x)
 #define TKO_DEBUG_PRINTF(x)
 #endif
 
-#define OFFSETOF(type, member)  ( (uintptr_t)&( (type *)0 )->member )
 #define RX_EVENT_FLAG (1UL << 0)
 #define TX_EVENT_FLAG (1UL << 1)
 
@@ -101,63 +100,12 @@ static uint16_t tko_state_enabled = false;
 void cylpa_on_emac_activity(bool is_tx_activity);    //RX_EVENT_FLAG
 extern cy_mutex_t cy_lp_mutex;
 
-/* 10Mb/s Ethernet header  */
-typedef struct
-{
-    uint8_t ether_dhost[ETHER_ADDR_LEN];
-    uint8_t ether_shost[ETHER_ADDR_LEN];
-    uint16_t ether_type;
-} whd_ether_header_t;
-
-/* IP V4 Header */
-typedef struct
-{
-    uint8_t version_ihl;          /* Version and Internet Header Length */
-    uint8_t tos;              /* Type Of Service */
-    uint16_t tot_len;         /* Number of bytes in packet (max 65535) */
-    uint16_t id;
-    uint16_t frag;            /* 3 flag bits and fragment offset */
-    uint8_t ttl;              /* Time To Live */
-    uint8_t prot;             /* Protocol */
-    uint16_t hdr_chksum;      /* IP header checksum */
-    uint8_t src_ip[IPV4_ADDR_LEN];    /* Source IP Address */
-    uint8_t dst_ip[IPV4_ADDR_LEN];    /* Destination IP Address */
-} ipv4_hdr_t;
-
-/* TCP Header... used for checksumming */
-typedef struct tcp_pseudo_hdr
-{
-    uint8_t src_ip[IPV4_ADDR_LEN]; /* Source IP Address */
-    uint8_t dst_ip[IPV4_ADDR_LEN]; /* Destination IP Address */
-    uint8_t zero;
-    uint8_t prot;
-    uint16_t tcp_size;
-} tcp_pseudo_hdr_t;
-
-/* These fields are stored in network order */
-typedef struct bcmtcp_hdr
-{
-    uint16_t src_port;        /* Source Port Address */
-    uint16_t dst_port;        /* Destination Port Address */
-    uint32_t seq_num;         /* TCP Sequence Number */
-    uint32_t ack_num;         /* TCP Sequence Number */
-    uint16_t hdrlen_rsvd_flags;       /* Header length, reserved bits and flags */
-    uint16_t tcpwin;          /* TCP window */
-    uint16_t chksum;          /* Segment checksum with pseudoheader */
-    uint16_t urg_ptr;         /* Points to seq-num of byte following urg data */
-}bcmtcp_hdr_t;
-
 /*********************************************************************************************
 *
 *  Forward Declarations
 *
 *********************************************************************************************/
 #if LWIP_TCP
-static uint16_t ipv4_hdr_cksum(uint8_t *ip, int ip_len);
-static uint32_t ip_cksum_partial(uint32_t sum, uint8_t *val8, uint32_t count);
-static uint16_t ip_cksum(uint32_t sum, uint8_t *val8, uint32_t count);
-static uint16_t ipv4_tcp_hdr_cksum(uint8_t *ip, uint8_t *tcp, uint16_t tcp_len);
-static uint16_t tcp_hdr_chksum(uint32_t sum, uint8_t *tcp_hdr, uint16_t tcp_len);
 static int tko_connect_init(wl_tko_connect_t *connect, sock_seq_t *keep_alive_offload, uint8_t index);
 ssize_t etharp_find_addr(struct netif *netif, const ip4_addr_t *ipaddr, wl_ether_addr_t **eth_ret,
                          const ip4_addr_t **ip_ret);
@@ -393,19 +341,19 @@ prep_packet(sock_seq_t *seq, int index, uint8_t *buf)
     eth->ether_type = hton16(ETHER_TYPE_IP);
     ip = (ipv4_hdr_t *)(buf + sizeof(whd_ether_header_t) );
 
-    memcpy(ip->dst_ip, &seq->dstip, IPV4_ADDR_LEN);
-    memcpy(ip->src_ip, &seq->srcip, IPV4_ADDR_LEN);
+    memcpy(ip->dst_ip, &seq->dstip, CYLPA_IPV4_ADDR_LEN);
+    memcpy(ip->src_ip, &seq->srcip, CYLPA_IPV4_ADDR_LEN);
 
-    ip->version_ihl = (IP_VER_4 << IPV4_VER_SHIFT) | (IPV4_MIN_HEADER_LEN / 4);
+    ip->version_ihl = (CYLPA_IP_VER_4 << CYLPA_IPV4_VER_SHIFT) | (CYLPA_IPV4_MIN_HEADER_LEN / 4);
     ip->tos = 0;
     ip->tot_len = hton16(sizeof(ipv4_hdr_t) + sizeof(bcmtcp_hdr_t) );
     ip->id = hton16(0);
     ip->frag = 0;
     ip->ttl = 32;
-    ip->prot = IP_PROTO_TCP;
+    ip->prot = CYLPA_IP_PROTO_TCP;
     ip->hdr_chksum = 0;
 
-    ip->hdr_chksum = ipv4_hdr_cksum( (uint8_t *)ip, IPV4_HLEN(ip) );
+    ip->hdr_chksum = cylpa_ipv4_hdr_cksum( (uint8_t *)ip, CYLPA_IPV4_HLEN(ip) );
 
     tcp = (bcmtcp_hdr_t *)(buf + sizeof(whd_ether_header_t) +
                            sizeof(ipv4_hdr_t) );
@@ -416,11 +364,11 @@ prep_packet(sock_seq_t *seq, int index, uint8_t *buf)
     tcp->tcpwin   = hton16(seq->rx_window);
     tcp->chksum   = 0;
     tcp->urg_ptr  = 0;
-    tcp->hdrlen_rsvd_flags = (TCP_FLAG_ACK << 8) |
-                             ( (sizeof(bcmtcp_hdr_t) >> 2) << TCP_HDRLEN_SHIFT );
+    tcp->hdrlen_rsvd_flags = (CYLPA_TCP_FLAG_ACK << 8) |
+                             ( (sizeof(bcmtcp_hdr_t) >> 2) << CYLPA_TCP_HDRLEN_SHIFT );
 
     /* calculate TCP header checksum */
-    tcp->chksum = ipv4_tcp_hdr_cksum( (uint8_t *)ip, (uint8_t *)tcp, sizeof(*tcp) );
+    tcp->chksum = cylpa_ipv4_tcp_hdr_cksum( (uint8_t *)ip, (uint8_t *)tcp, sizeof(*tcp) );
     if (tcp->chksum == TKO_ERROR)
     {
         TKO_ERROR_PRINTF( ("%s ERROR, Bad checksum 0x%x\n", __func__, tcp->chksum) );
@@ -479,127 +427,6 @@ tko_connect_init(wl_tko_connect_t *connect, sock_seq_t *keep_alive_offload, uint
     datalen += connect->response_len;
 
     return (offsetof(wl_tko_connect_t, data) + datalen);
-}
-
-/* calculate IPv4 header checksum
- * - input ip points to IP header in network order
- * - output cksum is in network order
- */
-static uint16_t ipv4_hdr_cksum(uint8_t *ip, int ip_len)
-{
-    uint32_t sum = 0;
-    uint8_t *ptr = ip;
-
-    if ( (ip == NULL) || (ip_len < IPV4_MIN_HEADER_LEN) )
-    {
-        TKO_ERROR_PRINTF( ("%s: Error\n", __func__) );
-        return TKO_ERROR;
-    }
-
-    /* partial cksum skipping the hdr_chksum field */
-    sum = ip_cksum_partial(sum, ptr, OFFSETOF(ipv4_hdr_t, hdr_chksum) );
-    ptr += OFFSETOF(ipv4_hdr_t, hdr_chksum) + 2;
-
-    /* return calculated chksum */
-    return ip_cksum(sum, ptr, ip_len - OFFSETOF(ipv4_hdr_t, src_ip) );
-}
-
-/* calculate partial checksum */
-static uint32_t ip_cksum_partial(uint32_t sum, uint8_t *val8, uint32_t count)
-{
-    uint32_t i;
-    uint16_t *val16 = (uint16_t *)val8;
-
-    if ( (val8 == NULL) || ( (count % 2) != 0 ) )
-    {
-        TKO_ERROR_PRINTF( ("%s: ERROR!\n", __func__) );
-        return TKO_ERROR;
-    }
-
-    count /= 2;
-
-    for (i = 0; i < count; i++)
-    {
-        sum += *val16++;
-    }
-    return sum;
-}
-
-/* calculate IP checksum */
-static uint16_t ip_cksum(uint32_t sum, uint8_t *val8, uint32_t count)
-{
-    uint16_t *val16 = (uint16_t * )val8;
-
-    if (val8 == NULL)
-    {
-        TKO_ERROR_PRINTF( ("%s: ERROR!\n", __func__) );
-        return TKO_ERROR;
-    }
-
-    while (count > 1)
-    {
-        sum += *val16++;
-        count -= 2;
-    }
-
-    /*  add left-over byte, if any */
-    if (count > 0)
-    {
-        sum += (*(uint8_t *)val16);
-    }
-
-    /*  fold 32-bit sum to 16 bits */
-    sum = (sum >> 16) + (sum & 0xffff);
-    sum += (sum >> 16);
-    return ( (uint16_t) ~sum );
-}
-
-/* calculate IPv4 TCP header checksum
- * - input ip and tcp points to IP and TCP header in network order
- * - output cksum is in network order
- */
-static uint16_t ipv4_tcp_hdr_cksum(uint8_t *ip, uint8_t *tcp, uint16_t tcp_len)
-{
-    ipv4_hdr_t *ip_hdr = (ipv4_hdr_t *)ip;
-    tcp_pseudo_hdr_t tcp_ps;
-    uint32_t sum = 0;
-
-    if (tcp_len < TCP_MIN_HEADER_LEN)
-    {
-        TKO_ERROR_PRINTF( ("%s: ERROR!\n", __func__) );
-        return TKO_ERROR;
-    }
-
-    /* pseudo header cksum */
-    memset(&tcp_ps, 0, sizeof(tcp_ps) );
-    memcpy(&tcp_ps.dst_ip, ip_hdr->dst_ip, IPV4_ADDR_LEN);
-    memcpy(&tcp_ps.src_ip, ip_hdr->src_ip, IPV4_ADDR_LEN);
-    tcp_ps.zero = 0;
-    tcp_ps.prot = ip_hdr->prot;
-    tcp_ps.tcp_size = hton16(tcp_len);
-    sum = ip_cksum_partial(sum, (uint8_t *)&tcp_ps, sizeof(tcp_ps) );
-
-    /* return calculated TCP header chksum */
-    return tcp_hdr_chksum(sum, tcp, tcp_len);
-}
-
-/* calculate TCP header checksum using partial sum */
-static uint16_t tcp_hdr_chksum(uint32_t sum, uint8_t *tcp_hdr, uint16_t tcp_len)
-{
-    uint8_t *ptr = tcp_hdr;
-
-    if (tcp_len < TCP_MIN_HEADER_LEN)
-    {
-        TKO_ERROR_PRINTF( ("%s: ERROR!\n", __func__) );
-        return TKO_ERROR;
-    }
-
-    /* partial TCP cksum skipping the chksum field */
-    sum = ip_cksum_partial(sum, ptr, offsetof(bcmtcp_hdr_t, chksum) );
-    ptr += offsetof(bcmtcp_hdr_t, chksum) + 2;
-
-    /* return calculated chksum */
-    return ip_cksum(sum, ptr, tcp_len - offsetof(bcmtcp_hdr_t, urg_ptr) );
 }
 #endif /* LWIP_TCP */
 

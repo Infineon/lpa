@@ -58,7 +58,7 @@ This library and its features are supported on the following Infineon platforms:
 
 ## Limitations
 
-See the [Low Power Assistant Middleware Library Limitations](https://infineon.github.io/lpa/lpa_api_reference_manual/html/index.html).
+See the [Low Power Assistant Middleware Library Limitations](https://infineon.github.io/lpa/api_reference_manual/html/index.html).
 
 ## Dependent libraries
 
@@ -66,7 +66,7 @@ See the [Low Power Assistant Middleware Library Limitations](https://infineon.gi
 
 ## Quick start
 
-The LPA could be configured using the ModusToolbox&trade; MCU, Wi-Fi, and Bluetooth&reg; personalities. See the [Low Power Assistant middleware library configuration considerations](https://infineon.github.io/lpa/lpa_api_reference_manual/html/index.html).
+The LPA could be configured using the ModusToolbox&trade; MCU, Wi-Fi, and Bluetooth&reg; personalities. See the [Low Power Assistant middleware library configuration considerations](https://infineon.github.io/lpa/api_reference_manual/html/index.html).
 
 
 ### FreeRTOS

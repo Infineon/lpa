@@ -1,27 +1,41 @@
-/*******************************************************************************
-* File Name: network_activity_handler.c
-*
-* Version: 1.0
-*
-* Description: This file implements the functions needed to suspend
+/*
+ * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
+ * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
+ *
+ * This software, including source code, documentation and related
+ * materials ("Software") is owned by Cypress Semiconductor Corporation
+ * or one of its affiliates ("Cypress") and is protected by and subject to
+ * worldwide patent protection (United States and foreign),
+ * United States copyright laws and international treaty provisions.
+ * Therefore, you may use this Software only as provided in the license
+ * agreement accompanying the software package from which you
+ * obtained this Software ("EULA").
+ * If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
+ * non-transferable license to copy, modify, and compile the Software
+ * source code solely for use in connection with Cypress's
+ * integrated circuit products.  Any reproduction, modification, translation,
+ * compilation, or representation of this Software except as specified
+ * above is prohibited without the express written permission of Cypress.
+ *
+ * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Cypress
+ * reserves the right to make changes to the Software without notice. Cypress
+ * does not assume any liability arising out of the application or use of the
+ * Software or any product or circuit described in the Software. Cypress does
+ * not authorize its products for use in any products where a malfunction or
+ * failure of the Cypress product may reasonably be expected to result in
+ * significant property damage, injury or death ("High Risk Product"). By
+ * including Cypress's product in a High Risk Product, the manufacturer
+ * of such system or application assumes all risk of such use and in doing
+ * so agrees to indemnify Cypress against all liability.
+ */
+
+/**
+* @file network_activity_handler.c
+* @brief This file implements the functions needed to suspend
 * network stack and wait till external event or timeout
-*
-********************************************************************************
-* Copyright 2020 Cypress Semiconductor Corporation
-* SPDX-License-Identifier: Apache-2.0
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-********************************************************************************/
+*/
 
 #include "network_activity_handler.h"
 #include "cyabs_rtos.h"
@@ -30,13 +44,15 @@
 #include "cy_OlmInterface.h"
 #include "whd_int.h"
 #include <cycfg_system.h>
+#include "cycfg.h"
 #include "cyhal.h"
-
+#ifdef COMPONENT_LWIP
 /* lwIP header files */
 #include <lwip/tcpip.h>
 #include <lwip/api.h>
 #include <lwip/tcp.h>
 #include <lwip/priv/tcp_priv.h>
+#endif
 #include "cy_nw_helper.h"
 
 #include "cy_wcm.h"
@@ -168,6 +184,12 @@ cy_mutex_t cy_lp_mutex;
 /* This variable is used to track total time spent in deep sleep */
 uint32_t cy_dsleep_nw_suspend_time;
 
+/* This variable is used to store the callback pointer provided by application */
+static cylpa_suspend_callback_t suspend_notify_cb;
+
+/* This variable is used to store the callback user data provided by application */
+static void *cb_data;
+
 /******************************************************
  *               Function Definitions
  ******************************************************/
@@ -213,11 +235,9 @@ static void cylpa_print_whd_bus_stats(struct netif *wifi)
            return;
         }
 
-#ifndef ULP_SUPPORT
         NW_INFO(("\n=====================================================\n"));
         (void)whd_print_stats(ifp->whd_driver, WHD_FALSE);
         NW_INFO(("=====================================================\n"));
-#endif
     }
     else
     {
@@ -230,7 +250,7 @@ void cylpa_on_emac_activity(bool is_tx_activity)
     if (cy_lp_wait_net_event)
     {
         cy_rtos_setbits_event(&cy_lp_wait_net_event,
-			(uint32_t)(is_tx_activity ? TX_EVENT_FLAG : RX_EVENT_FLAG), true);
+             (uint32_t)(is_tx_activity ? TX_EVENT_FLAG : RX_EVENT_FLAG), true);
     }
 }
 
@@ -248,8 +268,8 @@ static cy_rslt_t cylpa_register_network_activity_callback(void)
 
     if ( CY_RSLT_SUCCESS != result )
     {
-    	NW_INFO(("Failed to initialize Mutex \n"));
-    	return result;
+        NW_INFO(("Failed to initialize Mutex \n"));
+        return result;
     }
     else
     {
@@ -297,13 +317,26 @@ int32_t cylpa_resume_ns(void)
     return state;
 }
 
+int32_t cylpa_register_suspend_notify_callback( cylpa_suspend_callback_t callback, void *user_data )
+{
+    if( callback == NULL )
+    {
+        return ST_BAD_ARGS;
+    }
+
+    suspend_notify_cb = callback;
+    cb_data = user_data;
+
+    return CY_RSLT_SUCCESS;
+}
+
 int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inactive_window_ms)
 {
     cy_time_t lp_start_time;
     cy_time_t lp_end_time;
     uint32_t state = ST_SUCCESS;
 
-#ifdef ULP_SUPPORT
+#ifdef CYCFG_ULP_SUPPORT_ENABLED
     whd_interface_t ifp = NULL;
 
     ifp = cy_olm_get_whd_interface();
@@ -334,7 +367,7 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
             flags = (TX_EVENT_FLAG | RX_EVENT_FLAG);
 
             /* Configure ULP mode on specified interface */
-#ifdef ULP_SUPPORT
+#ifdef CYCFG_ULP_SUPPORT_ENABLED
             if(cy_wcm_is_connected_to_ap() == true)
             {
                 uint32_t set_ulp_mode = CY_ULP_MODE_SUPPORT;
@@ -403,6 +436,12 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
         state = cylpa_suspend_ns();
         if (ST_SUCCESS == state)
         {
+            /* Notify application about the network stack suspend */
+            if(suspend_notify_cb)
+            {
+                suspend_notify_cb(CYLPA_NW_SUSPENDED, cb_data);
+            }
+
             cy_rtos_clearbits_event(&cy_lp_wait_net_event, (uint32_t)(TX_EVENT_FLAG | RX_EVENT_FLAG), false);
 
             cylpa_get_idle_power_mode(idle_power_mode, sizeof(idle_power_mode));
@@ -444,6 +483,12 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
             NW_INFO(("Resuming Network Stack, Network stack was suspended for %ums\n",(unsigned int) lp_end_time));
             cy_dsleep_nw_suspend_time += lp_end_time;
             cylpa_print_whd_bus_stats(wifi);
+
+            /* Notify application about the network stack resuming */
+            if(suspend_notify_cb)
+            {
+                suspend_notify_cb(CYLPA_NW_RESUMING, cb_data);
+            }
 
             /* Update state to timeout expired even if event is set after timeout is expired as
              * xEventGroupWaitBits function returns the current bit for timeout scenario with

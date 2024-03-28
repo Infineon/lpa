@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Low Power Assistant Middleware Library 5.0.0: LPA Utilities API</title>
+<title>Low Power Assistant Middleware Library 5.2.0: LPA Utilities API</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,7 +27,7 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><a href="http://www.cypress.com/"><img alt="Logo" src="infineon_logo.png"/></a></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Low Power Assistant Middleware Library 5.0.0</div>
+   <div id="projectname">Low Power Assistant Middleware Library 5.2.0</div>
   </td>
  </tr>
  </tbody>
@@ -84,6 +84,7 @@ $(document).ready(function(){initNavTree('group__lpautilities.html',''); initRes
 
 <div class="header">
   <div class="summary">
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">LPA Utilities API</div></div>
 </div><!--header-->
@@ -91,14 +92,20 @@ $(document).ready(function(){initNavTree('group__lpautilities.html',''); initRes
 <a name="details" id="details"></a><h2 class="groupheader">General Description</h2>
 <p >The Documentation is provided for Network Utility functions used by the LPA application to demonstrate the Low power functionality. </p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:gae4d570aa705b9f1942d1e86bab1f2975"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#gae4d570aa705b9f1942d1e86bab1f2975">cylpa_suspend_callback_t</a>) (cylpa_notify_event_type_t notify_type, void *arg)</td></tr>
+<tr class="memdesc:gae4d570aa705b9f1942d1e86bab1f2975"><td class="mdescLeft">&#160;</td><td class="mdescRight">Application callback function.  <a href="group__lpautilities.html#gae4d570aa705b9f1942d1e86bab1f2975">More...</a><br /></td></tr>
+<tr class="separator:gae4d570aa705b9f1942d1e86bab1f2975"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:gafe4c451be7aa1ec48f7a3ceaa6539f55"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#gafe4c451be7aa1ec48f7a3ceaa6539f55">cylpa_register_suspend_notify_callback</a> (<a class="el" href="group__lpautilities.html#gae4d570aa705b9f1942d1e86bab1f2975">cylpa_suspend_callback_t</a> callback, void *user_data)</td></tr>
+<tr class="memdesc:gafe4c451be7aa1ec48f7a3ceaa6539f55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers suspend notify callback.  <a href="group__lpautilities.html#gafe4c451be7aa1ec48f7a3ceaa6539f55">More...</a><br /></td></tr>
+<tr class="separator:gafe4c451be7aa1ec48f7a3ceaa6539f55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8fe3dbb6666cb69c052385ce9ff9405f"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f">wait_net_suspend</a> (void *net_intf, uint32_t wait_ms, uint32_t inactive_interval_ms, uint32_t inactive_window_ms)</td></tr>
 <tr class="memdesc:ga8fe3dbb6666cb69c052385ce9ff9405f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Network Monitor Function.  <a href="group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f">More...</a><br /></td></tr>
 <tr class="separator:ga8fe3dbb6666cb69c052385ce9ff9405f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga83db731bc98eb6abbcfbf453e9fecb69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#ga83db731bc98eb6abbcfbf453e9fecb69">cylpa_on_emac_activity</a> (bool is_tx_activity)</td></tr>
-<tr class="memdesc:ga83db731bc98eb6abbcfbf453e9fecb69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Network Monitor Function.  <a href="group__lpautilities.html#ga83db731bc98eb6abbcfbf453e9fecb69">More...</a><br /></td></tr>
-<tr class="separator:ga83db731bc98eb6abbcfbf453e9fecb69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab1bdee5b863d063b2cfb1dc693f8b685"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#gab1bdee5b863d063b2cfb1dc693f8b685">cy_tcp_create_socket_connection</a> (void *net_intf, void **socket_handle, const char *remote_ip, uint16_t remote_port, uint16_t local_port, <a class="el" href="structcy__tko__ol__cfg__t.html">cy_tko_ol_cfg_t</a> *downloaded, int socket_keepalive_enable)</td></tr>
 <tr class="memdesc:gab1bdee5b863d063b2cfb1dc693f8b685"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates TCP Socket connection.  <a href="group__lpautilities.html#gab1bdee5b863d063b2cfb1dc693f8b685">More...</a><br /></td></tr>
 <tr class="separator:gab1bdee5b863d063b2cfb1dc693f8b685"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -108,11 +115,80 @@ Functions</h2></td></tr>
 <tr class="memitem:gabdd78072ac977129c8202559f39f70a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structol__desc__t.html">ol_desc_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#gabdd78072ac977129c8202559f39f70a4">cylpa_find_my_descriptor</a> (const char *name, <a class="el" href="structol__desc__t.html">ol_desc_t</a> *offload_list)</td></tr>
 <tr class="memdesc:gabdd78072ac977129c8202559f39f70a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds OLM descriptor for a given name.  <a href="group__lpautilities.html#gabdd78072ac977129c8202559f39f70a4">More...</a><br /></td></tr>
 <tr class="separator:gabdd78072ac977129c8202559f39f70a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9759aac440ce3283d71ffe12ea2cf29c"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#ga9759aac440ce3283d71ffe12ea2cf29c">cy_get_olm_instance</a> (void)</td></tr>
-<tr class="memdesc:ga9759aac440ce3283d71ffe12ea2cf29c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get OLM instance.  <a href="group__lpautilities.html#ga9759aac440ce3283d71ffe12ea2cf29c">More...</a><br /></td></tr>
-<tr class="separator:ga9759aac440ce3283d71ffe12ea2cf29c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga49d46393ffdac11eca947ec6d2aeb53e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#ga49d46393ffdac11eca947ec6d2aeb53e">cylpa_tko_ol_update_config</a> (const char *remote_ip, uint16_t remote_port, uint16_t local_port, <a class="el" href="structcy__tko__ol__cfg__t.html">cy_tko_ol_cfg_t</a> *cfg)</td></tr>
+<tr class="memdesc:ga49d46393ffdac11eca947ec6d2aeb53e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the user provided TCP keep alive parameters to LPA middleware.  <a href="group__lpautilities.html#ga49d46393ffdac11eca947ec6d2aeb53e">More...</a><br /></td></tr>
+<tr class="separator:ga49d46393ffdac11eca947ec6d2aeb53e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac8baee212cc2fb0a8fba206c78c80846"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#gac8baee212cc2fb0a8fba206c78c80846">cylpa_tlsoe_ol_update_config</a> (int index, <a class="el" href="structcy__tlsoe__ol__cfg__t.html">cy_tlsoe_ol_cfg_t</a> *cfg, void *socket)</td></tr>
+<tr class="memdesc:gac8baee212cc2fb0a8fba206c78c80846"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update TLS configuration parameters and socket handle to LPA TLS database.  <a href="group__lpautilities.html#gac8baee212cc2fb0a8fba206c78c80846">More...</a><br /></td></tr>
+<tr class="separator:gac8baee212cc2fb0a8fba206c78c80846"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga44cedc2605f0e57f5271c10de0293c2c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lpautilities.html#ga44cedc2605f0e57f5271c10de0293c2c">cylpa_tlsoe_ol_set_socket_config</a> (int index, uint16_t local_port, uint16_t remote_port, uint32_t *remote_ip, uint16_t interval)</td></tr>
+<tr class="memdesc:ga44cedc2605f0e57f5271c10de0293c2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">configure the TLS connection parameters like local and peer port, peer IP and keepalive interval.  <a href="group__lpautilities.html#ga44cedc2605f0e57f5271c10de0293c2c">More...</a><br /></td></tr>
+<tr class="separator:ga44cedc2605f0e57f5271c10de0293c2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="gae4d570aa705b9f1942d1e86bab1f2975" name="gae4d570aa705b9f1942d1e86bab1f2975"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae4d570aa705b9f1942d1e86bab1f2975">&#9670;&nbsp;</a></span>cylpa_suspend_callback_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* cylpa_suspend_callback_t) (cylpa_notify_event_type_t notify_type, void *arg)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Application callback function. </p>
+<p >This LPA callback function is used for notification of network stack suspend to the application.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">notify_type</td><td>: notify event type </td></tr>
+    <tr><td class="paramname">*arg</td><td>: pointer to WLAN interface </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="gafe4c451be7aa1ec48f7a3ceaa6539f55" name="gafe4c451be7aa1ec48f7a3ceaa6539f55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafe4c451be7aa1ec48f7a3ceaa6539f55">&#9670;&nbsp;</a></span>cylpa_register_suspend_notify_callback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int32_t cylpa_register_suspend_notify_callback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__lpautilities.html#gae4d570aa705b9f1942d1e86bab1f2975">cylpa_suspend_callback_t</a>&#160;</td>
+          <td class="paramname"><em>callback</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>user_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Registers suspend notify callback. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">*callback</td><td>: Application callback function which needs to be called on network suspend. </td></tr>
+    <tr><td class="paramname">*user_data</td><td>: Pointer to user data to be passed in the event callback.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int32_t : CY_RSLT_SUCCESS on success, otherwise it returns error. </dd></dl>
+
+</div>
+</div>
 <a id="ga8fe3dbb6666cb69c052385ce9ff9405f" name="ga8fe3dbb6666cb69c052385ce9ff9405f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga8fe3dbb6666cb69c052385ce9ff9405f">&#9670;&nbsp;</a></span>wait_net_suspend()</h2>
 
@@ -163,34 +239,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int32_t : Returns status on one of these cases: Network error status if the network stack suspension failed or EMAC activity status as a result of network inactivity monitor. </dd></dl>
-
-</div>
-</div>
-<a id="ga83db731bc98eb6abbcfbf453e9fecb69" name="ga83db731bc98eb6abbcfbf453e9fecb69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga83db731bc98eb6abbcfbf453e9fecb69">&#9670;&nbsp;</a></span>cylpa_on_emac_activity()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void cylpa_on_emac_activity </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>is_tx_activity</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Network Monitor Function. </p>
-<p >This function should be used for waking up Network Stack from suspended/lock state. TCPIP Core will locked in wait_net_suspend function for putting MCU to Deep Sleep. Any task which needs to queue to LwIP should be call this function to unlock TCPIP Core.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">is_tx_activity</td><td>: set event bit for TX/RX activity</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
 </div>
 </div>
@@ -347,24 +395,159 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga9759aac440ce3283d71ffe12ea2cf29c" name="ga9759aac440ce3283d71ffe12ea2cf29c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9759aac440ce3283d71ffe12ea2cf29c">&#9670;&nbsp;</a></span>cy_get_olm_instance()</h2>
+<a id="ga49d46393ffdac11eca947ec6d2aeb53e" name="ga49d46393ffdac11eca947ec6d2aeb53e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga49d46393ffdac11eca947ec6d2aeb53e">&#9670;&nbsp;</a></span>cylpa_tko_ol_update_config()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void * cy_get_olm_instance </td>
+          <td class="memname">int cylpa_tko_ol_update_config </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>remote_ip</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>remote_port</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>local_port</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structcy__tko__ol__cfg__t.html">cy_tko_ol_cfg_t</a> *&#160;</td>
+          <td class="paramname"><em>cfg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get OLM instance. </p>
-<p >This function returns OLM instance </p><dl class="section return"><dt>Returns</dt><dd><a class="el" href="structolm__t.html" title="Offload Manager context.">olm_t</a> : Return OLM structure pointer </dd></dl>
+<p>Configure the user provided TCP keep alive parameters to LPA middleware. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">remote_ip</td><td>Pointer to the destination IP address. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">remote_port</td><td>Destination port number. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">local_port</td><td>Source port number. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">cfg</td><td>Structure containing user provided parameters.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success; negative on failure. </dd></dl>
+
+</div>
+</div>
+<a id="gac8baee212cc2fb0a8fba206c78c80846" name="gac8baee212cc2fb0a8fba206c78c80846"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac8baee212cc2fb0a8fba206c78c80846">&#9670;&nbsp;</a></span>cylpa_tlsoe_ol_update_config()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cylpa_tlsoe_ol_update_config </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structcy__tlsoe__ol__cfg__t.html">cy_tlsoe_ol_cfg_t</a> *&#160;</td>
+          <td class="paramname"><em>cfg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>socket</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update TLS configuration parameters and socket handle to LPA TLS database. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">index</td><td>Index of MQTT connection. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">cfg</td><td>Pointer to the structure containing the TLS configuration parameters. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">socket</td><td>Pointer to the socket handle used for MQTT connection.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success; negative on failure. </dd></dl>
+
+</div>
+</div>
+<a id="ga44cedc2605f0e57f5271c10de0293c2c" name="ga44cedc2605f0e57f5271c10de0293c2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga44cedc2605f0e57f5271c10de0293c2c">&#9670;&nbsp;</a></span>cylpa_tlsoe_ol_set_socket_config()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cylpa_tlsoe_ol_set_socket_config </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>local_port</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>remote_port</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t *&#160;</td>
+          <td class="paramname"><em>remote_ip</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>interval</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>configure the TLS connection parameters like local and peer port, peer IP and keepalive interval. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">index</td><td>Index of MQTT connection. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">local_port</td><td>Source port number. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">remote_port</td><td>Destination port number. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">remote_ip</td><td>Pointer to the destination IP address. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">interval</td><td>Keep alive connection interval.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success; negative on failure. </dd></dl>
 
 </div>
 </div>
@@ -374,7 +557,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath">
     <ul>
         <li class="footer">
-            Generated for <b>Low Power Assistant Middleware Library 5.0.0</b> by <b>Cypress Semiconductor Corporation</b>.
+            Generated for <b>Low Power Assistant Middleware Library 5.2.0</b> by <b>Cypress Semiconductor Corporation</b>.
             All rights reserved.
         </li>
     </ul>

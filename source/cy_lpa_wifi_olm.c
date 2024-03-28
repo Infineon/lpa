@@ -1,18 +1,40 @@
-/***************************************************************************//**
-* \file cy_lpa_wifi_olm.c
-* \version 1.0
-*
-* \brief
-* Low Power Offload Assist
-*
-********************************************************************************
-* \copyright
-* Copyright 2020, Cypress Semiconductor Corporation.  All rights reserved.
-* You may use this file only in accordance with the license, terms, conditions,
-* disclaimers, and limitations in the end user license agreement accompanying
-* the software package with which this file was provided.
-*******************************************************************************/
+/*
+ * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
+ * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
+ *
+ * This software, including source code, documentation and related
+ * materials ("Software") is owned by Cypress Semiconductor Corporation
+ * or one of its affiliates ("Cypress") and is protected by and subject to
+ * worldwide patent protection (United States and foreign),
+ * United States copyright laws and international treaty provisions.
+ * Therefore, you may use this Software only as provided in the license
+ * agreement accompanying the software package from which you
+ * obtained this Software ("EULA").
+ * If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
+ * non-transferable license to copy, modify, and compile the Software
+ * source code solely for use in connection with Cypress's
+ * integrated circuit products.  Any reproduction, modification, translation,
+ * compilation, or representation of this Software except as specified
+ * above is prohibited without the express written permission of Cypress.
+ *
+ * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Cypress
+ * reserves the right to make changes to the Software without notice. Cypress
+ * does not assume any liability arising out of the application or use of the
+ * Software or any product or circuit described in the Software. Cypress does
+ * not authorize its products for use in any products where a malfunction or
+ * failure of the Cypress product may reasonably be expected to result in
+ * significant property damage, injury or death ("High Risk Product"). By
+ * including Cypress's product in a High Risk Product, the manufacturer
+ * of such system or application assumes all risk of such use and in doing
+ * so agrees to indemnify Cypress against all liability.
+ */
 
+/**
+* @file cy_lpa_wifi_olm.c
+* @brief Low Power Offload Assist
+*/
 
 #include <string.h>
 #include <stdbool.h>
@@ -21,15 +43,9 @@
 #include "cy_lpa_wifi_ol.h"
 #include "cy_lpa_wifi_olm.h"
 #include "cy_lpa_wifi_ol_priv.h"
-#if !defined(OLM_NO_HARDWARE)
 #include "whd_int.h"
-#else
-#include "cy_whd_stubs.h"
-#endif
 
-#if !defined(OLM_NO_HARDWARE)
 #include "cy_worker_thread.h"
-#endif
 
 #include <stdarg.h>
 
@@ -41,31 +57,6 @@ uint32_t cy_pm2_sleep_ret_value;
 
 static const ol_desc_t cy_null_ol_list = {NULL, NULL, NULL, NULL};
 
-/* We have a non-hardware build that we need to handle - "OLM_NO_HARDWARE" defined in app/olm-sanity/Makefile */
-#if defined(OLM_NO_HARDWARE)
-
-#ifndef MIN
-extern int MIN(/*@sef@*/ int x, /*@sef@*/ int y);  /* LINT : This tells lint that  the parameter must be side-effect free. i.e. evaluation does not change any values (since it is being evaulated more than once */
-#define MIN(x, y) ( (x) < (y) ? (x) : (y) )
-#endif /* ifndef MIN */
-
-/**
- * Converts a unsigned long int to a decimal string
- *
- * @param value[in]      : The unsigned long to be converted
- * @param output[out]    : The buffer which will receive the decimal string
- * @param min_length[in] : the minimum number of characters to output (zero padding will apply if required)
- * @param max_length[in] : the maximum number of characters to output (up to 10 )
- *
- * @note: No trailing null is added.
- *
- * @return the number of characters returned.
- *
- */
-uint8_t unsigned_to_decimal_string(uint32_t value, char *output, uint8_t min_length, uint8_t max_length);
-
-#endif /* defined(OLM_NO_HARDWARE) */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -75,16 +66,10 @@ extern "C" {
 *******************************************************************************/
 #define OLM_WORKER_THREAD_STACK_SIZE    (6 * 1024)  /* >4k needed for printf()calls in worker thread */
 
-#if !defined(OLM_NO_HARDWARE)
 static cy_worker_thread_info_t cy_olm_worker_thread;
 
-#if defined(__MBED__)
-/* Define a stack buffer so we don't require a malloc when creating our worker thread Aligned on 8-byte boundary! */
-MBED_ALIGN(CY_RTOS_ALIGNMENT) static uint8_t cy_olm_worker_thread_stack[OLM_WORKER_THREAD_STACK_SIZE];
-#else
 /* Define a stack buffer so we don't require a malloc when creating our worker thread Aligned on 8-byte boundary! */
 __attribute__((aligned(CY_RTOS_ALIGNMENT))) static uint8_t cy_olm_worker_thread_stack[OLM_WORKER_THREAD_STACK_SIZE];
-#endif /* __MBED__ */
 
 static cy_worker_thread_params_t cy_olm_thread_params =
 {
@@ -100,7 +85,6 @@ static cy_worker_thread_params_t cy_olm_thread_params =
     .name = "OLM Worker",
     .num_entries = 0
 };
-#endif  /* !defined(OLM_NO_HARDWARE) */
 
 /*******************************************************************************
 * Function Prototypes
@@ -132,6 +116,7 @@ void cylpa_olm_init(olm_t *olm, const ol_desc_t *ol_list)
 {
     whd_interface_t iface = NULL;
     ol_info_t *olm_info = NULL;
+    uint32_t value = 0;
 
     if (olm == NULL)
     {
@@ -144,22 +129,36 @@ void cylpa_olm_init(olm_t *olm, const ol_desc_t *ol_list)
 
     olm->ol_list = ol_list ? ol_list : &cy_null_ol_list;
 
-#if !defined(OLM_NO_HARDWARE)
-    if (cy_olm_worker_thread.state != CY_WORKER_THREAD_VALID)
+    if (whd_wifi_get_fwcap(olm_info->whd, &value) == WHD_SUCCESS)
     {
-        cy_worker_thread_create(&cy_olm_worker_thread, &cy_olm_thread_params);
+        if (value & (1 << WHD_FWCAP_OFFLOADS) )
+        {
+            olm->ol_info.fw_new_infra = 1;
+        }
+        else
+        {
+            olm->ol_info.fw_new_infra = 0;
+        }
     }
-    olm->ol_info.worker = &cy_olm_worker_thread;
-    OL_LOG_OLM(LOG_OLA_LVL_DEBUG, "cylpa_olm_init()  olm:%p ol_list:%p worker:%p state:0x%lx whd:%x\n", (void *)olm, (void *)ol_list,
-               olm->ol_info.worker, cy_olm_worker_thread.state, olm->ol_info.whd);
-#endif /* !OLM_NO_HARDWARE */
+
+    /* Create worker thread only for old infra to handle callbacks */
+    if ( olm->ol_info.fw_new_infra == 0 )
+    {
+        if (cy_olm_worker_thread.state != CY_WORKER_THREAD_VALID)
+        {
+            cy_worker_thread_create(&cy_olm_worker_thread, &cy_olm_thread_params);
+        }
+        olm->ol_info.worker = &cy_olm_worker_thread;
+        OL_LOG_OLM(LOG_OLA_LVL_DEBUG, "cylpa_olm_init()  olm:%p ol_list:%p worker:%p state:0x%lx whd:%x\n", (void *)olm, (void *)ol_list,
+                   olm->ol_info.worker, cy_olm_worker_thread.state, olm->ol_info.whd);
+    }
 
     iface = olm_info->whd;
 
     if ( iface != NULL )
     {
-    	cylpa_olm_init_wlan_config (iface );
-    	cy_olm_whd_instance_created = true;
+        cylpa_olm_init_wlan_config (iface );
+        cy_olm_whd_instance_created = true;
     }
     else
     {
@@ -188,10 +187,13 @@ void cylpa_olm_deinit(olm_t *olm)
 {
     OL_LOG_OLM(LOG_OLA_LVL_DEBUG, "cylpa_olm_deinit() olm:%p\n", (void *)olm);
 
-#if !defined(OLM_NO_HARDWARE)
+    if ( olm->ol_info.fw_new_infra == 1 )
+    {
+        return;
+    }
+
     cy_worker_thread_delete(olm->ol_info.worker);
     olm->ol_info.worker = NULL;
-#endif  /* !defined(OLM_NO_HARDWARE) */
 
     OL_LOG_OLM(LOG_OLA_LVL_DEBUG, "cylpa_olm_deinit() Done\n");
 }
@@ -240,7 +242,7 @@ int cylpa_olm_init_ols(olm_t *olm, void *whd, void *ip)
         if (it0->fns->init != NULL)
         {
             result = (*it0->fns->init)(it0->ol, &olm->ol_info, it0->cfg);
-            if (result != RESULT_OK)
+            if ( result != RESULT_OK )
             {
                 OL_LOG_OLM(LOG_OLA_LVL_ERR, "%s offload %s fatal %d\n", __func__, it0->name, result);
                 break;
@@ -248,7 +250,7 @@ int cylpa_olm_init_ols(olm_t *olm, void *whd, void *ip)
         }
     }
 
-    if (result != RESULT_OK)
+    if ( result != RESULT_OK )
     {
         /* Failure */
         /* Undo any initializations. */
