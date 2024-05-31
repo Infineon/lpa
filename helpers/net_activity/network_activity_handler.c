@@ -43,8 +43,10 @@
 
 #include "cy_OlmInterface.h"
 #include "whd_int.h"
+#ifndef COMPONENT_CAT5
 #include <cycfg_system.h>
 #include "cycfg.h"
+#endif
 #include "cyhal.h"
 #ifdef COMPONENT_LWIP
 /* lwIP header files */
@@ -53,6 +55,13 @@
 #include <lwip/tcp.h>
 #include <lwip/priv/tcp_priv.h>
 #endif
+
+#ifdef COMPONENT_NETXDUO
+#include "nx_api.h"
+#include "tx_api.h"
+#include "nxd_dhcp_client.h"
+#endif
+
 #include "cy_nw_helper.h"
 
 #include "cy_wcm.h"
@@ -107,14 +116,13 @@ static void cylpa_get_idle_power_mode(char *str, uint32_t length);
 * the information includes no of WLAN Out-of-Band interrupts and In-band interrupts.
 *
 * Parameters:
-* netif *wifi: pointer to WLAN interface
+* void *iface: pointer to WLAN interface(pointer to network stack specific interface)
 *
 * Return:
 * void.
 *
 *******************************************************************************/
-static void cylpa_print_whd_bus_stats(struct netif *wifi);
-
+static void cylpa_print_whd_bus_stats(void *iface);
 
 /*******************************************************************************
 * Function Name: cylpa_register_network_activity_callback
@@ -178,6 +186,9 @@ static bool cylpa_s_ns_suspended;
 */
 cy_event_t cy_lp_wait_net_event;
 
+/* This bool variable tracks if cy_lp_wait_net_event is initialized or not.*/
+bool cy_lp_wait_net_event_valid;
+
 /*  This is mutex to sychronize multiple threads */
 cy_mutex_t cy_lp_mutex;
 
@@ -203,12 +214,14 @@ static void cylpa_get_idle_power_mode(char *str, uint32_t length)
 {
     switch (CY_CFG_PWR_SYS_IDLE_MODE)
     {
+#ifndef COMPONENT_CAT5
         case CY_CFG_PWR_MODE_LP:
             strncpy(str, "LP", length);
             break;
         case CY_CFG_PWR_MODE_ULP:
             strncpy(str, "ULP", length);
             break;
+#endif
         case CY_CFG_PWR_MODE_ACTIVE:
             strncpy(str, "Active", length);
             break;
@@ -224,10 +237,27 @@ static void cylpa_get_idle_power_mode(char *str, uint32_t length)
     }
 }
 
-static void cylpa_print_whd_bus_stats(struct netif *wifi)
+
+static void cylpa_print_whd_bus_stats(void *iface)
 {
+#if defined(COMPONENT_LWIP)
+    struct netif *wifi;
     whd_interface_t ifp = NULL;
+#elif defined(COMPONENT_NETXDUO)
+    NX_IP *wifi;
+    whd_interface_t ifp = NULL;
+    UINT res;
+    UINT status;
+#endif
+
+#if defined(COMPONENT_LWIP)
+    wifi = (struct netif *)iface;
     if (wifi->flags & NETIF_FLAG_UP)
+#elif defined(COMPONENT_NETXDUO)
+    wifi = (NX_IP *)iface;
+    res = nx_ip_status_check(wifi, NX_IP_ADDRESS_RESOLVED, (ULONG *)&status, NX_IP_PERIODIC_RATE);
+    if(res == NX_SUCCESS)
+#endif
     {
         ifp = cy_olm_get_whd_interface();
         if (ifp == NULL)
@@ -247,10 +277,10 @@ static void cylpa_print_whd_bus_stats(struct netif *wifi)
 
 void cylpa_on_emac_activity(bool is_tx_activity)
 {
-    if (cy_lp_wait_net_event)
+    if (cy_lp_wait_net_event_valid)
     {
         cy_rtos_setbits_event(&cy_lp_wait_net_event,
-             (uint32_t)(is_tx_activity ? TX_EVENT_FLAG : RX_EVENT_FLAG), true);
+            (uint32_t)(is_tx_activity ? CY_LPA_TX_EVENT_FLAG : CY_LPA_RX_EVENT_FLAG), true);
     }
 }
 
@@ -263,6 +293,7 @@ static cy_rslt_t cylpa_register_network_activity_callback(void)
         NW_INFO(("Failed to initialize Wait for Network Activity event.\n"));
         return result;
     }
+    cy_lp_wait_net_event_valid = true;
 
     result  = cy_rtos_init_mutex(&cy_lp_mutex);
 
@@ -284,6 +315,12 @@ static cy_rslt_t cylpa_register_network_activity_callback(void)
 int32_t cylpa_suspend_ns(void)
 {
     int32_t state;
+#if defined(COMPONENT_NETXDUO)
+    UINT    active;
+    UINT    res;
+    NX_IP   *ip_ptr;
+    NX_DHCP *dhcp_ptr;
+#endif
 
     if (true == cylpa_s_ns_suspended)
     {
@@ -291,7 +328,61 @@ int32_t cylpa_suspend_ns(void)
     }
     else
     {
+#if defined(COMPONENT_LWIP)
         LOCK_TCPIP_CORE();
+#elif defined(COMPONENT_NETXDUO)
+        /* Get netxduo network interface pointer */
+        ip_ptr = (NX_IP *)cy_network_get_nw_interface( CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE);
+        if(ip_ptr == NULL)
+        {
+            /* network interface is not available. Suspending network stack failed. */
+            state = ST_WIFI_NET_SUSPENDED_FAILED;
+            return state;
+        }
+
+        /* Acquire the lock to prevent the netxduo IP thread from running */
+        res = tx_mutex_get(&(ip_ptr -> nx_ip_protection), TX_WAIT_FOREVER);
+        if(res != TX_SUCCESS)
+        {
+            /* Unable to acquire IP thread mutex. Suspending network stack failed. */
+            state = ST_WIFI_NET_SUSPENDED_FAILED;
+            return state;
+        }
+
+        /* Deactivate the netxduo timers to suspend the network stack */
+        res = tx_timer_info_get(&ip_ptr->nx_ip_periodic_timer, TX_NULL, &active, TX_NULL, TX_NULL, TX_NULL);
+        if((res == TX_SUCCESS) && (active == TX_TRUE))
+        {
+            tx_timer_deactivate(&(ip_ptr->nx_ip_periodic_timer));
+        }
+        res = tx_timer_info_get(&ip_ptr->nx_ip_fast_periodic_timer, TX_NULL, &active, TX_NULL, TX_NULL, TX_NULL);
+        if((res == TX_SUCCESS) && (active == TX_TRUE))
+        {
+            tx_timer_deactivate(&(ip_ptr->nx_ip_fast_periodic_timer));
+        }
+
+        dhcp_ptr = cy_network_get_dhcp_handle(CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE);
+
+        if (dhcp_ptr != NULL)
+        {
+            res = tx_mutex_get(&(dhcp_ptr -> nx_dhcp_mutex), TX_WAIT_FOREVER);
+            if(res != TX_SUCCESS)
+            {
+                /* Unable to acquire DHCP mutex. Suspending network stack failed. */
+                tx_timer_activate(&(ip_ptr->nx_ip_periodic_timer));
+                tx_timer_activate(&(ip_ptr->nx_ip_fast_periodic_timer));
+                tx_mutex_put(&(ip_ptr -> nx_ip_protection));
+                state = ST_WIFI_NET_SUSPENDED_FAILED;
+                return state;
+            }
+
+            res = tx_timer_info_get(&dhcp_ptr -> nx_dhcp_timer, TX_NULL, &active, TX_NULL, TX_NULL, TX_NULL);
+            if((res == TX_SUCCESS) && (active == TX_TRUE))
+            {
+                tx_timer_deactivate(&(dhcp_ptr -> nx_dhcp_timer));
+            }
+        }
+#endif
         cylpa_s_ns_suspended = true;
         state = ST_SUCCESS;
     }
@@ -302,6 +393,12 @@ int32_t cylpa_suspend_ns(void)
 int32_t cylpa_resume_ns(void)
 {
     int32_t state;
+#if defined(COMPONENT_NETXDUO)
+    UINT    active;
+    UINT    res;
+    NX_IP   *ip_ptr;
+    NX_DHCP *dhcp_ptr;
+#endif
 
     if (false == cylpa_s_ns_suspended)
     {
@@ -309,7 +406,72 @@ int32_t cylpa_resume_ns(void)
     }
     else
     {
+#if defined(COMPONENT_LWIP)
         UNLOCK_TCPIP_CORE();
+#elif defined(COMPONENT_NETXDUO)
+
+        dhcp_ptr = cy_network_get_dhcp_handle(CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE);
+        if(dhcp_ptr != NULL)
+        {
+            res = tx_timer_info_get(&dhcp_ptr -> nx_dhcp_timer, TX_NULL, &active, TX_NULL, TX_NULL, TX_NULL);
+            if((res == TX_SUCCESS) && (active == TX_FALSE))
+            {
+                tx_timer_activate(&(dhcp_ptr -> nx_dhcp_timer));
+            }
+
+            tx_mutex_put(&(dhcp_ptr -> nx_dhcp_mutex));
+            if(res != TX_SUCCESS)
+            {
+                /* Unable to release IP thread mutex. Resuming network stack failed. */
+                tx_timer_deactivate(&(dhcp_ptr -> nx_dhcp_timer));
+                state = ST_WIFI_NET_RESUMING_FAILED;
+                return state;
+            }
+        }
+
+        /* Get netxduo network interface pointer */
+        ip_ptr = (NX_IP *)cy_network_get_nw_interface( CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE);
+        if(ip_ptr == NULL)
+        {
+            if(dhcp_ptr != NULL)
+            {
+                tx_mutex_get(&(dhcp_ptr -> nx_dhcp_mutex), TX_WAIT_FOREVER);
+                tx_timer_deactivate(&(dhcp_ptr -> nx_dhcp_timer));
+            }
+            /* network interface is not available. Resuming network stack failed. */
+            state = ST_WIFI_NET_RESUMING_FAILED;
+            return state;
+        }
+
+        /* Activate the netxduo timers to resume the network stack */
+        res = tx_timer_info_get(&ip_ptr->nx_ip_periodic_timer, TX_NULL, &active, TX_NULL, TX_NULL, TX_NULL);
+        if((res == TX_SUCCESS) && (active == TX_FALSE))
+        {
+            tx_timer_activate(&(ip_ptr->nx_ip_periodic_timer));
+        }
+
+        res = tx_timer_info_get(&ip_ptr->nx_ip_fast_periodic_timer, TX_NULL, &active, TX_NULL, TX_NULL, TX_NULL);
+        if((res == TX_SUCCESS) && (active == TX_FALSE))
+        {
+            tx_timer_activate(&(ip_ptr->nx_ip_fast_periodic_timer));
+        }
+
+        /* Release the lock to allow the netxduo IP thread to running */
+        res = tx_mutex_put(&(ip_ptr -> nx_ip_protection));
+        if(res != TX_SUCCESS)
+        {
+            /* Unable to release IP thread mutex. Resuming network stack failed. */
+            tx_timer_deactivate(&(ip_ptr->nx_ip_periodic_timer));
+            tx_timer_deactivate(&(ip_ptr->nx_ip_fast_periodic_timer));
+            if(dhcp_ptr != NULL)
+            {
+                tx_mutex_get(&(dhcp_ptr -> nx_dhcp_mutex), TX_WAIT_FOREVER);
+                tx_timer_deactivate(&(dhcp_ptr -> nx_dhcp_timer));
+            }
+            state = ST_WIFI_NET_RESUMING_FAILED;
+            return state;
+        }
+#endif
         cylpa_s_ns_suspended = false;
         state = ST_SUCCESS;
     }
@@ -349,7 +511,7 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
     if (inactive_interval_ms > inactive_window_ms)
     {
         /* Clear event flags to start with an initial state of no activity. */
-        cy_rtos_clearbits_event(&cy_lp_wait_net_event, (uint32_t)(TX_EVENT_FLAG | RX_EVENT_FLAG), false);
+        cy_rtos_clearbits_event(&cy_lp_wait_net_event, (uint32_t)(CY_LPA_TX_EVENT_FLAG | CY_LPA_RX_EVENT_FLAG), false);
 
          /* Start the wait timer. */
         cy_rtos_get_time( &lp_start_time);
@@ -364,7 +526,7 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
             /* Wait for the timeout value to expire.  This is the time we want
                to monitor for inactivity.
             */
-            flags = (TX_EVENT_FLAG | RX_EVENT_FLAG);
+            flags = (CY_LPA_TX_EVENT_FLAG | CY_LPA_RX_EVENT_FLAG);
 
             /* Configure ULP mode on specified interface */
 #ifdef CYCFG_ULP_SUPPORT_ENABLED
@@ -415,9 +577,18 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
     uint32_t result, flags;
     char idle_power_mode[IDLE_POWER_MODE_STRING_LEN];
     static bool emac_activity_callback_registered = false;
-    struct netif *wifi = (struct netif *)cy_network_get_nw_interface( CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE );
     cy_time_t lp_start_time;
     cy_time_t lp_end_time;
+
+#if defined(COMPONENT_LWIP)
+    struct netif *wifi = (struct netif *)cy_network_get_nw_interface( CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE );
+#elif defined(COMPONENT_NETXDUO)
+    NX_IP *wifi = (NX_IP *)cy_network_get_nw_interface( CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE);
+#endif
+    if((wifi == NULL) || (cy_wcm_is_connected_to_ap() == 0))
+    {
+    	return ST_BAD_STATE;
+    }
 
     if (false == emac_activity_callback_registered)
     {
@@ -442,13 +613,13 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
                 suspend_notify_cb(CYLPA_NW_SUSPENDED, cb_data);
             }
 
-            cy_rtos_clearbits_event(&cy_lp_wait_net_event, (uint32_t)(TX_EVENT_FLAG | RX_EVENT_FLAG), false);
+            cy_rtos_clearbits_event(&cy_lp_wait_net_event, (uint32_t)(CY_LPA_TX_EVENT_FLAG | CY_LPA_RX_EVENT_FLAG), false);
 
             cylpa_get_idle_power_mode(idle_power_mode, sizeof(idle_power_mode));
             cylpa_olm_dispatch_pm_notification(cy_get_olm_instance(), OL_PM_ST_GOING_TO_SLEEP);
             NW_INFO(("\nNetwork Stack Suspended, MCU will enter %s power mode\n", idle_power_mode));
             cyhal_syspm_unlock_deepsleep();
-            flags = (RX_EVENT_FLAG | TX_EVENT_FLAG);
+            flags = (CY_LPA_RX_EVENT_FLAG | CY_LPA_TX_EVENT_FLAG);
 
             cy_rtos_get_time( &lp_start_time);
 
@@ -482,7 +653,7 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
             */
             NW_INFO(("Resuming Network Stack, Network stack was suspended for %ums\n",(unsigned int) lp_end_time));
             cy_dsleep_nw_suspend_time += lp_end_time;
-            cylpa_print_whd_bus_stats(wifi);
+            cylpa_print_whd_bus_stats((void*)wifi);
 
             /* Notify application about the network stack resuming */
             if(suspend_notify_cb)
@@ -543,9 +714,16 @@ int cy_tcp_create_socket_connection( void *net_intf, void **global_socket_ptr, c
     cy_rslt_t response = CY_RSLT_SUCCESS;
     cy_socket_sockaddr_t remote_addr = {0};
     cy_nw_ip_address_t nw_ip_addr;
+#if defined(COMPONENT_LWIP)
     struct netif *net = NULL;
+#elif defined(COMPONENT_NETXDUO)
+    NX_IP *net = NULL;
+    ULONG ipv4_addr;
+    ULONG netmask;
+    UINT  res;
+#endif
     int32_t seconds, retry_count;
-#if LWIP_TCP
+#if (LWIP_TCP == 1) || defined(NX_ENABLE_TCP_KEEPALIVE)
     uint32_t sock_handle;
     cy_socket_sockaddr_t sockaddr;
 #endif
@@ -559,15 +737,29 @@ int cy_tcp_create_socket_connection( void *net_intf, void **global_socket_ptr, c
     int len = strlen(HARDCODED_STR);
     uint32_t bytes_sent = 0;
 
+#if defined(COMPONENT_LWIP)
     net = (struct netif *)net_intf;
+#elif defined(COMPONENT_NETXDUO)
+    net = (NX_IP *)net_intf;
+#endif
 
     cy_nw_str_to_ipv4((const char *)remote_ip, &nw_ip_addr);
     remote_addr.ip_address.version = CY_SOCKET_IP_VER_V4;
     remote_addr.ip_address.ip.v4 = nw_ip_addr.ip.v4;
     remote_addr.port = remote_port;
     sockaddr.ip_address.version = CY_SOCKET_IP_VER_V4;
-    sockaddr.ip_address.ip.v4 = net->ip_addr.u_addr.ip4.addr;
     sockaddr.port = local_port;
+#if defined(COMPONENT_LWIP)
+    sockaddr.ip_address.ip.v4 = net->ip_addr.u_addr.ip4.addr;
+#elif defined(COMPONENT_NETXDUO)
+    res = nx_ip_address_get(net, &ipv4_addr, &netmask);
+    if(res != NX_SUCCESS)
+    {
+        OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Failed to get the IP address!\n");
+        return CY_RSLT_TCPIP_ERROR_BAD_ARG;
+    }
+    sockaddr.ip_address.ip.v4 = ipv4_addr;
+#endif
 
     OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "TCP remote IP Address %s  remote port:%d\n", remote_ip, remote_port );
 
@@ -602,7 +794,7 @@ int cy_tcp_create_socket_connection( void *net_intf, void **global_socket_ptr, c
     OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "Created TCP connection to IP %s, local port %d, remote port %d\n",
                remote_ip, local_port, remote_port);
 
-#if LWIP_TCP
+#if (LWIP_TCP == 1) || defined(NX_ENABLE_TCP_KEEPALIVE)
     if (socket_keepalive_enable)
     {
         response = cy_socket_setsockopt((void *)sock_handle, CY_SOCKET_SOL_SOCKET,
@@ -615,7 +807,7 @@ int cy_tcp_create_socket_connection( void *net_intf, void **global_socket_ptr, c
         }
 
         seconds = downloaded->retry_interval * 1000;
-    	response = cy_socket_setsockopt((void *)sock_handle, CY_SOCKET_SOL_TCP,
+        response = cy_socket_setsockopt((void *)sock_handle, CY_SOCKET_SOL_TCP,
                                         CY_SOCKET_SO_TCP_KEEPALIVE_INTERVAL,
                                         &seconds, sizeof(seconds));
 
@@ -649,7 +841,7 @@ int cy_tcp_create_socket_connection( void *net_intf, void **global_socket_ptr, c
 #endif
 
     memcpy(cy_tcp_databuf, HARDCODED_STR, len);
-    response = cy_socket_send((void *)sock_handle, cy_tcp_databuf, len, NETCONN_NOFLAG, &bytes_sent);
+    response = cy_socket_send((void *)sock_handle, cy_tcp_databuf, len, CY_SOCKET_FLAGS_NONE, &bytes_sent);
     if (response != CY_RSLT_SUCCESS)
     {
         OL_LOG_TKO(LOG_OLA_LVL_ERR, "Could only send %u bytes on socket of request length err: %ld\n", (unsigned int)bytes_sent, response );
@@ -665,11 +857,11 @@ int cy_tcp_create_socket_connection( void *net_intf, void **global_socket_ptr, c
  */
 int cylpa_restart_olm( ol_desc_t *offload_list , void *net_intf )
 {
-	olm_t *olm_ptr = (olm_t *)cy_get_olm_instance();
-	const ol_desc_t *oflds_list = (const ol_desc_t *)offload_list;
-	cylpa_olm_deinit(olm_ptr);
-	cylpa_olm_init(olm_ptr, oflds_list);
-	return CY_RSLT_SUCCESS;
+    olm_t *olm_ptr = (olm_t *)cy_get_olm_instance();
+    const ol_desc_t *oflds_list = (const ol_desc_t *)offload_list;
+    cylpa_olm_deinit(olm_ptr);
+    cylpa_olm_init(olm_ptr, oflds_list);
+    return CY_RSLT_SUCCESS;
 }
 
 /*-----------------------------------------------------------*/

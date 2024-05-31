@@ -168,10 +168,12 @@ typedef enum
     LOG_OLA_ARP,       /**< LOG assist ARP */
     LOG_OLA_PF,        /**< LOG assist PF */
     LOG_OLA_TKO,       /**< LOG assist TKO */
+#ifndef COMPONENT_CAT5
     LOG_OLA_TLSOE,     /**< LOG assist TLSOE */
     LOG_OLA_WOWLPF,    /**< LOG assist WOWLPF */
     LOG_OLA_NKO,       /**< LOG assist NKO */
     LOG_OLA_NULLKA,    /**< LOG assist NULLKA */
+#endif
     LOG_OLA_MAX_INDEX  /**< LOG assist MAX */
 } LOG_OFFLOAD_ASSIST_T;
 

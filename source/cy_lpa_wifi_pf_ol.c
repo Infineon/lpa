@@ -42,8 +42,11 @@
 #include "cy_lpa_wifi_ol_priv.h"
 #include "cy_lpa_wifi_pf_ol.h"
 #include "cy_lpa_wifi_result.h"
+#include "cy_lpa_common_priv.h"
 
+#ifdef COMPONENT_LWIP
 #include "lwip/ip.h"
+#endif
 #include "whd_sdpcm.h"
 #include "whd_wifi_api.h"
 #include "whd_wlioctl.h"
@@ -525,13 +528,13 @@ static int cylpa_create_port_filter(whd_t *whd, cy_pf_ol_cfg_t *pf_cfg, uint16_t
     switch (pf_cfg->u.pf.proto)
     {
         case CY_PF_PROTOCOL_UDP:
-            ip_hdr_pattern.prot = IP_PROTO_UDP;
+            ip_hdr_pattern.prot = CYLPA_IP_PROTO_UDP;
             break;
         case CY_PF_PROTOCOL_TCP:
-            ip_hdr_pattern.prot = IP_PROTO_TCP;
+            ip_hdr_pattern.prot = CYLPA_IP_PROTO_TCP;
             break;
         default:
-            ip_hdr_pattern.prot = IP_PROTO_TCP;
+            ip_hdr_pattern.prot = CYLPA_IP_PROTO_TCP;
             break;
     }
 

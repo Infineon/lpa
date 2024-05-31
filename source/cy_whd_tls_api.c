@@ -63,6 +63,7 @@ extern "C" {
 *  Defines
 *
 ********************************************************************/
+#ifdef CYCFG_WIFI_MQTT_OL_SUPPORT
 #ifdef TLSOE_OL_DEBUG
 #define TLSOE_ERROR_PRINTF(x) printf x
 #define TLSOE_DEBUG_PRINTF(x) printf x
@@ -211,7 +212,7 @@ static void *tlsoe_callback_handler( whd_interface_t ifp, const whd_event_header
 #endif
 
 whd_result_t
-whd_wowl_set_pattern( whd_t *whd, uint8_t* patt, uint16_t pattern_size, uint16_t pattern_rule, uint16_t pattern_offset, uint8_t set_pattern )
+whd_wowl_set_pattern( whd_t *whd, uint8_t* patt, uint16_t pattern_size, uint16_t pattern_type, uint16_t pattern_offset, uint8_t set_pattern )
 {
     whd_result_t result = WHD_SUCCESS;
 #ifdef CYCFG_WIFI_MQTT_OL_SUPPORT
@@ -232,7 +233,7 @@ whd_wowl_set_pattern( whd_t *whd, uint8_t* patt, uint16_t pattern_size, uint16_t
         mask[i] = 0xff;
     }  
     
-    result = whd_set_wowl_pattern( whd, mode , pattern_offset, mask_size, mask, pattern_size, patt, pattern_rule );
+    result = whd_set_wowl_pattern( whd, mode , pattern_offset, mask_size, mask, pattern_size, patt, pattern_type );
     if ( result !=  WHD_SUCCESS)
     {
         TLSOE_DEBUG_PRINTF( ("%s: add pattern failed \n", __func__) );
@@ -242,7 +243,7 @@ whd_wowl_set_pattern( whd_t *whd, uint8_t* patt, uint16_t pattern_size, uint16_t
 }
 
 whd_result_t
-whd_tlsoe_set_wowl_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_len, uint16_t pattern_rule, uint16_t patttern_offset )
+whd_tlsoe_set_wowl_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_len, uint16_t pattern_type, uint16_t patttern_offset )
 {
     whd_result_t result = WHD_SUCCESS;
 #ifdef CYCFG_WIFI_MQTT_OL_SUPPORT
@@ -257,7 +258,7 @@ whd_tlsoe_set_wowl_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_len, 
             wowl |= ( WL_WOWL_SECURE | WL_WOWL_NET );
             result = whd_set_wowl_cap( whd, wowl );
         }
-        result |= whd_wowl_set_pattern( whd, pattern, pattern_len, pattern_rule, patttern_offset,1 );
+        result |= whd_wowl_set_pattern( whd, pattern, pattern_len, pattern_type, patttern_offset,1 );
     }
     else
     {
@@ -273,13 +274,13 @@ whd_tlsoe_set_wowl_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_len, 
 }
 
 whd_result_t
-whd_tlsoe_del_wowl_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_size, uint16_t pattern_rule,  uint16_t patttern_offset )
+whd_tlsoe_del_wowl_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_size, uint16_t pattern_type,  uint16_t patttern_offset )
 {
     whd_result_t result = WHD_SUCCESS;
 #ifdef CYCFG_WIFI_MQTT_OL_SUPPORT
     if( pattern_size > 0 )
     {
-        result = whd_wowl_set_pattern( whd, pattern, pattern_size, pattern_rule,patttern_offset, 0 );
+        result = whd_wowl_set_pattern( whd, pattern, pattern_size, pattern_type, patttern_offset, 0 );
     }
 #endif
     return result;
@@ -441,3 +442,5 @@ whd_tlsoe_activate( whd_t *whd, uint16_t local_port, uint16_t remote_port, const
 #ifdef __cplusplus
 }
 #endif
+
+#endif //CYCFG_WIFI_MQTT_OL_SUPPORT

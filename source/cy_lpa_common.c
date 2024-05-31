@@ -174,7 +174,7 @@ uint16_t cylpa_ipv4_hdr_cksum(uint8_t *ip, int ip_len)
 uint16_t cylpa_ipv4_tcp_hdr_cksum(uint8_t *ip, uint8_t *tcp, uint16_t tcp_len)
 {
     ipv4_hdr_t *ip_hdr = (ipv4_hdr_t *)ip;
-    tcp_pseudo_hdr_t tcp_ps;
+    static tcp_pseudo_hdr_t tcp_ps;
     uint32_t sum = 0;
 
     if (tcp_len < CYLPA_TCP_MIN_HEADER_LEN)

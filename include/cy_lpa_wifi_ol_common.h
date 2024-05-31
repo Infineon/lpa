@@ -38,13 +38,13 @@
 
 /**
  *******************************************************************************
- * \mainpage Low Power Assistant Middleware Library 5.2.0 
+ * \mainpage Low Power Assistant Middleware Library 5.3.0 
  *******************************************************************************
  * \section section_lpa_overview Overview
  *******************************************************************************
  *
  * Power consumption is a key operational factor for embedded devices.
- * The Low Power Assistant (LPA) allows you to configure a PSoC&trade; 6 MCU
+ * The Low Power Assistant (LPA) allows you to configure a MCU
  * and WLAN (Wi-Fi / Bluetooth&reg; radio) device to provide low-power features. This
  * framework presents a unified, low-overhead, user-friendly way to
  * configure, connect, and operate within multiple tasks/cases.
@@ -52,7 +52,7 @@
  * The key points for LPA include:
  *
  * * Applies to MCU, Wi-Fi, and Bluetooth&reg;
- * * For RTOS-oriented applications (FreeRTOS).
+ * * For RTOS-oriented applications (FreeRTOS/ThreadX).
  * * Configuration of LPA middleware is required. Application code changes are needed 
  *   to call LPA middleware functions in runtime.
  * * Configurations are done using ModusToolbox&trade; Device Configurator flow.
@@ -109,8 +109,11 @@
  *     Improves the power consumption of the host MCU by offloading
  *     MQTT keepalive functionality to WLAN firmware.
  *
+ *   \note <a href="https://www.infineon.com/CYW955913EVK-01">CYW955913EVK-01 Wi-Fi Bluetooth&reg; Prototyping Kit</a> currently supports \ref group_lpa_p2_arp_offload, \ref group_lpa_p2_packet_filter and \ref group_lpa_p2_tcp_keepalive.
+ *
  * * \ref group_lpa_p3
  *   Enable the Bluetooth&reg; wake-up pins by configuring the Bluetooth&reg; host wake pin and Bluetooth&reg; device wake pin.
+ *
  *
  * The listed capabilities make the LPA middleware useful for a
  * variety of applications, including automotive, IoT, and industrial.
@@ -168,10 +171,9 @@
  * \section section_lpa_Prerequisites Prerequisites
  *******************************************************************************
  *
- * * ModusToolbox&trade; development environment configured for FreeRTOS.
- * * Availability of the CY8CKIT-062S2-43012 Pioneer Kit (or other kits 
- *   that support the PSoC&trade; 6 power consumption measurement).\n
- *   The CY8CKIT-062S2-43012 Kit is recommended because this section 
+ * * Availability of any of the supported kits.\n
+ * * ModusToolbox&trade; development environment.
+ *   \note The CY8CKIT-062S2-43012 Kit is recommended because this section 
  *   documents the measurement instructions for this kit. If another kit 
  *   is used, refer to its documentation and learn how to measure the 
  *   current consumed.
@@ -204,7 +206,7 @@
  *       <td>The Wi-Fi and/or Bluetooth&reg; radio module (WLAN processor)</td></tr>
  *   <tr><td>Host</td>
  *       <td>Host processor</td>
- *       <td>The host (or application) processor (e.g., PSoC&trade; 6).</td></tr>
+ *       <td>The host (or application) processor (e.g., PSoC&trade; 6 / CM33 in CYW955913EVK-01).</td></tr>
  *   <tr><td>LPA</td>
  *       <td>Low Power Assistant</td>
  *       <td></td></tr>
@@ -258,7 +260,7 @@
  * \section group_device_configurator_flow ModusToolbox&trade; Device Configurator flow
  *******************************************************************************
  * Generating the initialization code using the ModusToolbox&trade; Device Configurator
- *   greatly simplifies configuring the PSoC&trade; and
+ *   greatly simplifies configuring the device and
  *   enabling the LPA features. The ModusToolbox&trade; Device Configurator
  *   provides the user interface to set up and automatically generate
  *   the initialization code (including analog routing) and
@@ -268,22 +270,14 @@
  * If you modify the output of the ModusToolbox&trade; Device Configurator, 
  * you cannot import it back into the tool.
  *
- * * The following are steps to avoid the design.modus file modification in the checkout repo:
- *
- *   1. Copy contents of the mtb-example-psoc6-empty-app/libs/TARGET_CY8CKIT-062S2-43012/COMPONENT_BSP_DESIGN_MODUS folder to mtb-example-psoc6-empty-app/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT_062S2_43012 folder.
- *   2. Delete design.cyqspi and design.cycapsense files in mtb-example-psoc6-empty-app/TARGET_CY8CKIT_062S2_43012/CUSTOM_BSP_DESIGN_MODUS.
- *   3. Update the Makefile in the mtb-example-psoc6-empty-app folder with the following details (This informs the build to ignore the BSP configuration inside the libs folder)
- *      \code
- *      COMPONENTS+=CUSTOM_DESIGN_MODUS
- *      DISABLE_COMPONENTS=BSP_DESIGN_MODUS 
- *      \endcode 
+ * <b>PSoC&trade; 6 </b>
  *
  * * Navigate to the ModusToolbox&trade; installation folder and launch 
  *   the ModusToolbox&trade; Device Configurator
- *   (\<install_dir\>/tools_3.1/device-configurator).
+ *   (\<install_dir\>/tools_3.2/device-configurator).
  * * Select File-\>Open, navigate to the board's design.modus file,
  *   and open it: \n
- *   <i>mtb-example-psoc6-empty-app/COMPONENT_CUSTOM_DESIGN_MODUS/TARGET_CY8CKIT_062S2_43012/design.modus</i> \n
+ *   <i>\<code_example\>/bsps/TARGET_CY8CKIT_062S2_43012/config/design.modus</i> \n
  * * If the design.modus file does not open and pops with an error message <i>No device support library path provided </i>,
  *    For ModusToolbox&trade; v3.0 and later, point to the mtb-pdl-cat1 folder inside the mtb_shared/mtb-pdl-cat1/<>/props.json and  .modustoolbox/global/device-db/release-v4.6.0/props.json files in the window popup.
  *    For ModusToolbox&trade; below v3.0, point to the psoc6pdl folder inside the mtb-example-anycloud-wlan-lowpower/libs/psoc6pdl/devicesupport.xml (For ModusToolbox&trade; v2.2, point to mtb_shared/mtb-pdl-cat1/<>/devicesupport.xml) file in the window popup.
@@ -310,6 +304,11 @@
  * <b>Note</b> 
  * Using the ModusToolbox&trade; Device Configurator overwrites changes that
  * you made in the cycfg_system.h file.
+ *
+ * <b>CYW955913EVK-01</b>
+ *
+ * For CYW955913EVK-01 the System Idle Power Mode is not configurable. By default the system is configured to 
+ * the lowest power mode possible and this cannot be changed using the Device Configurator.
  *
  *******************************************************************************
  * \section group_lpa_p1 Part 1. MCU Low Power
@@ -344,12 +343,14 @@
  * \subsection group_lpa_p1_mcu_qsg Quick start guide
  *******************************************************************************
  *
+ * <b>PSoC&trade; 6 </b>
+ *
  * This quick start guide demonstrates how to configure and use 
  * the WLAN_HOST_WAKE pin for the MCU Low Power feature in 
  * the FreeRTOS environment. This guide also shows the feature's impact 
  * on the system's low power.
  *
- * 1. Create existing Code Example <a href="https://github.com/Infineon/mtb-example-psoc6-empty-app.git"><b>mtb-example-psoc6-empty-app</b></a> available in the ModusToolbox&trade environment for <a href="https://www.infineon.com/dgdl/Infineon-CY8CKIT-062S2-43012_PSoC_62S2_Wi-Fi_BT_Pioneer_Kit_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f01c8f11927"><b>CY8CKIT-062S2-43012</b></a> device.
+ * 1. Create existing Code Example <a href="https://github.com/Infineon/mtb-example-psoc6-empty-app.git"><b>mtb-example-psoc6-empty-app</b></a> available in the ModusToolbox&trade; environment for <a href="https://www.infineon.com/dgdl/Infineon-CY8CKIT-062S2-43012_PSoC_62S2_Wi-Fi_BT_Pioneer_Kit_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f01c8f11927"><b>CY8CKIT-062S2-43012</b></a> device.
  *
  * 2. Add FreeRTOS library into the application. Create following file in the deps folder for CY8CKIT_062S2_43012:
  *    \code
@@ -357,7 +358,7 @@
  *    \endcode
  * 3. Copy the latest <a href="https://github.com/Infineon/freertos/tree/master/Source/portable"><b> FreeRTOSConfig.h</b></a> and update with the below changes
  *
- *	  configUSE_TICKLESS_IDLE : This change to support Tickless Deep Sleep mode
+ *      configUSE_TICKLESS_IDLE : This change to support Tickless Deep Sleep mode
  *    \code
  *    #include <cycfg_system.h>
  *
@@ -439,11 +440,32 @@
  *
  *    \image html FreeRTOS_blinky_current.png height=500px
  *
+ * <b>CYW955913EVK-01</b>
+ *
+ * 1. Create existing Code Example <a href="https://github.com/Infineon/mtb-example-threadx-cyw5591x-low-power"><b>mtb-example-threadx-cyw5591x-low-power</b></a> available in the ModusToolbox&trade; environment for <b>CYW955913EVK-01</b> device.
+ *
+ * 2. MCU low power is enabled by default in CYW955913EVK-01.
+ *
+ * 3. Execute the following commands to build and program the application.
+ *    \code
+ *    make getlibs
+ *    make build TARGET=CYW955913EVK-01 TOOLCHAIN=GCC_ARM
+ *    make program TARGET=CYW955913EVK-01 TOOLCHAIN=GCC_ARM
+ *    \endcode
+ *
+ * 4. When the application starts, the console output shows a list of options. The application is initially holding sleep lock
+ *    to allow the user to enter their option.
+ *
+ * 5. Press '7' to allow system sleep. The application will release the sleep lock and allow the system to enter Deep Sleep.
+ *
+ * 6. Since the Wi-Fi is not active and MCU is idle, the system enters Deep Sleep. Refer to <a href="https://github.com/Infineon/mtb-example-threadx-cyw5591x-low-power/blob/master/README.md"><b>README.md</b></a> of mtb-example-threadx-cyw5591x-low-power application
+ *    for instructions to measure power.
+ *
  *******************************************************************************
  * \subsection group_lpa_p1_cc MCU Low Power Configuration Considerations
  *******************************************************************************
  * Refer to the section \ref group_device_configurator_flow to configure
- * MCU low power using desgin.modus
+ * MCU low power using design.modus
  *
  *******************************************************************************
  * \subsubsection group_lpa_p1_cc_parameters Configuration Parameters
@@ -475,6 +497,8 @@
  *           * 0 (default)
  *           * 0-1000</td></tr>
  * </table>
+ *
+ *  \note The above configurations do not apply to CYW955913EVK-01.
  *
  *******************************************************************************
  * \section group_lpa_p2 Part 2. Wi-Fi low power
@@ -570,6 +594,8 @@
  * \subsubsection group_lpa_p2_host_wake_qsg Quick start guide
  *******************************************************************************
  *
+ * <b>PSoC&trade; 6 </b>
+ *
  * This quick start guide demonstrates how to configure and use 
  * the WLAN_HOST_WAKE pin for the MCU low power feature in 
  * the FreeRTOS environment. This guide also shows the feature's impact 
@@ -577,7 +603,7 @@
  *
  * 1. Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.
  * 2. Refer section \ref section_lpa_hostwake to verify WLAN_HOST_WAKE pin configurations using device configurator.
- * 4. Execute the following command to build and program the application. Below is an example for the CY8CKIT_062S2_43012 Board, using GCC_ARM as the toolchain:
+ * 3. Execute the following command to build and program the application. Below is an example for the CY8CKIT_062S2_43012 Board, using GCC_ARM as the toolchain:
  *    \code
  *    make build TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
  *    make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
@@ -617,7 +643,7 @@
  *    Network Stack Suspended, MCU will enter DeepSleep power mode
  *    \endcode
  *
- * 5. PSoC&trade; 6 MCU is in System Deep Sleep mode. Only WLAN OOB can wake up the host
+ * 4. PSoC&trade; 6 MCU is in System Deep Sleep mode. Only WLAN OOB can wake up the host
  *    in this situation. Check the board operation. Use a PC to connect 
  *    to the same Wi-Fi AP as the PSoC&trade; 6 board.
  *
@@ -653,6 +679,91 @@
  *    output shows the number of WLAN OOB interrupts received.
  *
  * <b>NOTE :</b> For CY8CEVAL-062S2-CYW43022CUB device, ICMP ping is offloaded to WLAN firmware and ping traffic does not wake-up the host. To verify the OOB interrupts, send TCP/UDP packets which cause the host to wake-up.
+ *
+ * <b>CYW955913EVK-01</b>
+ *
+ * 1. Create existing Code Example <a href="https://github.com/Infineon/mtb-example-threadx-cyw5591x-low-power"><b>mtb-example-threadx-cyw5591x-low-power</b></a> available in the ModusToolbox&trade; environment for <b>CYW955913EVK-01</b> device.
+ *
+ * 2. MCU low power is enabled by default in CYW955913EVK-01.
+ *
+ * 3. Modify the <b>WIFI_SSID</b> and <b>WIFI_PASSWORD</b> in <i>wifi_functions.h</i> to the desired Access Point.
+ * 
+ * 4. Execute the following command to build and program the application.
+ *    \code
+ *    make build TARGET=CYW955913EVK-01 TOOLCHAIN=GCC_ARM
+ *    make program TARGET=CYW955913EVK-01 TOOLCHAIN=GCC_ARM
+ *    \endcode
+ *
+ * 5. When the application starts, the console output shows a list of options. Press '2' to connect to the pre-defined Access Point.
+ *
+ * 6. Once the device connects to AP, press '7' to release the sleep lock which allows the system to enter deep sleep.
+ *    \code
+ *    ************************************************************************
+ *                       Low Power Application Start
+ *     ************************************************************************
+ *    ********************* Available Commands *******************************
+ *    **1) Press '1' to initialize WLAN  *************************************
+ *    **2) Press '2' to connect to a predefined AP ***************************
+ *    **3) Press '3' to start iperf session **********************************
+ *    **4) Press '4' to initialize Bluetooth *********************************
+ *    **5) Press '5' to start Bluetooth LE advertisements ********************
+ *    **6) Press '6' to lock sleep *******************************************
+ *    **7) Press '7' to allow sleep ******************************************
+ *    **8) Press '8' to disconnect from the AP *******************************
+ *    **9) Press '9' any time in application to start scan *******************
+ *    *10) Press 't' to initiate a connection to pre-configured TCP server****
+ *    *11) Press 'h' any time in application to print the menu****************
+ *    ************************************************************************
+ *    Setting up wake source
+ *    Received character 2
+ *    
+ *    [1040] WLAN MAC Address : 00:A0:50:73:E9:C6
+ *    
+ *    [1040] WLAN Firmware    : wl0: Apr 30 2024 06:00:23 version 28.10.212 (b71ca01) FWID 01-f5464446
+ *    
+ *    [1040] WLAN CLM         : API: 20.0 Data: IFX.BRANCH_18_53 Compiler: 1.49.5 ClmImport: 1.48.0 Customization: v3 24/04/08 Creation: 2024-04-29 22:07:56
+ *    
+ *    [1040] WHD VERSION      : 300.3.0.23648
+ *    [1040]  : EAP v300.3.0
+ *    [1050]  : GCC 11.3
+ *    [1050]  : 2024-05-03 09:19:44 +0000
+ *    Wi-Fi Connection Manager initialized.
+ *    Connecting to Wi-Fi Network: ACTFIBERNET
+ *    ######### Received event changed from wcm, event = 0 #######
+ *    Connecting to AP ...
+ *    ######### Received event changed from wcm, event = 1 #######
+ *    Connected to AP and network is up !!
+ *    ######### Received event changed from wcm, event = 5 #######
+ *    IP Address: 192.168.39.170
+ *    Successfully connected to Wi-Fi network 'ACTFIBERNET'.
+ *    IP Address: 192.168.39.170
+ *    Connected AP details Channel: 6, Channel width: 20, Signal strength(dBm): -13
+ *    
+ *    Network Stack Suspended, MCU will enter Active power mode
+ *    Received character 7
+ *    Sleep unlocked
+ *    \endcode
+ *
+ * 7. Use a PC to connect to the same Wi-Fi AP as the device under test.
+ *
+ *    Send a "ping" command to the board and observe in the serial. Device wakes-up for the ping packets.
+ *    \code
+ *    <Terminal logs when device wakes-up>
+ *    Network Stack Suspended, MCU will enter Active power mode
+ *    Resuming Network Stack, Network stack was suspended for 24750ms
+ *    
+ *    =====================================================
+ *    
+ *    [42530] WHD Stats..
+ *    tx_total:11, rx_total:0, tx_no_mem:0, rx_no_mem:0
+ *    tx_fail:0, no_credit:0, flow_control:0
+ *    
+ *    [42540] Bus stats not available
+ *    =====================================================
+ *    Network is active. Resuming network stack
+ *    
+ *    Network Stack Suspended, MCU will enter Active power mode
+ *    \endcode
  *
  *******************************************************************************
  * \subsection group_lpa_p2_arp_offload Wi-Fi ARP Offload
@@ -771,9 +882,11 @@
  *******************************************************************************
  * \subsubsection group_lpa_p2_arp_offload_qsg Quick start guide
  *******************************************************************************
+ * 
  * This quick start guide demonstrates how to configure and use 
- * the ARP offload feature in the FreeRTOS environment and its impact 
- * on system power consumption.
+ * the ARP offload feature and its impact on system power consumption.
+ *
+ * <b>PSoC&trade; 6</b>
  *
  * Follow the below steps for application creation.
  *
@@ -922,6 +1035,162 @@
  * <b>NOTE:</b> For CY8CEVAL-062S2-CYW43022CUB ARP offload cannot be disabled.
  *
  *    \image html FreeRTOS_ARP_Disable.png height=500px
+ *
+ * <b>CYW955913EVK-01</b>
+ *
+ * Follow the below steps for application creation.
+ *
+ * 1. Create existing Code Example <a href="https://github.com/Infineon/mtb-example-threadx-cyw5591x-low-power"><b>mtb-example-threadx-cyw5591x-low-power</b></a> available in the ModusToolbox&trade; environment for <b>CYW955913EVK-01</b> device.
+ *
+ * 2. MCU low power is enabled by default in CYW955913EVK-01.
+ *
+ * 3. Modify the <b>WIFI_SSID</b> and <b>WIFI_PASSWORD</b> in <i>wifi_functions.h</i> to the desired Access Point.
+ *
+ * 4. Configure the ARP offload. The easiest way to configure ARP offload
+ *    is to use the ModusToolbox&trade; Device Configurator. \n
+ *    * <u>Confguring ARP offload on CYW955913EVK-01:</u> \n
+ *        * In design.modus, switch to the connectivity device "CYW55913IUBGT" tab 
+ *        * Select "Power" tab
+ *        * Enable Power->Wi-Fi.
+ *        * Enable ARP offload.
+ *        * Set "ARP offload Feature(s)" to "Peer Auto Reply".
+ *        * Enable "Snoop Host IP From Traffic When ARP Offload Enabled".
+ *        * Set "ARP Offload Cache Entries Expire after (s)" to 1200.
+ *        * Save the configuration to generate the necessary code.
+ *
+ * 5. Execute following command to build and program the application:
+ *    \code
+ *    make build TARGET=CYW955913EVK-01 TOOLCHAIN=GCC_ARM
+ *    make program TARGET=CYW955913EVK-01 TOOLCHAIN=GCC_ARM
+ *    \endcode
+ *
+ * 6. When the application starts, the console output shows a list of options. Press '2' to connect to the pre-defined Access Point.
+ *
+ *    \note As part of Wi-Fi connection, the offload gets initialized.
+ *
+ * 7. Once the device connects to AP, press '7' to release the sleep lock which allows the system to enter deep sleep.
+ *    \code
+ *    ************************************************************************
+ *                       Low Power Application Start
+ *     ************************************************************************
+ *    ********************* Available Commands *******************************
+ *    **1) Press '1' to initialize WLAN  *************************************
+ *    **2) Press '2' to connect to a predefined AP ***************************
+ *    **3) Press '3' to start iperf session **********************************
+ *    **4) Press '4' to initialize Bluetooth *********************************
+ *    **5) Press '5' to start Bluetooth LE advertisements ********************
+ *    **6) Press '6' to lock sleep *******************************************
+ *    **7) Press '7' to allow sleep ******************************************
+ *    **8) Press '8' to disconnect from the AP *******************************
+ *    **9) Press '9' any time in application to start scan *******************
+ *    *10) Press 't' to initiate a connection to pre-configured TCP server****
+ *    *11) Press 'h' any time in application to print the menu****************
+ *    ************************************************************************
+ *    Setting up wake source
+ *    Received character 2
+ *    
+ *    [1040] WLAN MAC Address : 00:A0:50:73:E9:C6
+ *    
+ *    [1040] WLAN Firmware    : wl0: Apr 30 2024 06:00:23 version 28.10.212 (b71ca01) FWID 01-f5464446
+ *    
+ *    [1040] WLAN CLM         : API: 20.0 Data: IFX.BRANCH_18_53 Compiler: 1.49.5 ClmImport: 1.48.0 Customization: v3 24/04/08 Creation: 2024-04-29 22:07:56
+ *    
+ *    [1040] WHD VERSION      : 300.3.0.23648
+ *    [1040]  : EAP v300.3.0
+ *    [1050]  : GCC 11.3
+ *    [1050]  : 2024-05-03 09:19:44 +0000
+ *    Wi-Fi Connection Manager initialized.
+ *    Connecting to Wi-Fi Network: ACTFIBERNET
+ *    ######### Received event changed from wcm, event = 0 #######
+ *    Connecting to AP ...
+ *    ######### Received event changed from wcm, event = 1 #######
+ *    Connected to AP and network is up !!
+ *    ######### Received event changed from wcm, event = 5 #######
+ *    IP Address: 192.168.39.170
+ *    Successfully connected to Wi-Fi network 'ACTFIBERNET'.
+ *    IP Address: 192.168.39.170
+ *    Connected AP details Channel: 6, Channel width: 20, Signal strength(dBm): -13
+ *    
+ *    Network Stack Suspended, MCU will enter Active power mode
+ *    Received character 7
+ *    Sleep unlocked
+ *    \endcode
+ *
+ * 8. Use a PC to connect to the same Wi-Fi AP as the CYW955913EVK-01 board.
+ *
+ *    * Send a "ping" command to the board and observe in the serial 
+ *      \code
+ *      C:\>ping -n 3 192.168.39.170
+ *    
+ *      Pinging 192.168.39.170 with 32 bytes of data:
+ *      Reply from 192.168.39.170: bytes=32 time=319ms TTL=255
+ *      Reply from 192.168.39.170: bytes=32 time=233ms TTL=255
+ *      Reply from 192.168.39.170: bytes=32 time=151ms TTL=255
+ *    
+ *      Ping statistics for 192.168.39.170:
+ *        Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),
+ *      Approximate round trip times in milli-seconds:
+ *        Minimum = 151ms, Maximum = 319ms, Average = 234ms
+ *
+ *      <Terminal logs >
+ *      Resuming Network Stack, Network stack was suspended for 2456ms
+ *      
+ *      =====================================================
+ *      WHD Stats..
+ *      tx_total:174, rx_total:198, tx_no_mem:0, rx_no_mem:0
+ *      tx_fail:0, no_credit:0, flow_control:0
+ *      Bus Stats..
+ *      cmd52:2638, cmd53_read:1001, cmd53_write:796
+ *      cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0
+ *      oob_intrs:199, sdio_intrs:401, error_intrs:0, read_aborts:0
+ *      =====================================================
+ *      Network is active. Resuming network stack
+ *      
+ *      Network Stack Suspended, MCU will enter DeepSleep power mode
+ *      \endcode
+ *
+ *    * Send an "arping" command as follows and observe that the CYW955913EVK-01 
+ *      is in Deep Sleep mode.
+ *      \code
+ *      C:\>arp-ping.exe -n 3 192.168.39.170
+ *      Reply that D4:4D:A4:A0:02:A4 is 192.168.39.170 in 113.078ms
+ *      Reply that D4:4D:A4:A0:02:A4 is 192.168.39.170 in 1115.498ms
+ *      Reply that D4:4D:A4:A0:02:A4 is 192.168.39.170 in 1113.863ms
+ *
+ *      Ping statistics for 192.168.39.170/arp
+ *         3 probes sent.
+ *         3 successful, 0 failed.
+ *      Approximate trip times in milli-seconds:
+ *         Minimum = 113.078ms, Maximum = 1115.498ms, Average = 780.813ms
+ *      \endcode
+ *
+ *      Use any available ARPping tool. As an example:
+ *        * Windows: https://www.elifulkerson.com/projects/arp-ping.php
+ *        * Mac : http://macappstore.org/arping/
+ *        * linux : sudo apt install arping; arping [ip address]
+ *
+ *      Because the WLAN device’s ARP cache is empty on the initial ARP request 
+ *      from the peer, it looks up the IP details from the host and updates 
+ *      its ARP cache. This causes the host to wake up because of network 
+ *      activity between the host MCU and the WLAN device. On subsequent 
+ *      ARP requests from the peer, the host remains asleep. The WLAN device 
+ *      continues to respond to the ARP request as it has the ARP data 
+ *      available in its ARP cache.
+ *
+ * 9. Verify the ARP offload is working as desired. Refer to <a href="https://github.com/Infineon/mtb-example-threadx-cyw5591x-low-power/blob/master/README.md"><b>README.md</b></a> of mtb-example-threadx-cyw5591x-low-power application
+ *    for instructions to measure power.
+ *    While the Wi-Fi subsystem responds to each request, 
+ *    the host MCU is in System Deep Sleep mode.
+ *
+ * 10. Disable the ARP Offload feature and observe that the CYW955913EVK-01
+ *    wakes up on each request.
+ *    Launch the ModusToolbox&trade; Device Configurator and open the appropriate 
+ *    design.modus file. Select the "CYW55913IUBGT" tab, 
+ *    select Power-\>Wi-Fi personality, and disable ARP offload by 
+ *    deselecting the check box next to "ARP offload".
+ *    Save the configuration. Then, build and program the application.
+ *    With ARP offload disabled, the CYW955913EVK-01 host wakes up for 
+ *    every ARP request.
  *
  *******************************************************************************
  * \subsection group_lpa_p2_packet_filter Wi-Fi Packet filter offload
@@ -1072,7 +1341,7 @@
  * the processor must be able to join a network, get a DHCP address,
  * respond to ARP requests, and possibly share network keys. Hence all filters are enabled after Wi-Fi connection. A reasonable minimal
  * set of keep filter includes:
- * * Keep, EtherType 0x806             		 \#Allow ARP through
+ * * Keep, EtherType 0x806                      \#Allow ARP through
  *
  * The following additional filters might also be needed depending on the application:
  * * Keep, Port Filter: TCP Dest Port 8883    \#Allow Secure MQTT packets
@@ -1090,7 +1359,7 @@
  * the network keeps pinging your machine (using ICMP packets) and
  * waking it. You want to block ICMP and keep everything else. In this
  * case, the following one filter is needed:
- * * Discard, IPType 1 				\# toss ICMP packet
+ * * Discard, IPType 1                 \# toss ICMP packet
  *
  * This discards all incoming ping/ICMP packets and keep all other traffic.
  *
@@ -1153,6 +1422,8 @@
  * This quick start guide demonstrates how to configure and use 
  * the Packet Filter feature in the FreeRTOS environment and its impact 
  * on the system power consumption. 
+ *
+ * <b>PSoC&trade; 6</b>
  *
  * Follow the below steps for application creation and offload verification.
  *
@@ -1273,7 +1544,7 @@
  *        Network Stack Suspended, MCU will enter DeepSleep power mode
  *        \endcode
  *
- * 6.  Verify that the packet Filter is working as desired. Refer to the \ref section_lpa_measurement section for corresponding instructions.
+ * 7.  Verify that the packet Filter is working as desired. Refer to the \ref section_lpa_measurement section for corresponding instructions.
  *     The following oscilloscope screen capture shows current measurement with the Packet Filter enabled:
  *
  *     i. ARP Ping :
@@ -1284,6 +1555,147 @@
  *     ii. Ping :
  *        This doesnot wakeup the host as ICMP packet is not configured as packet filter type.
  *      \image html FreeRTOS_PF_ping_nowake.png height=500px
+ *
+ * <b>CYW955913EVK-01</b>
+ *
+ * Follow the below steps for application creation and offload verification.
+ *
+ * 1. Create existing Code Example <a href="https://github.com/Infineon/mtb-example-threadx-cyw5591x-low-power"><b>mtb-example-threadx-cyw5591x-low-power</b></a> available in the ModusToolbox&trade; environment for <b>CYW955913EVK-01</b> device.
+ *
+ * 2. MCU low power is enabled by default in CYW955913EVK-01.
+ *
+ * 3. Modify the <b>WIFI_SSID</b> and <b>WIFI_PASSWORD</b> in <i>wifi_functions.h</i> to the desired Access Point.
+ *
+ * 4. Configure Packet Filters. The easiest way to configure Packet Filters
+ *    is to use the ModusToolbox&trade; Device Configurator. \n
+ *    * In design.modus, switch to the connectivity device "CYW55913IUBGT" tab 
+ *    * Enable Power-\>Wi-Fi.
+ *    * Enable "Filter configuration" with below configurations. These filters allow TCP packets and any other Wi-Fi packets are dropped by WLAN chip and not forwarded to the host MCU.
+ *        * Filter Type: IP type
+ *        * Action: Keep
+ *        * IP Protocol: 0x06
+ *      to the host MCU
+ *    * Save the configuration to generate the necessary code.
+ *
+ * 5. Execute following command to build and program the application:
+ *    \code
+ *    make build TARGET=CYW955913EVK-01 TOOLCHAIN=GCC_ARM
+ *    make program TARGET=CYW955913EVK-01 TOOLCHAIN=GCC_ARM
+ *    \endcode
+ *
+ * 6. When the application starts, the console output shows a list of options. Press '2' to connect to the pre-defined Access Point.
+ *
+ *    \note As part of Wi-Fi connection, the offload gets initialized.
+ *
+ * 7. Once the device connects to AP, press '7' to release the sleep lock which allows the system to enter deep sleep.
+ *    \code
+ *    ************************************************************************
+ *                       Low Power Application Start
+ *     ************************************************************************
+ *    ********************* Available Commands *******************************
+ *    **1) Press '1' to initialize WLAN  *************************************
+ *    **2) Press '2' to connect to a predefined AP ***************************
+ *    **3) Press '3' to start iperf session **********************************
+ *    **4) Press '4' to initialize Bluetooth *********************************
+ *    **5) Press '5' to start Bluetooth LE advertisements ********************
+ *    **6) Press '6' to lock sleep *******************************************
+ *    **7) Press '7' to allow sleep ******************************************
+ *    **8) Press '8' to disconnect from the AP *******************************
+ *    **9) Press '9' any time in application to start scan *******************
+ *    *10) Press 't' to initiate a connection to pre-configured TCP server****
+ *    *11) Press 'h' any time in application to print the menu****************
+ *    ************************************************************************
+ *    Setting up wake source
+ *    Received character 2
+ *    
+ *    [1040] WLAN MAC Address : 00:A0:50:73:E9:C6
+ *    
+ *    [1040] WLAN Firmware    : wl0: Apr 30 2024 06:00:23 version 28.10.212 (b71ca01) FWID 01-f5464446
+ *    
+ *    [1040] WLAN CLM         : API: 20.0 Data: IFX.BRANCH_18_53 Compiler: 1.49.5 ClmImport: 1.48.0 Customization: v3 24/04/08 Creation: 2024-04-29 22:07:56
+ *    
+ *    [1040] WHD VERSION      : 300.3.0.23648
+ *    [1040]  : EAP v300.3.0
+ *    [1050]  : GCC 11.3
+ *    [1050]  : 2024-05-03 09:19:44 +0000
+ *    Wi-Fi Connection Manager initialized.
+ *    Connecting to Wi-Fi Network: ACTFIBERNET
+ *    ######### Received event changed from wcm, event = 0 #######
+ *    Connecting to AP ...
+ *    ######### Received event changed from wcm, event = 1 #######
+ *    Connected to AP and network is up !!
+ *    ######### Received event changed from wcm, event = 5 #######
+ *    IP Address: 192.168.39.170
+ *    Successfully connected to Wi-Fi network 'ACTFIBERNET'.
+ *    IP Address: 192.168.39.170
+ *    Connected AP details Channel: 6, Channel width: 20, Signal strength(dBm): -13
+ *    
+ *    Network Stack Suspended, MCU will enter Active power mode
+ *    Received character 7
+ *    Sleep unlocked
+ *    \endcode
+ *
+ * 8. Use a PC to connect to the same Wi-Fi AP as the CYW955913EVK-01 board.
+ *
+ *    * Send "ping" command to the board and observe in serial terminal 
+ *      that it does not wake up the MCU (CM33) because there is 
+ *      no "keep" packet filter for ICMP pings, there is no response 
+ *      for the pings:
+ *      \code
+ *      C:\>ping -n 3 192.168.39.170
+ *   
+ *      Pinging 192.168.39.170 with 32 bytes of data:
+ *      Request timed out.
+ *      Request timed out.
+ *      Request timed out.
+ *   
+ *      Ping statistics for 192.168.39.170:
+ *          Packets: Sent = 3, Received = 0, Lost = 3 (100% loss),
+ *
+ *      \endcode
+ *
+ *    * Send an "arping" command as follows and observe that the MCU 
+ *      is in Deep Sleep mode.
+ *      \code
+ *      C:\>arp-ping.exe -n 3 192.168.39.170
+ *      Reply that D4:4D:A4:A0:02:A4 is 192.168.39.170 in 113.209ms
+ *      Reply that D4:4D:A4:A0:02:A4 is 192.168.39.170 in 125.789ms
+ *      Reply that D4:4D:A4:A0:02:A4 is 192.168.39.170 in 1114.333ms
+ *   
+ *      Ping statistics for 192.168.39.170/arp
+ *          3 probes sent.
+ *          3 successful, 0 failed.
+ *      Approximate trip times in milli-seconds:
+ *          Minimum = 113.209ms, Maximum = 1114.333ms, Average = 451.111ms
+ *      \endcode
+ *
+ *      Use any available ARPping tool. As an example:
+ *        * Windows: https://www.elifulkerson.com/projects/arp-ping.php
+ *        * Mac : http://macappstore.org/arping/
+ *        * linux : sudo apt install arping; arping [ip address]
+ *
+ *        Observe that CYW955913EVK-01 wakes up for each command because there
+ *        is "keep" packet filter for ARP pings, the ARP pings
+ *        are responded back:
+ *        \code
+ *        Resuming Network Stack, Network stack was suspended for 2456ms
+ *        
+ *        =====================================================
+ *        WHD Stats..
+ *        tx_total:174, rx_total:198, tx_no_mem:0, rx_no_mem:0
+ *        tx_fail:0, no_credit:0, flow_control:0
+ *        Bus Stats..
+ *        cmd52:2638, cmd53_read:1001, cmd53_write:796
+ *        cmd52_fail:0, cmd53_read_fail:0, cmd53_write_fail:0
+ *        oob_intrs:199, sdio_intrs:401, error_intrs:0, read_aborts:0
+ *        =====================================================
+ *        Network is active. Resuming network stack
+ *        
+ *        Network Stack Suspended, MCU will enter DeepSleep power mode
+ *        \endcode
+ *
+ * 9.  Verify that the packet Filter is working as desired. Refer to <a href="https://github.com/Infineon/mtb-example-threadx-cyw5591x-low-power/blob/master/README.md"><b>README.md</b></a> of mtb-example-threadx-cyw5591x-low-power application
+ *    for instructions to measure power.
  *
  *******************************************************************************
  * \subsection group_lpa_p2_tcp_keepalive Wi-Fi TCP keepalive offload
@@ -1311,6 +1723,8 @@
  * the TCP keepalive offload feature in the FreeRTOS environment and its impact
  * on the system power consumption.
  * 
+ * <b>PSoC&trade; 6</b>
+ *
  * Do the following to set up the wifi-low-power tcp keepalive offload
  * example and enable the TCP keepalive offload feature.
  *
@@ -1392,6 +1806,108 @@
  *
  * <b>TCP keepalive offload enabled with 20 seconds interval configuration and WLAN DTIM configured as 3 :</b>
  *      \image html FreeRTOS_TKO_Enable.png height=500px
+ *
+ * <b>CYW955913EVK-01</b>
+ *
+ * Do the following to set up the <i>mtb-example-threadx-cyw5591x-low-power</i>
+ * example and enable the TCP keepalive offload feature.
+ *
+ * 1. Create existing Code Example <a href="https://github.com/Infineon/mtb-example-threadx-cyw5591x-low-power"><b>mtb-example-threadx-cyw5591x-low-power</b></a> available in the ModusToolbox&trade; environment for <b>CYW955913EVK-01</b> device.
+ *
+ * 2. MCU low power is enabled by default in CYW955913EVK-01.
+ *
+ * 3. Modify the <b>WIFI_SSID</b> and <b>WIFI_PASSWORD</b> in <i>wifi_functions.h</i> to the desired Access Point.
+ *
+ * 4. Configure TCP keepalive offload. The easiest way to configure TCP keepalive offload
+ *    is to use the ModusToolbox&trade; Device Configurator.
+ *        * In design.modus, switch to the connectivity device "CYW55913IUBGT" tab 
+ *        * Enable Power-\>Wi-Fi.
+ *        * Enable TCP keepalive offload.
+ *        * Configure Interval, Retry Interval, and Retry Count.
+ *        * Configure Source port, Destination port, and Destination IP address (TCP server).
+ *        * Save the configuration to generate the necessary code.
+ *
+ * 5. Execute following command to build and program the application:
+ *    \code
+ *    make build TARGET=CYW955913EVK-01 TOOLCHAIN=GCC_ARM
+ *    make program TARGET=CYW955913EVK-01 TOOLCHAIN=GCC_ARM
+ *    \endcode
+ *
+ * 6. When the application starts, the console output shows a list of options. Press '2' to connect to the pre-defined Access Point.
+ *
+ *    \note As part of Wi-Fi connection, the offload gets initialized.
+ *
+ * 7. 
+ *    * Use a PC to connect to the same Wi-Fi Access Point as the board. Run <a href="tcp_echo_server.py" rel="stylesheet" type="text/css" ><b>tcp_echo_server.py</b></a> in that PC to act as TCP Server
+ *    \code
+ *    python tcp_echo_server.py --port 3360
+ *    \endcode 
+ *
+ *    * Press 't' option to connect to the pre-configured TCP server. 
+ *
+ * 8. Press '7' to release the sleep lock which allows the system to enter deep sleep.
+ *    \code
+ *    ************************************************************************
+ *                       Low Power Application Start
+ *     ************************************************************************
+ *    ********************* Available Commands *******************************
+ *    **1) Press '1' to initialize WLAN  *************************************
+ *    **2) Press '2' to connect to a predefined AP ***************************
+ *    **3) Press '3' to start iperf session **********************************
+ *    **4) Press '4' to initialize Bluetooth *********************************
+ *    **5) Press '5' to start Bluetooth LE advertisements ********************
+ *    **6) Press '6' to lock sleep *******************************************
+ *    **7) Press '7' to allow sleep ******************************************
+ *    **8) Press '8' to disconnect from the AP *******************************
+ *    **9) Press '9' any time in application to start scan *******************
+ *    *10) Press 't' to initiate a connection to pre-configured TCP server****
+ *    *11) Press 'h' any time in application to print the menu****************
+ *    ************************************************************************
+ *    Setting up wake source
+ *    Received character 2
+ *    
+ *    [1040] WLAN MAC Address : 00:A0:50:73:E9:C6
+ *    
+ *    [1040] WLAN Firmware    : wl0: Apr 30 2024 06:00:23 version 28.10.212 (b71ca01) FWID 01-f5464446
+ *    
+ *    [1040] WLAN CLM         : API: 20.0 Data: IFX.BRANCH_18_53 Compiler: 1.49.5 ClmImport: 1.48.0 Customization: v3 24/04/08 Creation: 2024-04-29 22:07:56
+ *    
+ *    [1040] WHD VERSION      : 300.3.0.23648
+ *    [1040]  : EAP v300.3.0
+ *    [1050]  : GCC 11.3
+ *    [1050]  : 2024-05-03 09:19:44 +0000
+ *    Wi-Fi Connection Manager initialized.
+ *    Connecting to Wi-Fi Network: ACTFIBERNET
+ *    ######### Received event changed from wcm, event = 0 #######
+ *    Connecting to AP ...
+ *    ######### Received event changed from wcm, event = 1 #######
+ *    Connected to AP and network is up !!
+ *    ######### Received event changed from wcm, event = 5 #######
+ *    IP Address: 192.168.39.170
+ *    Successfully connected to Wi-Fi network 'ACTFIBERNET'.
+ *    IP Address: 192.168.39.170
+ *    Connected AP details Channel: 6, Channel width: 20, Signal strength(dBm): -13
+ *    
+ *    Network Stack Suspended, MCU will enter Active power mode
+ *
+ *    Received character t
+ *    Taking TCP Keepalive configuration from the Generated sources.
+ *    TCP remote IP Address f2ba8c0  remote port:3360
+ *    TCP Connection Established Successfully ctx:8011050
+ *    Socket[0]: Created connection to IP 192.168.39.15, local port 3353, remote port 3360
+ *    Skipped TCP socket connection for socket id[1]. Check the TCP Keepalive configuration.
+ *    Skipped TCP socket connection for socket id[2]. Check the TCP Keepalive configuration.
+ *    Skipped TCP socket connection for socket id[3]. Check the TCP Keepalive configuration.
+ *    whd_tko_toggle: Successfully enabled
+ *    
+ *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *
+ *    Received character 7
+ *    Sleep unlocked
+ *    \endcode
+ *
+ * 9. Verify that the TCP keepalive offload is working as desired. Refer to <a href="https://github.com/Infineon/mtb-example-threadx-cyw5591x-low-power/blob/master/README.md"><b>README.md</b></a> of mtb-example-threadx-cyw5591x-low-power application
+ *    for instructions to measure power.
  *
  *******************************************************************************
  * \subsection group_lpa_p2_dltro DHCP Lease Time Renew offload
@@ -2031,7 +2547,7 @@
  *    How to configure packet Filter for IPv6 packets: \n
  *    * Navigate to ModusToolbox&trade; installation folder and launch
  *      the ModusToolbox&trade; Device Configurator
- *      (\<install_dir\>/tools_3.1/device-configurator).
+ *      (\<install_dir\>/tools_3.2/device-configurator).
  *    * Select File-\>Open, navigate to the board's design.modus file,
  *      and open it:
  *    * Switch to the connectivity device "CYW943012WKWBG" tab
@@ -2427,8 +2943,13 @@
  *
  * For jumper connections and how to measure power consumption, refer to the guide of the respective kit. \n
  * <b>For Example:</b> 
+ *
  * To measure the power consumption for the CY8CKIT-062S2-43012 Kit, refer to section <i>3.2.5 Power Supply System</i> in the kit guide
  * <a href="https://www.infineon.com/dgdl/Infineon-CY8CKIT-062S2-43012_PSoC_62S2_Wi-Fi_BT_Pioneer_Kit_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f01c8f11927">
+ * <b>User manual</b></a>.
+ *
+ * To measure the power consumption for the CYW955913EVK-01 Kit, refer to section <i>Power measurement using CYW955913EVK-01</i> in the kit guide
+ * <a href="https://www.infineon.com/CYW55913">
  * <b>User manual</b></a>.
  *
  *
@@ -2467,6 +2988,10 @@
  *   <tr>
  *     <td align="center">CY8CEVAL_062S2_MUR_43439M2</td>
  *     <td align="center">P4[1]</td>
+ *   </tr>
+ *   <tr>
+ *     <td align="center">CYW955913EVK-01</td>
+ *     <td align="center">Wi-Fi Subsystem Doorbell Wake Interrupt(Enabled by default)</td>
  *   </tr>
  * </table>
  * \n
@@ -2522,6 +3047,11 @@
  *     <td align="center">CY8CEVAL_062S2_MUR_43439M2</td>
  *     <td align="center">P3[5]</td>
  *     <td align="center">P4[0]</td>
+ *   </tr>
+ *   <tr>
+ *     <td align="center">CYW955913EVK-01</td>
+ *     <td align="center">Bluetooth activity</td>
+ *     <td align="center">Bluetooth activity</td>
  *   </tr>
  * </table>
  * \n

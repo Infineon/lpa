@@ -35,6 +35,7 @@
 * @file cy_whd_tls_api.h
 * @brief WHD MQTT TLS Offload API.
 */
+#ifndef COMPONENT_CAT5
 
 #ifndef WHD_TLSOE_API_H__
 #define WHD_TLSOE_API_H__  (1)
@@ -65,10 +66,10 @@ whd_result_t
 whd_tlsoe_get_sock_stats(cy_tls_sock_seq_t *seq, uint16_t local_port, uint16_t remote_port, const char *remote_ip);
 
 whd_result_t
-whd_tlsoe_set_wowl_pattern(whd_t *whd, uint8_t* pattern, uint16_t pattern_len, uint16_t pattern_rule, uint16_t patttern_offset);
+whd_tlsoe_set_wowl_pattern(whd_t *whd, uint8_t* pattern, uint16_t pattern_len, uint16_t pattern_type, uint16_t patttern_offset);
 
 whd_result_t
-whd_tlsoe_del_wowl_pattern(whd_t *whd, uint8_t* pattern, uint16_t pattern_size, uint16_t pattern_rule,  uint16_t patttern_offset);
+whd_tlsoe_del_wowl_pattern(whd_t *whd, uint8_t* pattern, uint16_t pattern_size, uint16_t pattern_type,  uint16_t patttern_offset);
 
 whd_result_t
 whd_tlsoe_disable(whd_t *whd, uint16_t local_port, uint16_t remote_port, const char *remote_ip, void* socket);
@@ -81,3 +82,4 @@ whd_tlsoe_activate(whd_t *whd, uint16_t local_port, uint16_t remote_port, const 
 #endif
 
 #endif /* !WHD_TLSOE_API_H__ */
+#endif //!COMPONENT_CAT5

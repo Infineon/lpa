@@ -57,7 +57,11 @@ static bool is_wcm_callback_registered = false;
 
 void cylpa_nw_ip_status_change_handler ( cylpa_nw_ip_status_change_callback_t *cb )
 {
+#if defined(COMPONENT_LWIP)
     struct netif *iface = cy_network_get_nw_interface( CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE );
+#elif defined(COMPONENT_NETXDUO)
+    NX_IP *iface = (NX_IP *)cy_network_get_nw_interface( CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE);
+#endif
     if ( cb->cb_func != NULL )
     {
         cb->priv = iface;
@@ -67,7 +71,11 @@ void cylpa_nw_ip_status_change_handler ( cylpa_nw_ip_status_change_callback_t *c
 
 void cylpa_nw_ip_initialize_status_change_callback(cylpa_nw_ip_status_change_callback_t *cb, cylpa_nw_ip_status_change_callback_func_t *cb_func, void *arg)
 {
+#if defined(COMPONENT_LWIP)
     struct netif *iface = cy_network_get_nw_interface( CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE );
+#elif defined(COMPONENT_NETXDUO)
+    NX_IP *iface = (NX_IP *)cy_network_get_nw_interface( CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE);
+#endif
 
     cb->cb_func = cb_func;
     cb->arg = arg;

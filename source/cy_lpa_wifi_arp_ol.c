@@ -205,14 +205,7 @@ static void cylpa_arp_ol_nw_ip_change_work(void *arg)
             {
                 if (--cy_dhcp_retry_count > 0)
                 {
-                    /* set up timer for future to handle timing of DHCP issue */
-                    if (cy_delay_dhcp_timer != 0)
-                    {
-                        cy_rtos_deinit_timer(&cy_delay_dhcp_timer);
-                        cy_delay_dhcp_timer = 0;
-                    }
-                    cy_rtos_init_timer(&cy_delay_dhcp_timer, CY_TIMER_TYPE_ONCE, cylpa_arp_ol_nw_ip_change_timer_callback,
-                                       (cy_timer_callback_arg_t)arp_ol);
+                    /* Start timer for future to handle timing of DHCP issue */
                     cy_rtos_start_timer(&cy_delay_dhcp_timer, CY_ARPOL_DELAY_FOR_DHCP_MS);
                 }
             }
@@ -227,8 +220,7 @@ static void cylpa_arp_ol_nw_ip_change_work(void *arg)
 static void cylpa_arp_ol_nw_ip_change_timer_callback(cy_timer_callback_arg_t arg)
 {
     arp_ol_t *arp_ol = (arp_ol_t *)arg;
-    cy_rtos_deinit_timer(&cy_delay_dhcp_timer);
-    cy_delay_dhcp_timer = 0;
+    cy_rtos_timer_stop(&cy_delay_dhcp_timer);
     if ( (arp_ol == NULL) || (arp_ol->ol_info_ptr == NULL) || (arp_ol->ol_info_ptr->worker == NULL) )
     {
         return;
@@ -260,14 +252,7 @@ static void cylpa_arp_ol_nw_ip_change_callback(cy_nw_ip_interface_t iface, void 
         return;
     }
 
-    /* set up timer for future to handle timing of DHCP issue */
-    if (cy_delay_dhcp_timer != 0)
-    {
-        cy_rtos_deinit_timer(&cy_delay_dhcp_timer);
-        cy_delay_dhcp_timer = 0;
-    }
-    cy_rtos_init_timer(&cy_delay_dhcp_timer, CY_TIMER_TYPE_ONCE, cylpa_arp_ol_nw_ip_change_timer_callback,
-                       (cy_timer_callback_arg_t)arp_ol);
+    /* Start a timer to handle timing of DHCP */
     cy_rtos_start_timer(&cy_delay_dhcp_timer, CY_ARPOL_SHORT_DELAY_FOR_DHCP_MS);
     return;
 }
@@ -326,6 +311,10 @@ static int cylpa_arp_ol_init(void *ol, ol_info_t *ol_info, const void *cfg)
         return RESULT_OK;
     }
 
+    /* Initialize the timer to handle DHCP timing */
+    cy_rtos_init_timer(&cy_delay_dhcp_timer, CY_TIMER_TYPE_ONCE, cylpa_arp_ol_nw_ip_change_timer_callback,
+                       (cy_timer_callback_arg_t)arp_ol);
+
     /* Initialize the SAL IP change callback
      * - registered in the PM change callback below
      * - only used if SNOOP is off
@@ -378,12 +367,8 @@ static void cylpa_arp_ol_deinit(void *ol)
 
     /* Un-register the ip change callback with sal api */
     cylpa_nw_ip_unregister_status_change_callback( (uintptr_t)arp_ol->ol_info_ptr->ip, &cy_arp_ol_cb );
-    /* deinit timer if needed */
-    if (cy_delay_dhcp_timer != 0)
-    {
-        cy_rtos_deinit_timer(&cy_delay_dhcp_timer);
-        cy_delay_dhcp_timer = 0;
-    }
+    /* deinit timer */
+    cy_rtos_deinit_timer(&cy_delay_dhcp_timer);
 
     /* Turn off ARP OL when we de-init ? */
     whd_arp_arpoe_set(arp_ol->ol_info_ptr->whd, 0);

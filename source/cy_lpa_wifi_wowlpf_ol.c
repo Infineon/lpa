@@ -35,6 +35,8 @@
 * @file cy_lpa_wifi_wowlpf_ol.c
 * @brief WOWLPF Low Power Offload Assist Implementation
 */
+
+
 #include <stdlib.h>
 #include "string.h"
 #include "cycfg.h"
@@ -48,6 +50,8 @@
 #include "whd_wifi_api.h"
 #include "whd_wlioctl.h"
 #include "whd_endian.h"
+
+#ifdef CYCFG_WOWL_MAGIC_PKT_ENABLED
 
 #ifdef __cplusplus
 extern "C" {
@@ -349,13 +353,14 @@ whd_wowl_set_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_offset, uin
     OL_LOG_WOWLPF(LOG_OLA_LVL_INFO, "pattern : %s\n", pattern);
 
     /* Pattern conversion */
-    /* Calculate the length of the pattern */
-    pattern_size = strlen((const char *)pattern)/2;
+    /* Calculate the length of the pattern. Exclude "0x" from the pattern */
+    pattern_size = (strlen((const char *)pattern)/2) - 1;
+
 
     /* Convert each pair of hexadecimal characters to an unsigned char */
-    for (int i = 0; i < pattern_size; ++i)
+    for (int i = 0, j = 1; i < pattern_size; ++i, ++j)
     {
-        pattern_array[i] = (hexCharToInt(pattern[2 * i]) << 4) | hexCharToInt(pattern[2 * i + 1]);
+        pattern_array[i] = (hexCharToInt(pattern[2 * j]) << 4) | hexCharToInt(pattern[2 * j + 1]);
     }
 
     OL_LOG_WOWLPF(LOG_OLA_LVL_INFO, "\nmask : %s\n", mask);
@@ -367,12 +372,25 @@ whd_wowl_set_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_offset, uin
         return 1;
     }
 
-    mask_size = strlen((const char *)mask)/2;
+    /* Calculate the length of the mask. Exclude "0x" from the mask */
+    mask_size = (strlen((const char *)mask)/2) - 1;
 
     /* Convert each pair of hexadecimal characters to an unsigned char */
-    for (int i = 0; i < mask_size; ++i)
+    for (int i = 0, j = 1; i < mask_size; ++i, ++j)
     {
-        mask_array[i] = (hexCharToInt(mask[2 * i]) << 4) | hexCharToInt(mask[2 * i + 1]);
+        mask_array[i] = (hexCharToInt(mask[2 * j]) << 4) | hexCharToInt(mask[2 * j + 1]);
+
+        /* Reverse bits for each byte in the mask */
+        for (int k = 0; k < 4; k++)
+        {
+            if (((mask_array[i] >> k) & 1) != ((mask_array[i] >> (7 - k)) & 1))
+            {
+                /* Toggle bit k */
+                mask_array[i] ^= (1 << k);
+                /* Toggle bit (7 - k) */
+                mask_array[i] ^= (1 << (7 - k));
+            }
+        }
     }
 
 #ifdef OLM_LOG_ENABLED
@@ -398,7 +416,7 @@ whd_wowl_set_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_offset, uin
         mode = "del";
     }
 
-    result = whd_set_wowl_pattern( whd, mode, pattern_offset, mask_size, mask_array, pattern_size, pattern_array, 0 );
+    result = whd_set_wowl_pattern( whd, mode, pattern_offset, mask_size, mask_array, pattern_size, pattern_array, WOWL_PATTERN_TYPE_BITMAP);
     if ( result !=  WHD_SUCCESS)
     {
         OL_LOG_WOWLPF(LOG_OLA_LVL_ERR, "%s: add pattern failed \n", __func__);
@@ -412,3 +430,5 @@ whd_wowl_set_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_offset, uin
 #ifdef __cplusplus
 }
 #endif
+
+#endif //CYCFG_WOWL_MAGIC_PKT_ENABLED

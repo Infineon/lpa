@@ -48,8 +48,8 @@ extern "C" {
 
 #define NW_INFO( x )      printf x
 
-#define RX_EVENT_FLAG     ( 1UL << 0 )
-#define TX_EVENT_FLAG     ( 1UL << 1 )
+#define CY_LPA_RX_EVENT_FLAG     ( 1UL << 0 )
+#define CY_LPA_TX_EVENT_FLAG     ( 1UL << 1 )
 
 #define PKT_FILTER_NAME "Pkt_Filter"
 #define ARP_NAME        "ARP"

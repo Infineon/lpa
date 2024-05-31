@@ -37,6 +37,8 @@
 */
 
 #include "whd_types.h"
+#include "whd_int.h"
+#include "whd_proto.h"
 #include "cy_lpa_common_priv.h"
 #include "cy_lpa_wifi_ol_common.h"
 #include "cy_lpa_wifi_ol.h"
@@ -47,8 +49,14 @@
 #include "whd_buffer_api.h"
 #include "cy_nw_helper.h"
 #include "whd_wlioctl.h"
+#ifdef COMPONENT_LWIP
 #include "lwip/tcp.h"
+#endif
 #include "ip4string.h"
+#ifdef COMPONENT_NETXDUO
+#include "cy_network_mw_core.h"
+#include "nx_api.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -81,9 +89,6 @@ extern "C" {
 #define TKO_DEBUG_PRINTF(x)
 #endif
 
-#define RX_EVENT_FLAG (1UL << 0)
-#define TX_EVENT_FLAG (1UL << 1)
-
 #define TKO_ERROR   0xfffe
 
 #define print_ip4(ipaddr)  \
@@ -105,12 +110,13 @@ extern cy_mutex_t cy_lp_mutex;
 *  Forward Declarations
 *
 *********************************************************************************************/
-#if LWIP_TCP
 static int tko_connect_init(wl_tko_connect_t *connect, sock_seq_t *keep_alive_offload, uint8_t index);
+#ifdef COMPONENT_LWIP
 ssize_t etharp_find_addr(struct netif *netif, const ip4_addr_t *ipaddr, wl_ether_addr_t **eth_ret,
                          const ip4_addr_t **ip_ret);
-static int prep_packet(sock_seq_t *seq, int index, uint8_t *buf);
 #endif
+static int prep_packet(sock_seq_t *seq, int index, uint8_t *buf);
+
 void *whd_callback_handler(whd_interface_t ifp, const whd_event_header_t *event_header, const uint8_t *event_data,
                            /*@null@*/ void *handler_user_data);
 
@@ -141,7 +147,69 @@ whd_tko_disable(whd_t *whd)
 
     return whd_tko_toggle(whd, WHD_FALSE);
 }
+#if defined(COMPONENT_NETXDUO)
+/*
+ * Returns table index if found, else returns -1
+ */
+static int find_mac_addr(uint32_t *dst_ip, wl_ether_addr_t *eth_ret, uint32_t *ip_ret)
+{
+    UINT          index=-1;
+    NX_ARP       *arp_ptr;
+    NX_ARP       *search_ptr;
+    NX_ARP       *arp_list_head;
+    NX_IP        *ip_ptr = NULL;
 
+    /* Get NX_IP pointer */
+    ip_ptr = cy_network_get_nw_interface(CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE);
+
+    /* Calculate the hash index for the specified IP address.
+     * Note: The IP address should be in little-endian(host byte order) format for netxduo  */
+    index =  (UINT)((ntohl(*dst_ip) + ((ntohl(*dst_ip)) >> 8)) & NX_ARP_TABLE_MASK);
+
+    /* Pickup the head pointer of the ARP entries for this IP instance.  */
+    arp_list_head =  ip_ptr -> nx_ip_arp_table[index];
+
+    search_ptr =  arp_list_head;
+    arp_ptr    =  NX_NULL;
+    while (search_ptr)
+    {
+        /* Determine if there is a duplicate IP address.
+         * Note: The IP address should be in little-endian(host byte order) format for netxduo  */
+        if (search_ptr -> nx_arp_ip_address == ntohl(*dst_ip))
+        {
+            /* Yes, the IP address matches, setup the ARP entry pointer.  */
+            arp_ptr =  search_ptr;
+
+            /* Get out of the loop.  */
+            break;
+        }
+
+        /* Move to the next entry in the active list.  */
+        search_ptr =  search_ptr -> nx_arp_active_next;
+
+        /* Determine if the search pointer is back at the head of
+           the list.  */
+        if (search_ptr == arp_list_head)
+        {
+            /* End of the ARP list, end the search.  */
+            break;
+        }
+    }
+
+    /* Determine if an ARP entry is found.  */
+    if (arp_ptr)
+    {
+        eth_ret->octet[0] = (uint8_t)((arp_ptr->nx_arp_physical_address_msw >>  8) & 0xFF);
+        eth_ret->octet[1] = (uint8_t)((arp_ptr->nx_arp_physical_address_msw >>  0) & 0xFF);
+        eth_ret->octet[2] = (uint8_t)((arp_ptr->nx_arp_physical_address_lsw >> 24) & 0xFF);
+        eth_ret->octet[3] = (uint8_t)((arp_ptr->nx_arp_physical_address_lsw >> 16) & 0xFF);
+        eth_ret->octet[4] = (uint8_t)((arp_ptr->nx_arp_physical_address_lsw >>  8) & 0xFF);
+        eth_ret->octet[5] = (uint8_t)((arp_ptr->nx_arp_physical_address_lsw >>  0) & 0xFF);
+        *ip_ret = arp_ptr->nx_arp_ip_address;
+    }
+    return index;
+}
+#endif
 /*
  * Host is going into sleep mode, activate TKO in FW.
  *
@@ -158,17 +226,21 @@ whd_result_t
 whd_tko_activate(whd_t *whd, uint8_t index, uint16_t local_port, uint16_t remote_port, const char *remote_ip)
 {
     whd_result_t result = WHD_SUCCESS;
-#if LWIP_TCP
     uint32_t len = 0;
     uint8_t *data = NULL;
     wl_tko_t *tko = NULL;
     wl_tko_connect_t *connect = NULL;
     sock_seq_t seq;
-    const ip4_addr_t *ip_ret;
-    wl_ether_addr_t *eth_ret;
-
     int tko_len;
     whd_buffer_t buffer;
+#if defined(COMPONENT_LWIP)
+    const ip4_addr_t *ip_ret;
+    wl_ether_addr_t *eth_ret;
+#endif
+#if defined(COMPONENT_NETXDUO)
+    uint32_t ip_ret = 0;
+    wl_ether_addr_t eth_ret;
+#endif
 
     /* Get required Sequence and Ack numbers from TCP stack */
     memset(&seq, 0, sizeof(seq) );
@@ -188,6 +260,7 @@ whd_tko_activate(whd_t *whd, uint8_t index, uint16_t local_port, uint16_t remote
     }
 
     /* Remote mac address */
+#if defined(COMPONENT_LWIP)
     if (etharp_find_addr(NULL, (const ip4_addr_t * )&seq.dstip, &eth_ret, &ip_ret) >= 0)
     {
         if (ip_ret->addr != seq.dstip)
@@ -197,6 +270,18 @@ whd_tko_activate(whd_t *whd, uint8_t index, uint16_t local_port, uint16_t remote
         memcpy(seq.dst_mac.octet, eth_ret, sizeof(seq.dst_mac.octet) );
     }
     else
+#elif defined(COMPONENT_NETXDUO)
+    if (find_mac_addr(&seq.dstip, &eth_ret, &ip_ret) >= 0)
+    {
+        /* Note: The IP address should be in little-endian(host byte order) format for netxduo */
+        if (ip_ret != ntohl(seq.dstip))
+        {
+            TKO_ERROR_PRINTF( ("%s: Hey orig IP and Netxduo IP don't match!\n", __func__) );
+        }
+        memcpy(seq.dst_mac.octet, &eth_ret, sizeof(seq.dst_mac.octet) );
+    }
+    else
+#endif
     {
         TKO_DEBUG_PRINTF( ("%s: Remote mac addr not found, using bssid\n", __func__) );
         result = whd_wifi_get_bssid(whd, &seq.dst_mac);
@@ -215,7 +300,7 @@ whd_tko_activate(whd_t *whd, uint8_t index, uint16_t local_port, uint16_t remote
                        seq.dst_mac.octet[3], seq.dst_mac.octet[4], seq.dst_mac.octet[5]) );
 
     len = (int)(WHD_PAYLOAD_MTU - strlen(IOVAR_STR_TKO) - 1);
-    data = (uint8_t * )whd_cdc_get_iovar_buffer(IFP_TO_DRIVER(whd), &buffer, (uint16_t)len, IOVAR_STR_TKO);
+    data = (uint8_t * )(IFP_TO_DRIVER(whd)->proto->get_iovar_buffer(IFP_TO_DRIVER(whd), &buffer, (uint16_t)len, IOVAR_STR_TKO));
 
     tko = (wl_tko_t *)data;
 
@@ -237,12 +322,11 @@ whd_tko_activate(whd_t *whd, uint8_t index, uint16_t local_port, uint16_t remote
     tko->len = htod16(tko->len);
 
     /* invoke SET iovar */
-    result = whd_cdc_send_iovar(whd, CDC_SET, buffer, NULL);
+    result = IFP_TO_DRIVER(whd)->proto->set_iovar(whd, buffer, NULL);
     if (result != WHD_SUCCESS)
     {
         TKO_ERROR_PRINTF( ("%s: tko CONNECT subcmd IOVAR failed. Result: %u\n", __func__, (unsigned int)result) );
     }
-#endif /* LWIP_TCP */
     return result;
 }
 
@@ -252,7 +336,7 @@ whd_tko_activate(whd_t *whd, uint8_t index, uint16_t local_port, uint16_t remote
 whd_result_t
 sock_stats(sock_seq_t *seq, uint16_t local_port, uint16_t remote_port, const char *remote_ip)
 {
-#if LWIP_TCP
+#if defined(COMPONENT_LWIP) && (LWIP_TCP == 1)
     extern struct tcp_pcb *tcp_bound_pcbs;
     extern struct tcp_pcb *tcp_active_pcbs;
     extern struct tcp_pcb *tcp_tw_pcbs;
@@ -282,7 +366,59 @@ sock_stats(sock_seq_t *seq, uint16_t local_port, uint16_t remote_port, const cha
             list = list->next;
         }
     }
-#endif /* LWIP_TCP */
+
+#elif defined(COMPONENT_NETXDUO) && defined(NX_ENABLE_TCP_KEEPALIVE)
+
+    NX_TCP_SOCKET  *socket_ptr;
+    ULONG          sockets_count;
+    UINT           keepalive_enabled = NX_FALSE;
+    NX_IP          *ip_ptr = NULL;
+    uint32_t       tmp_ip;
+
+    /* Get NX_IP pointer */
+    ip_ptr = cy_network_get_nw_interface(CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE);
+
+    /* Pickup the number of created TCP sockets.  */
+    sockets_count =  ip_ptr -> nx_ip_tcp_created_sockets_count;
+
+    /* Pickup the first socket.  */
+    socket_ptr =  ip_ptr -> nx_ip_tcp_created_sockets_ptr;
+
+    /* Loop through the created sockets.  */
+    while ((sockets_count--) && socket_ptr)
+    {
+        keepalive_enabled = socket_ptr -> nx_tcp_socket_keepalive_enabled;
+        /* Is keep alive enabled on this socket? */
+        if (keepalive_enabled)
+        {
+            if ((socket_ptr -> nx_tcp_socket_state == NX_TCP_ESTABLISHED))
+            {
+                stoip4(remote_ip, strlen(remote_ip), &tmp_ip);
+
+                /* In netxduo IP address is stored in little-endian format.
+                 * Converting network order to host byte order which is little-endian for comparison */
+                tmp_ip = ntohl(tmp_ip);
+
+                if ((socket_ptr -> nx_tcp_socket_port == local_port) && (socket_ptr -> nx_tcp_socket_connect_port == remote_port) && (socket_ptr -> nx_tcp_socket_connect_ip.nxd_ip_address.v4 == tmp_ip) )
+                {
+                    /* Store the IP address in Big-endian format.
+                     * Convert host byte order to network order before storing */
+                    seq->srcip = htonl(ip_ptr -> nx_ip_interface[0].nx_interface_ip_address);
+                    seq->dstip = htonl(socket_ptr -> nx_tcp_socket_connect_ip.nxd_ip_address.v4);
+
+                    seq->srcport = socket_ptr -> nx_tcp_socket_port;
+                    seq->dstport = socket_ptr -> nx_tcp_socket_connect_port;
+                    seq->seqnum = socket_ptr -> nx_tcp_socket_tx_sequence;
+                    seq->acknum = socket_ptr -> nx_tcp_socket_rx_sequence;
+                    seq->rx_window = socket_ptr -> nx_tcp_socket_rx_window_default;
+                    return WHD_SUCCESS;
+                }
+            }
+        }
+        /* Move to the next TCP socket.  */
+        socket_ptr =  socket_ptr -> nx_tcp_socket_created_next;
+    }
+#endif
     return WHD_BADARG;
 }
 
@@ -312,7 +448,6 @@ void *whd_callback_handler(whd_interface_t ifp, const whd_event_header_t *event_
     return handler_user_data;
 }
 
-#ifdef LWIP_TCP
 /* Prepare request packet */
 static int
 prep_packet(sock_seq_t *seq, int index, uint8_t *buf)
@@ -428,8 +563,6 @@ tko_connect_init(wl_tko_connect_t *connect, sock_seq_t *keep_alive_offload, uint
 
     return (offsetof(wl_tko_connect_t, data) + datalen);
 }
-#endif /* LWIP_TCP */
-
 
 #ifdef __cplusplus
 }

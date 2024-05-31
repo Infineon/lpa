@@ -43,7 +43,9 @@
 #include "cy_lpa_wifi_tko_ol.h"
 #include "cy_lpa_wifi_result.h"
 
+#ifdef COMPONENT_LWIP
 #include "lwip/ip.h"
+#endif
 #include "whd_sdpcm.h"
 #include "cy_whd_tko_api.h"
 #include "whd_wifi_api.h"
@@ -122,8 +124,6 @@ static int cylpa_tko_ol_init(void *ol, ol_info_t *info, const void *cfg)
     uint8_t max;
     whd_tko_retry_t retry;
 
-    ctxt->ol_info_ptr = info;
-
     OL_LOG_TKO(LOG_OLA_LVL_DEBUG, "%s\n", __func__);
 
     memset(ctxt, 0, sizeof(tko_ol_t) );
@@ -134,6 +134,7 @@ static int cylpa_tko_ol_init(void *ol, ol_info_t *info, const void *cfg)
         return RESULT_OK;
     }
 
+    ctxt->ol_info_ptr = info;
     ctxt->cfg = (cy_tko_ol_cfg_t *)cfg;
     tko_cfg = &cy_tko_ol_cfg;
     ctxt->whd  = info->whd;

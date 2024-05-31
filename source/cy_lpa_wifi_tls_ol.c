@@ -52,6 +52,8 @@
 #include "whd_endian.h"
 #include "whd_types.h"
 
+#ifdef CYCFG_WIFI_MQTT_OL_SUPPORT
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -204,7 +206,7 @@ static void cylpa_tlsoe_ol_pm( void *ol, ol_pm_st_t st )
 
             port->patt_offset = MQTT_HEADER_SIZE;
 
-            result = whd_tlsoe_set_wowl_pattern( ctxt->whd, (uint8_t *)port->wakepatt, port->patt_len, 0, port->patt_offset );
+            result = whd_tlsoe_set_wowl_pattern( ctxt->whd, (uint8_t *)port->wakepatt, port->patt_len, WOWL_PATTERN_TYPE_SECWOWL, port->patt_offset );
             if ( result == WHD_SUCCESS )
             {
                 port->data[0] = ( ( MQTT_PINGREQ_DATA >> 8 ) & 0xFF);
@@ -216,7 +218,7 @@ static void cylpa_tlsoe_ol_pm( void *ol, ol_pm_st_t st )
                 {
                     OL_LOG_TLSOE( LOG_OLA_LVL_ERR, "%s: No such connection: %s local %d remote %d\n", __func__,
                                port->remote_ip, port->local_port, port->remote_port );
-                    result = whd_tlsoe_del_wowl_pattern( ctxt->whd, (uint8_t *)port->wakepatt, port->patt_len, 0, port->patt_offset );
+                    result = whd_tlsoe_del_wowl_pattern( ctxt->whd, (uint8_t *)port->wakepatt, port->patt_len, WOWL_PATTERN_TYPE_SECWOWL, port->patt_offset );
                     if ( result == WHD_SUCCESS )
                     {
                         OL_LOG_TLSOE( LOG_OLA_LVL_ERR, "%s: Deleting the wowl pattern when WHD activate fails \n", __func__ );
@@ -241,7 +243,7 @@ static void cylpa_tlsoe_ol_pm( void *ol, ol_pm_st_t st )
         for ( int i = 0; i < MAX_TLSOE; i++ )
         {
             port = &tlsoe_cfg->ports[i];
-            result = whd_tlsoe_del_wowl_pattern( ctxt->whd, (uint8_t *)port->wakepatt, port->patt_len, 0, port->patt_offset );
+            result = whd_tlsoe_del_wowl_pattern( ctxt->whd, (uint8_t *)port->wakepatt, port->patt_len, WOWL_PATTERN_TYPE_SECWOWL, port->patt_offset );
             if ( result == WHD_SUCCESS )
             {
                 result = whd_tlsoe_disable( ctxt->whd, port->local_port, port->remote_port, port->remote_ip, port->tls_socket );
@@ -328,3 +330,4 @@ int cylpa_tlsoe_ol_set_socket_config( int index, uint16_t local_port, uint16_t r
 #ifdef __cplusplus
 }
 #endif
+#endif //CYCFG_WIFI_MQTT_OL_SUPPORT
