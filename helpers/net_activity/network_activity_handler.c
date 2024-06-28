@@ -497,6 +497,9 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
     cy_time_t lp_start_time;
     cy_time_t lp_end_time;
     uint32_t state = ST_SUCCESS;
+#ifdef CYCFG_ULP_SUPPORT_ENABLED
+    static bool is_ulp_configured = false;
+#endif
 
 #ifdef CYCFG_ULP_SUPPORT_ENABLED
     whd_interface_t ifp = NULL;
@@ -528,9 +531,9 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
             */
             flags = (CY_LPA_TX_EVENT_FLAG | CY_LPA_RX_EVENT_FLAG);
 
-            /* Configure ULP mode on specified interface */
+            /* Configure ULP DS2 mode on specified interface only once */
 #ifdef CYCFG_ULP_SUPPORT_ENABLED
-            if(cy_wcm_is_connected_to_ap() == true)
+            if(cy_wcm_is_connected_to_ap() == true && is_ulp_configured == false)
             {
                 uint32_t set_ulp_mode = CY_ULP_MODE_SUPPORT;
                 uint32_t ulp_wait_time = inactive_window_ms;
@@ -541,6 +544,8 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
                 }
 
                 whd_wifi_config_ulp_mode(ifp, &set_ulp_mode, &ulp_wait_time);
+
+                is_ulp_configured = true;
             }
 #endif
 

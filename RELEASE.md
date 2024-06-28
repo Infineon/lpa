@@ -8,14 +8,14 @@ The revision history of the LPA middleware is also available on the [Low Power A
 
 New in this release:
 
-- Added support for new offload Infra.
-- Added support for DLTRO offload, ICMP offload, NDOE offload, NULL KA offload, NAT KA offload, WOWLPF, MQTT Keepalive offload.
+- Added support for WOWLPF Net-pattern offload for CY8CEVAL-062S2-CYW43022CUB.
 
 
 ### Release versions
 
 |  Version         | Description of change                                                  | Comments                                                 |
 | ---------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 5.4.0            | Added support for WOWLPF Net-pattern offload for CY8CEVAL-062S2-CYW43022CUB         | |
 | 5.3.0            | Added support for CYW955913EVK-01 Kit         | |
 | 5.2.0            | Added support for new offload Infra. Added support for DLTRO offload, ICMP offload, NDOE offload, NULL KA offload, NAT KA offload, WOWLPF, MQTT Keepalive offload         | |
 | 5.1.0            | Added support for CY8CEVAL-062S2-CYW43022CUB kit                       | |

@@ -51,7 +51,7 @@
 #include "whd_wlioctl.h"
 #include "whd_endian.h"
 
-#ifdef CYCFG_WOWL_MAGIC_PKT_ENABLED
+#ifdef CYCFG_WOWLPF_OL_ENABLED
 
 #ifdef __cplusplus
 extern "C" {
@@ -431,4 +431,4 @@ whd_wowl_set_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_offset, uin
 }
 #endif
 
-#endif //CYCFG_WOWL_MAGIC_PKT_ENABLED
+#endif //CYCFG_WOWLPF_OL_ENABLED

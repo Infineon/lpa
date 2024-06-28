@@ -38,7 +38,7 @@
 
 /**
  *******************************************************************************
- * \mainpage Low Power Assistant Middleware Library 5.3.0 
+ * \mainpage Low Power Assistant Middleware Library 5.4.0 
  *******************************************************************************
  * \section section_lpa_overview Overview
  *******************************************************************************
@@ -2406,7 +2406,9 @@
  * 2. Open library manager and add MQTT middleware into this application.
  * 3. Copy <a href="https://github.com/Infineon/mtb-example-wifi-mqtt-client/tree/master/configs">
  * <b>configs</b></a> folder into the application.
- * 4. Configure MQTT keepalive offload. The easiest way to configure MQTT keepalive offload
+ * 4. To configure MQTT offload client configurations refer <a href="https://github.com/Infineon/mtb-example-wifi-mqtt-client/blob/master/README.md#operation"> 
+ * <b>readme</b></a>. Make sure keep-alive interval (MQTT_KEEP_ALIVE_SECONDS) in mqtt_client_config.h should be greater than 10 seconds.
+ * 5. Configure MQTT keepalive offload. The easiest way to configure MQTT keepalive offload
  *    is to use the ModusToolbox&trade; Device Configurator. \n
  *    * Refer section \ref section_lpa_hostwake to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.
  *    * In design.modus, switch to the connectivity device "CYW43022CUB" tab.
@@ -2414,21 +2416,30 @@
  *    * In "Wi-Fi - Parameters" pane, enable "Host Wake Configuration" and 
  *      set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".
  *    * Enable "MQTT Offload Configuration".
- *    * Configure "MQTT wake pattern".
+ *    * Configure "MQTT wake pattern" if user needs device to wake up for specific wake pattern. Else, MCU will wake up for any packet targetted to this device.
  *    * Save the configuration to generate the necessary code.
- * 5. In the application, subscribe for the topic which is used to publish the wake pattern from the server.
- * 6. Intergate LPA API's needed for MQTT offload into the application. Refer \ref subsection_lpa_snippet_7 which proivdes information about the APIs to be called from application.
- * 7. Add the following to COMPONENTS in the application Makefile if not present: FREERTOS, LWIP, and MBEDTLS.
+ * 6. In the application, subscribe for the topic which is used to publish the wake pattern from the server.
+ * 7. Intergate LPA API's needed for MQTT offload into the application. Refer \ref subsection_lpa_snippet_7 which proivdes information about the APIs to be called from application.
+ * 8. Open mbedtls_user_config.h header file and comment this macro to enable support for key export.
+ *    \code
+ *    #undef MBEDTLS_SSL_EXPORT_KEYS
+ *    \endcode
+ * 9. MQTT offload supports only SHA1 hash algorithm. Hence in mbedtls_user_config.h enable ciphersuites which supports only SHA1. Below is an example to enable SHA1 ciphersuites.
+ *    \code
+ *    #define MBEDTLS_SSL_CIPHERSUITES  MBEDTLS_TLS_RSA_WITH_AES_128_CBC_SHA, MBEDTLS_TLS_RSA_WITH_AES_256_CBC_SHA
+ *    \endcode
+ 
+ * 10. Add the following to COMPONENTS in the application Makefile if not present: FREERTOS, LWIP, and MBEDTLS.
  *    \code
  *    COMPONENTS = FREERTOS LWIP MBEDTLS WCM SECURE_SOCKETS
  *    \endcode
- * 8. Build the project and program the board.
+ * 11. Build the project and program the board.
  *    The following command is an example for the CY8CEVAL-062S2-CYW43022CUB board, using GCC_ARM as the toolchain:
  *    \code
  *    make build TARGET=CY8CEVAL-062S2-CYW43022CUB TOOLCHAIN=GCC_ARM
  *    make program TARGET=CY8CEVAL-062S2-CYW43022CUB TOOLCHAIN=GCC_ARM
  *    \endcode
- * 9. When the application executes, the console output shows that it connected to the specified Wi-Fi AP, MQTT connection successful and network stack is suspended. As part of this MQTT offload will be enabled.
+ * 12. When the application executes, the console output shows that it connected to the specified Wi-Fi AP, MQTT connection successful and network stack is suspended. As part of this MQTT offload will be enabled.
  *    \code
  *    ===============================================================
  *    CE229889 - AnyCloud Example: MQTT Client KEEPALIVE OFFLOAD
@@ -2469,7 +2480,7 @@
  *    
  *    Network Stack Suspended, MCU will enter DeepSleep power mode
  *    \endcode  
- * 10. Verify in Wireshark that TLS Keepalive request is send from the device periodically and Keepalive response is received from the server.
+ * 13. Verify in Wireshark that TLS Keepalive request is send from the device periodically and Keepalive response is received from the server.
  *
  *******************************************************************************
  * \subsection group_lpa_p2_cc Wi-Fi low power configuration considerations
