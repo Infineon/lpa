@@ -10,7 +10,7 @@ The LPA middleware is essentially a Wi-Fi offload manager that is instantiated w
 
 The LPA middleware library consists of the following components:
 
-- Configurator tool (using a personality), which makes the low-power features of the system easy to use. This personality writes data structures; after the configuration is saved, it generates *cycfg_connectivity_wifi.h*,*cycfg_connectivity_wifi.c* for PSoC&trade; 6 and *cycfg_peripherals.h*, *cycfg_peripherals.c* for CYW955913EVK-01 based on the settings made in the Device Configurator. See the [ModusToolbox&trade; Device Configurator tool guide](https://www.infineon.com/dgdl/Infineon-ModusToolbox_Device_Configurator_4.10_User_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c88704c7a0188a18bc3c94e70&redirId=180683).
+- Configurator tool (using a personality), which makes the low-power features of the system easy to use. This personality writes data structures; after the configuration is saved, it generates *cycfg_connectivity_wifi.h*,*cycfg_connectivity_wifi.c* for PSoC&trade; 6 and *cycfg_peripherals.h*, *cycfg_peripherals.c* for CYW955913EVK-01 based on the settings made in the Device Configurator. See the [ModusToolbox&trade; Device Configurator tool guide](https://www.infineon.com/dgdl/Infineon-ModusToolbox_Device_Configurator_4.20_User_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c8d2fe47b018e0ea9a6727916&redirId=180683).
 
 - The generated source files are compiled and linked in the executable. The API in the generated source will be invoked at system initialization.
 
@@ -56,6 +56,8 @@ This library and its features are supported on the following Infineon platforms:
 - [PSoC&trade; 62S2 evaluation kit (CY8CEVAL-062S2-CYW43022CUB)](https://www.infineon.com/cms/en/product/evaluation-boards/cy8ceval-062s2/)
 
 - [CYW955913EVK-01 Wi-Fi Bluetooth&reg; Prototyping Kit (CYW955913EVK-01)](https://www.infineon.com/CYW955913EVK-01)
+
+- [PSoC&trade; 62S2 evaluation kit (CY8CEVAL-062S2-CYW955513SDM2WLIPA)](https://www.infineon.com/cms/en/product/evaluation-boards/cy8ceval-062s2/)
 
 ## Limitations
 
@@ -116,7 +118,7 @@ The following resources contain more information:
 - [LPA middleware RELEASE.md](./RELEASE.md)
 - [Low Power Assistant middleware library](https://infineon.github.io/lpa/api_reference_manual/html/index.html)
 - [ModusToolbox&trade; software environment, quick start guide, documentation, and videos](https://www.infineon.com/cms/en/design-support/tools/sdk/modustoolbox-software/?redirId=178597)
-- [LPA middleware code example for FreeRTOS](https://github.com/Infineon/mtb-example-anycloud-wlan-lowpower)
+- [LPA middleware code example for FreeRTOS](https://github.com/Infineon/mtb-example-wifi-wlan-lowpower)
 - [ModusToolbox&trade; Device Configurator tool guide](https://www.infineon.com/dgdl/Infineon-ModusToolbox_Device_Configurator_4.20_User_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c8d2fe47b018e0ea9a6727916&redirId=180683)
 - [PSoC&trade; 6 technical reference manual](https://www.infineon.com/dgdl/Infineon-PSoC_6_MCU_PSoC_63_with_BLE_Architecture_Technical_Reference_Manual-AdditionalTechnicalInformation-v11_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f946fea01ca&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-technical_reference_manual&redirId=TRM148)
 - [PSoC&trade; 63 with Bluetooth&reg; datasheet](https://www.infineon.com/dgdl/Infineon-PSoC_6_MCU_PSoC_63_with_BLE_Datasheet_Programmable_System-on-Chip_(PSoC)-DataSheet-v16_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0ee4efe46c37&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-datasheet&redirId=VL4079)

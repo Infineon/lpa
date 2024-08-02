@@ -24,7 +24,7 @@
 */
 var NAVTREE =
 [
-  [ "Low Power Assistant Middleware Library 5.4.0", "index.html", [
+  [ "Low Power Assistant Middleware Library 5.5.0", "index.html", [
     [ "Overview", "index.html#section_lpa_overview", [
       [ "Features", "index.html#section_lpa_features", null ]
     ] ],

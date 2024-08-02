@@ -80,6 +80,7 @@ extern "C" {
  *  Structures
  *
  *********************************************************************/
+#pragma pack(1)
 typedef struct
 {
     uint8_t ether_dhost[ETHER_ADDR_LEN];
@@ -133,7 +134,7 @@ typedef struct udp_hdr
     uint16_t len;                           /* UDP Len */
     uint16_t chksum;                        /* UDP Checksum */
 } udp_hdr_t;
-
+#pragma pack()
 
 /*********************************************************************************************
 *

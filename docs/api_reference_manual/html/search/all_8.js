@@ -19,6 +19,6 @@ var searchData=
   ['log_5fola_5ftko_16',['LOG_OLA_TKO',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaae7cbadaf0dc8ae8f78fa67c4c9303dbd',1,'cy_lpa_wifi_olm.h']]],
   ['log_5fola_5ftlsoe_17',['LOG_OLA_TLSOE',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaa3da4c8a9d9060bd8bb87c403516a74c6',1,'cy_lpa_wifi_olm.h']]],
   ['log_5fola_5fwowlpf_18',['LOG_OLA_WOWLPF',['../group__group__loglevel__enum.html#ggaed8d713d5472a20438e48a958d960daaae8ee5d116fd95d31f09f690d2e1b830a',1,'cy_lpa_wifi_olm.h']]],
-  ['low_20power_20assistant_20middleware_20library_205_2e4_2e0_19',['Low Power Assistant Middleware Library 5.4.0',['../index.html',1,'']]],
+  ['low_20power_20assistant_20middleware_20library_205_2e5_2e0_19',['Low Power Assistant Middleware Library 5.5.0',['../index.html',1,'']]],
   ['lpa_20utilities_20api_20',['LPA Utilities API',['../group__lpautilities.html',1,'']]]
 ];

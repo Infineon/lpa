@@ -38,7 +38,7 @@
 
 /**
  *******************************************************************************
- * \mainpage Low Power Assistant Middleware Library 5.4.0 
+ * \mainpage Low Power Assistant Middleware Library 5.5.0 
  *******************************************************************************
  * \section section_lpa_overview Overview
  *******************************************************************************
@@ -1728,8 +1728,8 @@
  * Do the following to set up the wifi-low-power tcp keepalive offload
  * example and enable the TCP keepalive offload feature.
  *
- * 1. Refer readme of <a href="https://github.com/Infineon/mtb-example-anycloud-offload-tcp-keepalive.git"><b> 
- * mtb-example-anycloud-offload-tcp-keepalive</b></a> for project creation. 
+ * 1. Refer readme of <a href="https://github.com/Infineon/mtb-example-wlan-offloads.git"><b> 
+ * mtb-example-wlan-offloads</b></a> for project creation. 
  * 2. Configure TCP keepalive offload. The easiest way to configure TCP keepalive offload
  *    is to use the ModusToolbox&trade; Device Configurator.
  *    * <u>Confguring TCP keepalive offload on CY8CEVAL-062S2-CYW43022CUB:</u> \n
@@ -3020,6 +3020,8 @@
  *
  * \image html hostwake_config_43012_062S2_kit.png height=400px
  *
+ * \note For CYW955913EVK-01, host wake pin configuration does not apply as the Doorbell wake interrupt is enabled by default.
+ * \note For CY8CEVAL-062S2-CYW955513SDM2WLIPA, <b><i>Drive Mode</i></b> should be set to <b><i>Resistive Pull UP, Input Buffer ON</i></b>
  *
  *******************************************************************************
  * \section section_lpa_bt_wakeconfig BT Wake Configuration
@@ -3117,7 +3119,7 @@
  *   <b>ModusToolbox&trade; Software Environment, Quick Start Guide, Documentation,
  *   and Videos</b></a>
  *
- * * <a href="https://github.com/Infineon/mtb-example-anycloud-wlan-lowpower">
+ * * <a href="https://github.com/Infineon/mtb-example-wifi-wlan-lowpower">
  *   <b>LPA Middleware Code Example for FREERTOS </b></a>
  *
  * * <a href="https://github.com/Infineon">
