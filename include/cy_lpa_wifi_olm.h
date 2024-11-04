@@ -168,12 +168,10 @@ typedef enum
     LOG_OLA_ARP,       /**< LOG assist ARP */
     LOG_OLA_PF,        /**< LOG assist PF */
     LOG_OLA_TKO,       /**< LOG assist TKO */
-#ifndef COMPONENT_CAT5
     LOG_OLA_TLSOE,     /**< LOG assist TLSOE */
     LOG_OLA_WOWLPF,    /**< LOG assist WOWLPF */
     LOG_OLA_NKO,       /**< LOG assist NKO */
     LOG_OLA_NULLKA,    /**< LOG assist NULLKA */
-#endif
     LOG_OLA_MAX_INDEX  /**< LOG assist MAX */
 } LOG_OFFLOAD_ASSIST_T;
 
@@ -238,16 +236,16 @@ extern int ol_logging(LOG_OFFLOAD_ASSIST_T assist, LOG_OFFLOAD_ASSIST_LEVEL_T le
 /** \} */
 
 /**< Offload Logging Macros */
-#define OL_LOG(...) ol_logging(__VA_ARGS__)                     /**< ex: OL_LOG(LOG_OLA_ARP, LOG_OLA_LVL_NOTICE, "ARP OL IP: %s\n", ip_string); */
+#define OL_LOG(...) ol_logging(__VA_ARGS__)                         /**< ex: OL_LOG(LOG_OLA_ARP, LOG_OLA_LVL_NOTICE, "ARP OL IP: %s\n", ip_string); */
 
-#define OL_LOG_OLM(...) ol_logging(LOG_OLA_OLM, __VA_ARGS__)    /**< ex: OL_LOG_ARP(LOG_OLA_LVL_NOTICE, "ARP OL IP: %s\n", ip_string); */
-#define OL_LOG_ARP(...) ol_logging(LOG_OLA_ARP, __VA_ARGS__)    /**< ex: OL_LOG_ARP(LOG_OLA_LVL_NOTICE, "ARP OL IP: %s\n", ip_string); */
-#define OL_LOG_PF(...) ol_logging(LOG_OLA_PF, __VA_ARGS__)      /**< ex: OL_LOG_PF(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
-#define OL_LOG_TKO(...) ol_logging(LOG_OLA_TKO, __VA_ARGS__)    /**< ex: OL_LOG_TKO(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
+#define OL_LOG_OLM(...) ol_logging(LOG_OLA_OLM, __VA_ARGS__)        /**< ex: OL_LOG_ARP(LOG_OLA_LVL_NOTICE, "ARP OL IP: %s\n", ip_string); */
+#define OL_LOG_ARP(...) ol_logging(LOG_OLA_ARP, __VA_ARGS__)        /**< ex: OL_LOG_ARP(LOG_OLA_LVL_NOTICE, "ARP OL IP: %s\n", ip_string); */
+#define OL_LOG_PF(...) ol_logging(LOG_OLA_PF, __VA_ARGS__)          /**< ex: OL_LOG_PF(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
+#define OL_LOG_TKO(...) ol_logging(LOG_OLA_TKO, __VA_ARGS__)        /**< ex: OL_LOG_TKO(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
 #define OL_LOG_TLSOE(...) ol_logging(LOG_OLA_TLSOE, __VA_ARGS__)    /**< ex: OL_LOG_TKO(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
-#define OL_LOG_WOWLPF(...) ol_logging(LOG_OLA_WOWLPF, __VA_ARGS__)    /**< ex: OL_LOG_WOWLPF(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
-#define OL_LOG_NKO(...) ol_logging(LOG_OLA_NKO, __VA_ARGS__) /**< ex: OL_LOG_NKO(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
-#define OL_LOG_NULLKA(...) ol_logging(LOG_OLA_NULLKA, __VA_ARGS__)    /**< ex: OL_LOG_NULLKAF(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
+#define OL_LOG_WOWLPF(...) ol_logging(LOG_OLA_WOWLPF, __VA_ARGS__)  /**< ex: OL_LOG_WOWLPF(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
+#define OL_LOG_NKO(...) ol_logging(LOG_OLA_NKO, __VA_ARGS__)        /**< ex: OL_LOG_NKO(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
+#define OL_LOG_NULLKA(...) ol_logging(LOG_OLA_NULLKA, __VA_ARGS__)  /**< ex: OL_LOG_NULLKAF(LOG_OLA_LVL_ERR, "PF: Bad Args\n"); */
 
 #else
 

@@ -45,6 +45,9 @@
 #ifdef COMPONENT_LWIP
 #include "lwip/ip.h"
 #endif
+#ifdef COMPONENT_NETXDUO
+#include "cy_nw_helper.h"
+#endif
 #include "whd_sdpcm.h"
 #include "cy_whd_tls_api.h"
 #include "whd_wifi_api.h"
@@ -319,7 +322,17 @@ int cylpa_tlsoe_ol_set_socket_config( int index, uint16_t local_port, uint16_t r
 
     if( *remote_ip != 0 )
     {
+#ifdef COMPONENT_LWIP
         strcpy( tlsoe_ol_connect_params->remote_ip, ip4addr_ntoa( ( const ip4_addr_t *) remote_ip ) );
+#endif
+#ifdef COMPONENT_NETXDUO
+        char ip_str[16] = {0};
+        cy_nw_ip_address_t addr;
+        addr.version = NW_IP_IPV4;
+        addr.ip.v4 = *remote_ip;
+        cy_nw_ntoa (&addr, ip_str);
+        strcpy( tlsoe_ol_connect_params->remote_ip, ip_str );
+#endif
     }
 
     cy_tlsoe_ol_cfg_index++;

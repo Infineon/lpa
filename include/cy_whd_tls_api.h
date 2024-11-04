@@ -35,7 +35,6 @@
 * @file cy_whd_tls_api.h
 * @brief WHD MQTT TLS Offload API.
 */
-#ifndef COMPONENT_CAT5
 
 #ifndef WHD_TLSOE_API_H__
 #define WHD_TLSOE_API_H__  (1)
@@ -82,4 +81,3 @@ whd_tlsoe_activate(whd_t *whd, uint16_t local_port, uint16_t remote_port, const 
 #endif
 
 #endif /* !WHD_TLSOE_API_H__ */
-#endif //!COMPONENT_CAT5

@@ -592,7 +592,7 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
 #endif
     if((wifi == NULL) || (cy_wcm_is_connected_to_ap() == 0))
     {
-    	return ST_BAD_STATE;
+        return ST_BAD_STATE;
     }
 
     if (false == emac_activity_callback_registered)
@@ -674,9 +674,9 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
                 state = ST_WAIT_TIMEOUT_EXPIRED;
             }
             cylpa_network_state_handler(state);
-            cylpa_resume_ns();
             /* Call OLM API to reset back the configurations */
             cylpa_olm_dispatch_pm_notification(cy_get_olm_instance(), OL_PM_ST_AWAKE);
+            cylpa_resume_ns();
             cy_rtos_set_mutex(&cy_lp_mutex);
         }
     }

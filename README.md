@@ -32,8 +32,6 @@ The LPA middleware library consists of the following components:
 
 For more release-specific information, see [RELEASE.md](./RELEASE.md)
 
-**Note:** CYW955913EVK-01 currently supports only ARP offload, packet filter offload and TCP keepalive offload.
-
 ## Requirements
 
 - [ModusToolbox&trade; software](https://www.infineon.com/modustoolbox) v3.2
@@ -43,7 +41,7 @@ For more release-specific information, see [RELEASE.md](./RELEASE.md)
 
 This library and its features are supported on the following Infineon platforms:
 
-- [PSoC&trade; 6 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/cms/en/product/evaluation-boards/cy8cproto-062-4343w/) (CY8CPROTO-062-4343W) 
+- [PSoC&trade; 6 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/cms/en/product/evaluation-boards/cy8cproto-062-4343w/) (CY8CPROTO-062-4343W)
 
 - [PSoC&trade; 62S2 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/cms/en/product/evaluation-boards/cy8ckit-062s2-43012/) (CY8CKIT-062S2-43012)
 
@@ -78,7 +76,7 @@ The LPA could be configured using the ModusToolbox&trade; MCU, Wi-Fi, and Blueto
 
 See [wifi-core-freertos-lwip-mbedtls README](https://github.com/Infineon/wifi-core-freertos-lwip-mbedtls/blob/master/README.md#quick-start) Quick start section for basic Makefile changes required .
 
-MCU Deep Sleep Functionality is enabled by default in *FreeRTOSConfig.h* as follows: 
+MCU Deep Sleep Functionality is enabled by default in *FreeRTOSConfig.h* as follows:
 
 ```
 #include <cycfg_system.h>

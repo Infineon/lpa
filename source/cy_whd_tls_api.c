@@ -50,6 +50,11 @@
 #ifdef COMPONENT_LWIP
 #include "lwip/tcp.h"
 #endif
+#ifdef COMPONENT_NETXDUO
+#include "nx_ipv4.h"
+#include "nx_api.h"
+#include "cy_network_mw_core.h"
+#endif
 #include "ip4string.h"
 #include "cy_secure_sockets.h"
 #include "cycfg.h"
@@ -92,8 +97,10 @@ extern whd_result_t whd_wowl_get_secure_session_status(whd_interface_t ifp, secu
 extern whd_result_t whd_wowl_clear(whd_interface_t ifp);
 extern whd_result_t whd_wowl_activate_secure(whd_interface_t ifp, tls_param_info_t *tlsparam);
 #endif
+#ifdef COMPONENT_LWIP
 ssize_t etharp_find_addr(struct netif *netif, const ip4_addr_t *ipaddr, wl_ether_addr_t **eth_ret,
                          const ip4_addr_t **ip_ret);
+#endif
 /*********************************************************************************************
 *
 *  Forward Declarations
@@ -134,11 +141,52 @@ whd_result_t whd_tlsoe_update_sock_seq( uint16_t local_port, uint16_t remote_por
             list = list->next;
         }
     }
-    return ret;
-#else
-    return ret;
 #endif
+
+#if defined(COMPONENT_NETXDUO)
+    NX_TCP_SOCKET  *socket_ptr;
+    ULONG          sockets_count;
+    UINT           keepalive_enabled = NX_FALSE;
+    NX_IP          *ip_ptr = NULL;
+    uint32_t       tmp_ip;
+
+    ip_ptr = cy_network_get_nw_interface(CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE);
+
+    /* Pickup the number of created TCP sockets.  */
+    sockets_count =  ip_ptr -> nx_ip_tcp_created_sockets_count;
+
+    /* Pickup the first socket.  */
+    socket_ptr =  ip_ptr -> nx_ip_tcp_created_sockets_ptr;
+
+    while ((sockets_count--) && socket_ptr)
+    {
+        keepalive_enabled = socket_ptr -> nx_tcp_socket_keepalive_enabled;
+        /* Is keep alive enabled on this socket? */
+        if (keepalive_enabled)
+        {
+            if (socket_ptr -> nx_tcp_socket_state == NX_TCP_ESTABLISHED)
+            {
+                stoip4(remote_ip, strlen(remote_ip), &tmp_ip);
+
+                /* In netxduo IP address is stored in little-endian format.
+                 * Converting network order to host byte order which is little-endian for comparison */
+                tmp_ip = ntohl(tmp_ip);
+
+                if ((socket_ptr -> nx_tcp_socket_port == local_port) && (socket_ptr -> nx_tcp_socket_connect_port == remote_port) && (socket_ptr -> nx_tcp_socket_connect_ip.nxd_ip_address.v4 == tmp_ip) )
+                {
+                    /* Restore the updated TCP sequence numbers obtained from the FW. */
+                    socket_ptr -> nx_tcp_socket_tx_sequence = seq_num;
+                    socket_ptr -> nx_tcp_socket_rx_sequence = ack_num;
+                    ret = WHD_SUCCESS;
+                }
+            }
+        }
+    }
+#endif
+
+    return ret;
 }
+
 
 /** GET sequence number of the TCP packet when provided source and destination port,
  * destination IP address.
@@ -176,8 +224,60 @@ whd_result_t whd_tlsoe_get_sock_stats( cy_tls_sock_seq_t *seq, uint16_t local_po
         }
     }
     return 1;
-#else
-    return 0;
+#endif
+
+#if defined(COMPONENT_NETXDUO)
+
+    NX_TCP_SOCKET  *socket_ptr;
+    ULONG          sockets_count;
+    UINT           keepalive_enabled = NX_FALSE;
+    NX_IP          *ip_ptr = NULL;
+    uint32_t       tmp_ip;
+
+    /* Get NX_IP pointer */
+    ip_ptr = cy_network_get_nw_interface(CY_NETWORK_WIFI_STA_INTERFACE, 0);
+
+    /* Pickup the number of created TCP sockets.  */
+    sockets_count =  ip_ptr -> nx_ip_tcp_created_sockets_count;
+
+    /* Pickup the first socket.  */
+    socket_ptr =  ip_ptr -> nx_ip_tcp_created_sockets_ptr;
+
+    /* Loop through the created sockets.  */
+    while ((sockets_count--) && socket_ptr)
+    {
+        keepalive_enabled = socket_ptr -> nx_tcp_socket_keepalive_enabled;
+        /* Is keep alive enabled on this socket? */
+        if (keepalive_enabled)
+        {
+            if (socket_ptr -> nx_tcp_socket_state == NX_TCP_ESTABLISHED)
+            {
+                stoip4(remote_ip, strlen(remote_ip), &tmp_ip);
+
+                /* In netxduo IP address is stored in little-endian format.
+                 * Converting network order to host byte order which is little-endian for comparison */
+                tmp_ip = ntohl(tmp_ip);
+
+                if ((socket_ptr -> nx_tcp_socket_port == local_port) && (socket_ptr -> nx_tcp_socket_connect_port == remote_port) && (socket_ptr -> nx_tcp_socket_connect_ip.nxd_ip_address.v4 == tmp_ip) )
+                {
+                    /* Store the IP address in Big-endian format.
+                     * Convert host byte order to network order before storing */
+                    seq->srcip = htonl(ip_ptr -> nx_ip_interface[0].nx_interface_ip_address);
+                    seq->dstip = htonl(socket_ptr -> nx_tcp_socket_connect_ip.nxd_ip_address.v4);
+
+                    seq->srcport = socket_ptr -> nx_tcp_socket_port;
+                    seq->dstport = socket_ptr -> nx_tcp_socket_connect_port;
+                    seq->seqnum = socket_ptr -> nx_tcp_socket_tx_sequence;
+                    seq->acknum = socket_ptr -> nx_tcp_socket_rx_sequence;
+                    seq->rx_window = socket_ptr -> nx_tcp_socket_rx_window_default;
+                    return WHD_SUCCESS;
+                }
+            }
+        }
+        /* Move to the next TCP socket.  */
+        socket_ptr =  socket_ptr -> nx_tcp_socket_created_next;
+    }
+    return 1;
 #endif
 }
 
@@ -282,6 +382,7 @@ whd_tlsoe_del_wowl_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_size,
     {
         result = whd_wowl_set_pattern( whd, pattern, pattern_size, pattern_type, patttern_offset, 0 );
     }
+
 #endif
     return result;
 }
@@ -290,7 +391,6 @@ whd_result_t
 whd_tlsoe_disable( whd_t *whd, uint16_t local_port, uint16_t remote_port, const char *remote_ip, void* socket )
 {
     whd_result_t ret = WHD_SUCCESS;
-#ifdef CYCFG_WIFI_MQTT_OL_SUPPORT
     cy_rslt_t result = CY_RSLT_SUCCESS;
     secure_sess_info_t tls_sess;
 
@@ -310,22 +410,99 @@ whd_tlsoe_disable( whd_t *whd, uint16_t local_port, uint16_t remote_port, const 
     ret = whd_wowl_clear( whd );
 
     whd_wifi_deregister_event_handler( whd, tlsoe_offload_update_entry );
-#endif
     return ret;
 }
+
+#if defined(COMPONENT_NETXDUO)
+/*
+ * Returns table index if found, else returns -1
+ */
+static int find_mac_addr(uint32_t *dst_ip, wl_ether_addr_t *eth_ret, uint32_t *ip_ret)
+{
+    UINT          index=-1;
+    NX_ARP       *arp_ptr;
+    NX_ARP       *search_ptr;
+    NX_ARP       *arp_list_head;
+    NX_IP        *ip_ptr = NULL;
+    NX_INTERFACE *outgoing_interface = NX_NULL;
+    ULONG         res;
+    ULONG         next_hop_address;
+
+    /* Get NX_IP pointer */
+    ip_ptr = cy_network_get_nw_interface(CY_NETWORK_WIFI_STA_INTERFACE, CY_NETWORK_WIFI_STA_INTERFACE);
+
+    /* Find the next hop address of given IP address */
+    res = _nx_ip_route_find(ip_ptr, *dst_ip, &outgoing_interface, &next_hop_address);
+    if(res != 0)
+    {
+        TLSOE_ERROR_PRINTF( ( "_nx_ip_route_find failed. res = %x \n", res ) );
+    }
+
+    /* Calculate the hash index for the next hop IP address.
+     * Note: The IP address should be in little-endian(host byte order) format for netxduo  */
+    index =  (UINT)((next_hop_address + ((next_hop_address) >> 8)) & NX_ARP_TABLE_MASK);
+
+    /* Pickup the head pointer of the ARP entries for this IP instance.  */
+    arp_list_head =  ip_ptr -> nx_ip_arp_table[index];
+
+    search_ptr =  arp_list_head;
+    arp_ptr    =  NX_NULL;
+    while (search_ptr)
+    {
+        /* Determine if there is a duplicate IP address.
+         * Note: The IP address should be in little-endian(host byte order) format for netxduo  */
+        if (search_ptr -> nx_arp_ip_address == next_hop_address)
+        {
+            /* Yes, the IP address matches, setup the ARP entry pointer.  */
+            arp_ptr =  search_ptr;
+
+            /* Get out of the loop.  */
+            break;
+        }
+
+        /* Move to the next entry in the active list.  */
+        search_ptr =  search_ptr -> nx_arp_active_next;
+
+        /* Determine if the search pointer is back at the head of
+           the list.  */
+        if (search_ptr == arp_list_head)
+        {
+            /* End of the ARP list, end the search.  */
+            break;
+        }
+    }
+
+    /* Determine if an ARP entry is found.  */
+    if (arp_ptr)
+    {
+        eth_ret->octet[0] = (uint8_t)((arp_ptr->nx_arp_physical_address_msw >>  8) & 0xFF);
+        eth_ret->octet[1] = (uint8_t)((arp_ptr->nx_arp_physical_address_msw >>  0) & 0xFF);
+        eth_ret->octet[2] = (uint8_t)((arp_ptr->nx_arp_physical_address_lsw >> 24) & 0xFF);
+        eth_ret->octet[3] = (uint8_t)((arp_ptr->nx_arp_physical_address_lsw >> 16) & 0xFF);
+        eth_ret->octet[4] = (uint8_t)((arp_ptr->nx_arp_physical_address_lsw >>  8) & 0xFF);
+        eth_ret->octet[5] = (uint8_t)((arp_ptr->nx_arp_physical_address_lsw >>  0) & 0xFF);
+        *ip_ret = arp_ptr->nx_arp_ip_address;
+    }
+    return index;
+}
+#endif
 
 whd_result_t
 whd_tlsoe_activate( whd_t *whd, uint16_t local_port, uint16_t remote_port, const char *remote_ip, uint32_t interval, uint8_t* pkt, uint32_t pkt_len, void* socket )
 {
     whd_result_t result = WHD_SUCCESS;
-#ifdef CYCFG_WIFI_MQTT_OL_SUPPORT
-#if LWIP_TCP
+#if defined(COMPONENT_NETXDUO)
+    uint32_t ip_ret = 0;
+    wl_ether_addr_t eth_ret;
+    uint32_t dst_ip;
+#endif
+#if defined(COMPONENT_LWIP)
+    const ip4_addr_t *ip_ret;
+    wl_ether_addr_t *eth_ret;
+#endif
     tls_param_info_t tls_info;
     cy_tls_offload_info_t cy_tls_offload_info;
     cy_tls_sock_seq_t seq;
-    const ip4_addr_t *ip_ret;
-    wl_ether_addr_t *eth_ret;
-
     memset( &cy_tls_offload_info, 0x00, sizeof( cy_tls_offload_info ) );
     memset( &tls_info, 0x00, sizeof ( tls_info ) );
     memset( &seq, 0, sizeof ( seq ) );
@@ -344,6 +521,7 @@ whd_tlsoe_activate( whd_t *whd, uint16_t local_port, uint16_t remote_port, const
     }
 
     /* Remote mac address */
+#ifdef COMPONENT_LWIP
     if ( etharp_find_addr( NULL, (const ip4_addr_t * )&seq.dstip, &eth_ret, &ip_ret ) >= 0 )
     {
         if ( ip_ret->addr != seq.dstip )
@@ -353,6 +531,20 @@ whd_tlsoe_activate( whd_t *whd, uint16_t local_port, uint16_t remote_port, const
         memcpy( seq.dst_mac.octet, eth_ret, sizeof ( seq.dst_mac.octet ) );
     }
     else
+#endif
+#if defined(COMPONENT_NETXDUO)
+    dst_ip = ntohl(seq.dstip);
+    if (find_mac_addr(&dst_ip, &eth_ret, &ip_ret) >= 0)
+    {
+        /* Note: The IP address should be in little-endian(host byte order) format for netxduo */
+        if (ip_ret != ntohl(seq.dstip))
+        {
+            TLSOE_ERROR_PRINTF( ("%s: Hey orig IP and Netxduo IP don't match!\n", __func__) );
+        }
+        memcpy(seq.dst_mac.octet, &eth_ret, sizeof(seq.dst_mac.octet) );
+    }
+    else
+#endif
     {
         TLSOE_DEBUG_PRINTF( ( "%s: Remote mac addr not found, using bssid\n", __func__ ) );
         result = whd_wifi_get_bssid( whd, &seq.dst_mac );
@@ -375,7 +567,7 @@ whd_tlsoe_activate( whd_t *whd, uint16_t local_port, uint16_t remote_port, const
     {
         TLSOE_ERROR_PRINTF( ( "%s: cy_socket_get_tls_info failed: 0X%X\n", __func__, result ) );
         return WHD_BADARG;
-    }       
+    }
 
     tls_info.version.major = cy_tls_offload_info.protocol_major_ver;
     tls_info.version.minor = cy_tls_offload_info.protocol_minor_ver;
@@ -411,14 +603,14 @@ whd_tlsoe_activate( whd_t *whd, uint16_t local_port, uint16_t remote_port, const
     memcpy(tls_info.local_ip, &seq.srcip, sizeof(seq.srcip));
     memcpy(tls_info.local_mac_addr, seq.src_mac.octet, sizeof ( seq.src_mac.octet ) );
 
-    tls_info.remote_port = SWAP16(seq.dstport);   
+    tls_info.remote_port = SWAP16(seq.dstport);
     memcpy(tls_info.remote_ip, &seq.dstip, sizeof(seq.dstip));
     memcpy(tls_info.remote_mac_addr, seq.dst_mac.octet, sizeof ( seq.dst_mac.octet ) );
 
     tls_info.tcp_ack_num = SWAP32(seq.acknum);
     tls_info.tcp_seq_num = SWAP32(seq.seqnum);
     tls_info.app_syncid = (uint32_t) rand();
-    tls_info.keepalive_interval = interval; 
+    tls_info.keepalive_interval = interval;
 
     tls_info.payload_len = ( (pkt_len) < (TLS_MAX_PAYLOAD_LEN) ? (pkt_len) : (TLS_MAX_PAYLOAD_LEN) );
     memcpy(tls_info.payload, pkt, tls_info.payload_len);
@@ -433,8 +625,6 @@ whd_tlsoe_activate( whd_t *whd, uint16_t local_port, uint16_t remote_port, const
     /* Enable WLE_E_KTO Event */
     tcp_reset = 0;
     whd_management_set_event_handler(whd, tlsoe_events, tlsoe_callback_handler, (void *)whd, &tlsoe_offload_update_entry);
-#endif /* LWIP_TCP */
-#endif
     TLSOE_DEBUG_PRINTF( ( "%s: success\n", __func__ ) );
     return result;
 }

@@ -391,7 +391,7 @@ sock_stats(sock_seq_t *seq, uint16_t local_port, uint16_t remote_port, const cha
         /* Is keep alive enabled on this socket? */
         if (keepalive_enabled)
         {
-            if ((socket_ptr -> nx_tcp_socket_state == NX_TCP_ESTABLISHED))
+            if (socket_ptr -> nx_tcp_socket_state == NX_TCP_ESTABLISHED)
             {
                 stoip4(remote_ip, strlen(remote_ip), &tmp_ip);
 

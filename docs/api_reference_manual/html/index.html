@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Low Power Assistant Middleware Library 5.5.0: Low Power Assistant Middleware Library 5.5.0</title>
+<title>Low Power Assistant Middleware Library 5.6.0: Low Power Assistant Middleware Library 5.6.0</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,7 +27,7 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><a href="http://www.cypress.com/"><img alt="Logo" src="infineon_logo.png"/></a></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Low Power Assistant Middleware Library 5.5.0</div>
+   <div id="projectname">Low Power Assistant Middleware Library 5.6.0</div>
   </td>
  </tr>
  </tbody>
@@ -83,7 +83,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Low Power Assistant Middleware Library 5.5.0 </div></div>
+  <div class="headertitle"><div class="title">Low Power Assistant Middleware Library 5.6.0 </div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="section_lpa_overview"></a>
@@ -101,7 +101,7 @@ Features</h2>
 <p >There are various use cases for the LPA covered in the following sections. The LPA allows you to configure different parts of the design to be energy-efficient.</p>
 <ul>
 <li><a class="el" href="index.html#group_lpa_p1">Part 1. MCU Low Power</a> Allows you to configure MCU to enter low-power mode to achieve maximum power savings.</li>
-<li><p class="startli"><a class="el" href="index.html#group_lpa_p2">Part 2. Wi-Fi low power</a></p><ul>
+<li><a class="el" href="index.html#group_lpa_p2">Part 2. Wi-Fi low power</a><ul>
 <li><a class="el" href="index.html#group_lpa_p2_host_wake">Wi-Fi host-wake signal</a> Allows the WLAN device to wake up the Host MCU from its low-power state.</li>
 <li><a class="el" href="index.html#group_lpa_p2_arp_offload">Wi-Fi ARP Offload</a> Improves the power consumption of the connected system by reducing the time that the host needs to stay awake because of ARP broadcast traffic.</li>
 <li><a class="el" href="index.html#group_lpa_p2_packet_filter">Wi-Fi Packet filter offload</a> Allows the host processor to limit which types of packets get passed up to the host processor from the WLAN subsystem. This is useful to keep out unwanted/unneeded packets from the network that might otherwise wake up the host out of a power saving Deep Sleep mode, or prevent it from entering Deep Sleep mode.</li>
@@ -114,7 +114,6 @@ Features</h2>
 <li><a class="el" href="index.html#group_lpa_p2_wowlpf">Wake on WirelessLAN</a> Allows the MCU to wake on configured patterns. This is useful to keep out from waking up the host from low power for unwanted packets.</li>
 <li><a class="el" href="index.html#group_lpa_p2_mqtt_keepalive">MQTT keepalive offload</a> Improves the power consumption of the host MCU by offloading MQTT keepalive functionality to WLAN firmware.</li>
 </ul>
-<dl class="section note"><dt>Note</dt><dd><a href="https://www.infineon.com/CYW955913EVK-01">CYW955913EVK-01 Wi-Fi Bluetooth&reg; Prototyping Kit</a> currently supports <a class="el" href="index.html#group_lpa_p2_arp_offload">Wi-Fi ARP Offload</a>, <a class="el" href="index.html#group_lpa_p2_packet_filter">Wi-Fi Packet filter offload</a> and <a class="el" href="index.html#group_lpa_p2_tcp_keepalive">Wi-Fi TCP keepalive offload</a>.</dd></dl>
 </li>
 <li><a class="el" href="index.html#group_lpa_p3">Part 3. Bluetooth&reg; Low Power</a> Enable the Bluetooth&reg; wake-up pins by configuring the Bluetooth&reg; host wake pin and Bluetooth&reg; device wake pin.</li>
 </ul>
@@ -224,7 +223,25 @@ ModusToolbox™ Device Configurator flow</h1>
 </ul>
 <p ><b>Note</b> Using the ModusToolbox&trade; Device Configurator overwrites changes that you made in the cycfg_system.h file.</p>
 <p ><b>CYW955913EVK-01</b></p>
-<p >For CYW955913EVK-01 the System Idle Power Mode is not configurable. By default the system is configured to the lowest power mode possible and this cannot be changed using the Device Configurator.</p>
+<p >For CYW955913EVK-01 Idle Power Mode can be configured to Active or Deepsleep using the Device Configurator. Follow the below mentioned steps to do that.</p>
+<p ><b>Note</b> By default the system is configured to deep sleep power mode.</p>
+<ul>
+<li>Navigate to the ModusToolbox&trade; installation folder and launch the ModusToolbox&trade; Device Configurator (&lt;install_dir&gt;/tools_3.2/device-configurator).</li>
+<li>Select File-&gt;Open, navigate to the board's design.modus file, and open it: <br  />
+ <em>&lt;code_example&gt;/bsps/TARGET_CYW955913EVK-01/config/design.modus</em> <br  />
+</li>
+<li>Select the <b>Power</b> tab and tick the <b>MCU</b> check box in Resource.</li>
+<li>Go to the MCU - Parameters pane and tick the <b>Enable MCU Low Power</b> check box under Power.</li>
+<li>Update <b>Idle Power Mode config</b> by selecting Active/Deepsleep in the dropdown.</li>
+<li>Select File-&gt;Save to generate the initialization code.</li>
+</ul>
+<div class="image">
+<img src="Power_Personality_CYW955913EVK.png" alt=""/>
+</div>
+<p >After saving the configuration file, the generated code is available under the GeneratedSource folder, located in the same directory as the design.modus file in the BSP:</p><ul>
+<li>C Data File: GeneratedSource/cycfg_peripherals.c</li>
+<li>C Header File: GeneratedSource/cycfg_peripherals.h</li>
+</ul>
 <h1><a class="anchor" id="group_lpa_p1"></a>
 Part 1. MCU Low Power</h1>
 <p >The MCU low-power feature allows you to take advantage of the power saving features of a PSoC&trade; MCU simply by configuring a few parameters. Using the MCU low-power feature, you can configure the system to achieve maximum power savings during system idling or to establish maximum performance by operating only in Active power mode. This feature works in conjunction with FreeRTOS.</p>
@@ -324,6 +341,7 @@ MCU Low Power Configuration Considerations</h2>
 <p >Refer to the section <a class="el" href="index.html#group_device_configurator_flow">ModusToolbox&trade; Device Configurator flow</a> to configure MCU low power using design.modus</p>
 <h3><a class="anchor" id="group_lpa_p1_cc_parameters"></a>
 Configuration Parameters</h3>
+<p ><b>PSoC&trade; 6 </b></p>
 <p >The following parameters and their mapping to macros are available:</p>
 <table class="doxtable">
 <tr>
@@ -342,7 +360,20 @@ Configuration Parameters</h3>
 </ul>
 </td></tr>
 </table>
-<dl class="section note"><dt>Note</dt><dd>The above configurations do not apply to CYW955913EVK-01.</dd></dl>
+<p ><b>CYW955913EVK-01</b></p>
+<p >Following are the idle power mode configuration parameters:</p>
+<table class="doxtable">
+<tr>
+<th>Parameter </th><th>Description </th><th>Recommended Configuration </th></tr>
+<tr>
+<td>Idle power mode config </td><td>Selects the power mode that the core operates in when idle – Active or Deep Sleep. </td><td><ul>
+<li>Deep Sleep (for maximum power saving)</li>
+<li>Active (for minimum latency) </li>
+</ul>
+</td></tr>
+<tr>
+<td>Power/SysPM Callback Ignore mode </td><td>Allows selecting the callback states for which the application does not want to get a callback for. </td><td>Tick the check-box “check fail” to ignore sleep check failed messages for an unsuccessful sleep attempt. </td></tr>
+</table>
 <h1><a class="anchor" id="group_lpa_p2"></a>
 Part 2. Wi-Fi low power</h1>
 <p >Low Power Assistant provides features for MCU low power, Wi-Fi low power, and Bluetooth&reg; low power. LPA library only needs to be included in applications that use Wi-Fi low power.</p>
@@ -573,12 +604,12 @@ Quick start guide</h3>
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
 <li>Configure the ARP offload. The easiest way to configure ARP offload is to use the ModusToolbox&trade; Device Configurator. <br  />
 <ul>
-<li><u>Confguring ARP offload on CY8CEVAL-062S2-CYW43022CUB:</u> <br  />
+<li><u>Configuring ARP offload on CY8CEVAL-062S2-CYW43022CUB and CY8CEVAL-062S2-CYW955513SDM2WLIPA</u> <br  />
 <ul>
-<li>ARP offload is enabled by default in the WLAN firmware with configuration set to <a class="el" href="index.html#group_lpa_p2_hostpeerautoreply">Host and Peer Auto Reply</a>. Hence user not required to do any configuration settings in ModusToolbox&trade; Device Configurator.</li>
+<li>ARP offload is enabled by default in the WLAN firmware with configuration set to <a class="el" href="index.html#group_lpa_p2_hostpeerautoreply">Host and Peer Auto Reply</a>. Hence user is not required to do any configuration settings in ModusToolbox&trade; Device Configurator.</li>
 </ul>
 </li>
-<li><u>Confguring ARP offload on kits other than CY8CEVAL-062S2-CYW43022CUB:</u> <br  />
+<li><u>Configuring ARP offload on all other kits:</u> <br  />
 <ul>
 <li>Refer section <a class="el" href="index.html#section_lpa_hostwake">Wi-Fi host wake configuration</a> to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.</li>
 <li>In design.modus, switch to the connectivity device "CYW943012WKWBG" tab (if the CY8CKIT_062S2_43012 Board is used).</li>
@@ -691,16 +722,9 @@ Quick start guide</h3>
 <li>Modify the <b>WIFI_SSID</b> and <b>WIFI_PASSWORD</b> in <em>wifi_functions.h</em> to the desired Access Point.</li>
 <li>Configure the ARP offload. The easiest way to configure ARP offload is to use the ModusToolbox&trade; Device Configurator. <br  />
 <ul>
-<li><u>Confguring ARP offload on CYW955913EVK-01:</u> <br  />
+<li><u>Configuring ARP offload on CYW955913EVK-01:</u> <br  />
 <ul>
-<li>In design.modus, switch to the connectivity device "CYW55913IUBGT" tab</li>
-<li>Select "Power" tab</li>
-<li>Enable Power-&gt;Wi-Fi.</li>
-<li>Enable ARP offload.</li>
-<li>Set "ARP offload Feature(s)" to "Peer Auto Reply".</li>
-<li>Enable "Snoop Host IP From Traffic When ARP Offload Enabled".</li>
-<li>Set "ARP Offload Cache Entries Expire after (s)" to 1200.</li>
-<li>Save the configuration to generate the necessary code.</li>
+<li>ARP offload is enabled by default in the WLAN firmware with configuration set to <a class="el" href="index.html#group_lpa_p2_hostpeerautoreply">Host and Peer Auto Reply</a>. Hence user is not required to do any configuration settings in ModusToolbox&trade; Device Configurator.</li>
 </ul>
 </li>
 </ul>
@@ -1121,12 +1145,12 @@ Quick start guide</h3>
 <ol type="1">
 <li>Refer readme of <a href="https://github.com/Infineon/mtb-example-wlan-offloads.git"><b> mtb-example-wlan-offloads</b></a> for project creation.</li>
 <li><p class="startli">Configure TCP keepalive offload. The easiest way to configure TCP keepalive offload is to use the ModusToolbox&trade; Device Configurator.</p><ul>
-<li><u>Confguring TCP keepalive offload on CY8CEVAL-062S2-CYW43022CUB:</u> <br  />
+<li><u>Configuring TCP keepalive offload on CY8CEVAL-062S2-CYW43022CUB and CY8CEVAL-062S2-CYW955513SDM2WLIPA:</u> <br  />
 <ul>
 <li>Only responder mode is supported for this device. i.e. WLAN firmware will send the TCP keep-alive response to the TCP keep-alive request coming from the server. No configuration parameters for TCPKA offolad in ModusToolbox&trade; Device Configurator is needed.</li>
 </ul>
 </li>
-<li><u>Confguring ARP offload on kits other than CY8CEVAL-062S2-CYW43022CUB:</u> <br  />
+<li><u>Configuring TCP keepalive offload on all other kits:</u> <br  />
 <ul>
 <li>Refer section <a class="el" href="index.html#section_lpa_hostwake">Wi-Fi host wake configuration</a> to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.</li>
 <li>In design.modus, switch to the connectivity device "CYW943012WKWBG" tab (in case the CY8CKIT_062S2_43012 board is used).</li>
@@ -1188,12 +1212,7 @@ Quick start guide</h3>
 <li>MCU low power is enabled by default in CYW955913EVK-01.</li>
 <li>Modify the <b>WIFI_SSID</b> and <b>WIFI_PASSWORD</b> in <em>wifi_functions.h</em> to the desired Access Point.</li>
 <li>Configure TCP keepalive offload. The easiest way to configure TCP keepalive offload is to use the ModusToolbox&trade; Device Configurator.<ul>
-<li>In design.modus, switch to the connectivity device "CYW55913IUBGT" tab</li>
-<li>Enable Power-&gt;Wi-Fi.</li>
-<li>Enable TCP keepalive offload.</li>
-<li>Configure Interval, Retry Interval, and Retry Count.</li>
-<li>Configure Source port, Destination port, and Destination IP address (TCP server).</li>
-<li>Save the configuration to generate the necessary code.</li>
+<li>Only responder mode is supported for this device. i.e. WLAN firmware will send the TCP keep-alive response to the TCP keep-alive request coming from the server. No configuration parameters for TCPKA offolad in ModusToolbox™ Device Configurator is needed.</li>
 </ul>
 </li>
 <li>Execute following command to build and program the application: <div class="fragment"><div class="line">make build TARGET=CYW955913EVK-01 TOOLCHAIN=GCC_ARM</div>
@@ -1278,9 +1297,10 @@ DHCP Lease Time Renew offload</h2>
 </div>
 <h3><a class="anchor" id="group_lpa_p2_dltro_qsg"></a>
 Quick start guide</h3>
-<p >This quick start guide demonstrates how to use the DLTRO feature in the FreeRTOS environment and its impact on the system power consumption.</p>
+<p >This quick start guide demonstrates how to use the DLTRO feature in the RTOS environment and its impact on the system power consumption.</p>
+<p >DLTRO is supported on CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices. Follow below steps for DLTRO testing on CYW43022CUB device.</p>
 <p ><u>CY8CEVAL-062S2-CYW43022CUB:</u> <br  />
- DLTRO is supported only on CY8CEVAL-062S2-CYW43022CUB device. Hence follow below steps for DLTRO testing only for CYW43022CUB device.</p>
+</p>
 <p >Follow the below steps for application creation and offload verification.</p>
 <ol type="1">
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
@@ -1289,7 +1309,7 @@ Quick start guide</h3>
 <li>Select Power-&gt;Wi-Fi.</li>
 <li>In "Wi-Fi - Parameters" pane, enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
 <li>Save the configuration to generate the necessary code.</li>
-<li>DLTRO is enabled by default in the WLAN firmware. Hence user not required to do any configuration settings in ModusToolbox&trade; Device Configurator.</li>
+<li>DLTRO is enabled by default in the WLAN firmware. Hence user is not required to do any configuration settings in ModusToolbox&trade; Device Configurator.</li>
 </ul>
 </li>
 <li>Add the following to COMPONENTS in the application Makefile if not present: FREERTOS, LWIP, and MBEDTLS. <div class="fragment"><div class="line">COMPONENTS = FREERTOS LWIP MBEDTLS WCM SECURE_SOCKETS</div>
@@ -1342,9 +1362,9 @@ ICMP offload</h2>
 <h3><a class="anchor" id="group_lpa_p2_icmp_qsg"></a>
 Quick start guide</h3>
 <p >This quick start guide demonstrates how to use the ICMP offload feature in the FreeRTOS environment and its impact on the system power consumption.</p>
+<p >ICMP offload is supported on CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices. Follow below steps for ICMP offload testing on CYW43022CUB device.</p>
 <p ><u>CY8CEVAL-062S2-CYW43022CUB:</u> <br  />
- ICMP offload is supported only or CY8CEVAL-062S2-CYW43022CUB device. Hence follow below steps for ICMP offlaod testing only for CYW43022CUB device.</p>
-<p >Follow the below steps for application creation and offload verification.</p>
+ Follow the below steps for application creation and offload verification.</p>
 <ol type="1">
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
 <li>Open design.modus file and do the following configuration settings in the ModusToolbox&trade; Device Configurator.<ul>
@@ -1352,7 +1372,7 @@ Quick start guide</h3>
 <li>Select Power-&gt;Wi-Fi.</li>
 <li>In "Wi-Fi - Parameters" pane, enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
 <li>Save the configuration to generate the necessary code.</li>
-<li>ICMP offload is enabled by default in the WLAN firmware. Hence user not required to do any configuration settings in ModusToolbox&trade; Device Configurator.</li>
+<li>ICMP offload is enabled by default in the WLAN firmware. Hence user is not required to do any configuration settings in ModusToolbox&trade; Device Configurator.</li>
 </ul>
 </li>
 <li>Add the following to COMPONENTS in the application Makefile if not present: FREERTOS, LWIP, and MBEDTLS. <div class="fragment"><div class="line">COMPONENTS = FREERTOS LWIP MBEDTLS WCM SECURE_SOCKETS</div>
@@ -1418,9 +1438,9 @@ Neighbor Discovery offload</h2>
 <h3><a class="anchor" id="group_lpa_p2_ndoe_qsg"></a>
 Quick start guide</h3>
 <p >This quick start guide demonstrates how to use the Neighbor Discovery offload feature in the FreeRTOS environment and its impact on the system power consumption.</p>
+<p >Neighbor Discovery offload is supported on CY8CEVAL-062S2-CYW43022CU and CYW955913EVK-01 devices. Follow below steps for Neighbor Discovery offload testing on CYW43022CUB device.</p>
 <p ><u>CY8CEVAL-062S2-CYW43022CUB:</u> <br  />
- Neighbor Discovery offload is supported only on CY8CEVAL-062S2-CYW43022CUB device. Hence follow below steps for Neighbor Discovery offlaod testing only for CYW43022CUB device.</p>
-<p >Follow the below steps for application creation and offload verification.</p>
+ Follow the below steps for application creation and offload verification.</p>
 <ol type="1">
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
 <li>Open design.modus file and do the following configuration settings in the ModusToolbox&trade; Device Configurator.<ul>
@@ -1428,7 +1448,7 @@ Quick start guide</h3>
 <li>Select Power-&gt;Wi-Fi.</li>
 <li>In "Wi-Fi - Parameters" pane, enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
 <li>Save the configuration to generate the necessary code.</li>
-<li>Neighbor Discovery offload is enabled by default in the WLAN firmware. Hence user not required to do any configuration settings in ModusToolbox&trade; Device Configurator.</li>
+<li>Neighbor Discovery offload is enabled by default in the WLAN firmware. Hence user is not required to do any configuration settings in ModusToolbox&trade; Device Configurator.</li>
 </ul>
 </li>
 <li>Add the following to COMPONENTS in the application Makefile if not present: FREERTOS, LWIP, and MBEDTLS. <div class="fragment"><div class="line">COMPONENTS = FREERTOS LWIP MBEDTLS WCM SECURE_SOCKETS</div>
@@ -1481,9 +1501,9 @@ NULL Keepalive offload</h2>
 <h3><a class="anchor" id="group_lpa_p2_null_keepalive_qsg"></a>
 Quick start guide</h3>
 <p >This quick start guide demonstrates how to configure and use the NULL keepalive offload feature in the FreeRTOS environment and its impact on the system power consumption.</p>
+<p >NULL keep-alive offload is supported only on CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices. Follow below steps for NULL keep-alive offload testing on CYW43022CUB device.</p>
 <p ><u>CY8CEVAL-062S2-CYW43022CUB:</u> <br  />
- NULL keep-alive offload is supported only on CY8CEVAL-062S2-CYW43022CUB device. Hence follow below steps for NULL keep-alive offlaod testing only for CYW43022CUB device.</p>
-<p >Follow the below steps for application creation and offload verification.</p>
+ Follow the below steps for application creation and offload verification.</p>
 <ol type="1">
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
 <li>Open design.modus file and do the following configuration settings in the ModusToolbox&trade; Device Configurator.<ul>
@@ -1539,9 +1559,9 @@ NAT Keepalive offload</h2>
 <h3><a class="anchor" id="group_lpa_p2_nat_keepalive_qsg"></a>
 Quick start guide</h3>
 <p >This quick start guide demonstrates how to configure and use the NAT keepalive offload feature in the FreeRTOS environment and its impact on the system power consumption.</p>
+<p >NAT keep-alive offload is supported on CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices. Follow below steps for NAT keep-alive offload testing on CYW43022CUB device.</p>
 <p ><u>CY8CEVAL-062S2-CYW43022CUB:</u> <br  />
- NAT keep-alive offload is supported only on CY8CEVAL-062S2-CYW43022CUB device. Hence follow below steps for NAT keep-alive offlaod testing only for CYW43022CUB device.</p>
-<p >Follow the below steps for application creation and offload verification.</p>
+ Follow the below steps for application creation and offload verification.</p>
 <ol type="1">
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
 <li>Open design.modus file and do the following configuration settings in the ModusToolbox&trade; Device Configurator.<ul>
@@ -1601,9 +1621,9 @@ Wake on WirelessLAN</h2>
 <h3><a class="anchor" id="group_lpa_p2_wowlpf_qsg"></a>
 Quick start guide</h3>
 <p >This quick start guide demonstrates how to configure and use the WOWLPF feature in the FreeRTOS environment and its impact on the system power consumption.</p>
+<p >WOWLPF offload is supported on CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices. Follow below steps for WOWLPF offload testing on CYW43022CUB device.</p>
 <p ><u>CY8CEVAL-062S2-CYW43022CUB:</u> <br  />
- WOWLPF offload is supported only on CY8CEVAL-062S2-CYW43022CUB device. Hence follow below steps for WOWLPF offlaod testing only for CYW43022CUB device.</p>
-<p >Follow the below steps for application creation and offload verification.</p>
+ Follow the below steps for application creation and offload verification.</p>
 <ol type="1">
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
 <li>Open design.modus file and do the following configuration settings in the ModusToolbox&trade; Device Configurator.<ul>
@@ -1643,11 +1663,10 @@ MQTT keepalive offload</h2>
 </div>
 <h3><a class="anchor" id="group_lpa_p2_mqtt_keepalive_qsg"></a>
 Quick start guide</h3>
-<p >This quick start guide demonstrates how to configure and use the MQTT keepalive offload feature in the FreeRTOS environment.</p>
-<p >Do the following to set up the MQTT keepalive offload example and enable the MQTT keepalive offload feature.</p>
+<p >This quick start guide demonstrates how to configure and use the MQTT keepalive offload feature in the RTOS environment.</p>
+<p >MQTT keep-alive offload is supported on CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices. Following are the steps for MQTT keep-alive offload testing on CYW43022CUB device.</p>
 <p ><u>CY8CEVAL-062S2-CYW43022CUB:</u> <br  />
- MQTT keep-alive offload is supported only on CY8CEVAL-062S2-CYW43022CUB device. Hence follow below steps for MQTT keep-alive offlaod testing only for CYW43022CUB device.</p>
-<ol type="1">
+</p><ol type="1">
 <li>Create existing Code Example WLAN_LOW_POWER present in ModusToolbox&trade; environment.</li>
 <li>Open library manager and add MQTT middleware into this application.</li>
 <li>Copy <a href="https://github.com/Infineon/mtb-example-wifi-mqtt-client/tree/master/configs"><b>configs</b></a> folder into the application.</li>
@@ -1659,17 +1678,27 @@ Quick start guide</h3>
 <li>Enable Power-&gt;Wi-Fi.</li>
 <li>In "Wi-Fi - Parameters" pane, enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
 <li>Enable "MQTT Offload Configuration".</li>
-<li>Configure "MQTT wake pattern" if user needs device to wake up for specific wake pattern. Else, MCU will wake up for any packet targetted to this device.</li>
+<li>Configure "MQTT wake pattern" if user needs device to wake up for specific wake pattern. Else, MCU will wake up for any packet targetted to this device.<ul>
+<li>MQTT wake pattern should be of the following format: <div class="fragment"><div class="line">&lt;topic_name&gt;&lt;message&gt;</div>
+</div><!-- fragment --> Eg: topic="ledstatus" and message="TURN_ON". Wake pattern to be set to ensure that device wakes on only this particular pattern is "ledstatusTURN_ON"</li>
+</ul>
+</li>
 <li>Save the configuration to generate the necessary code.</li>
 </ul>
 </li>
 <li>In the application, subscribe for the topic which is used to publish the wake pattern from the server.</li>
 <li>Intergate LPA API's needed for MQTT offload into the application. Refer <a class="el" href="index.html#subsection_lpa_snippet_7">Code Snippet 7: MQTT offload configuration.</a> which proivdes information about the APIs to be called from application.</li>
-<li>Open mbedtls_user_config.h header file and comment this macro to enable support for key export. <div class="fragment"><div class="line"><span class="preprocessor">#undef MBEDTLS_SSL_EXPORT_KEYS</span></div>
+<li>When using lwip + mbedtls combination, comment the below macro to enable support for key export in mbedtls_user_config.h <div class="fragment"><div class="line"><span class="preprocessor">#undef MBEDTLS_SSL_EXPORT_KEYS</span></div>
 </div><!-- fragment --></li>
-<li>MQTT offload supports only SHA1 hash algorithm. Hence in mbedtls_user_config.h enable ciphersuites which supports only SHA1. Below is an example to enable SHA1 ciphersuites. <div class="fragment"><div class="line"><span class="preprocessor">#define MBEDTLS_SSL_CIPHERSUITES  MBEDTLS_TLS_RSA_WITH_AES_128_CBC_SHA, MBEDTLS_TLS_RSA_WITH_AES_256_CBC_SHA</span></div>
+<li>MQTT offload supports only SHA1 hash algorithm. Make sure SHA1 is enabled in security stack configuration and the ciphersuite negotiated with the server is SHA1 ciphersuite.<ul>
+<li>When using lwip + mbedtls combination, enable ciphersuites which supports only SHA1 in mbedtls_user_config.h. Below is an example to enable SHA1 ciphersuites. <div class="fragment"><div class="line"><span class="preprocessor">#define MBEDTLS_SSL_CIPHERSUITES  MBEDTLS_TLS_RSA_WITH_AES_128_CBC_SHA, MBEDTLS_TLS_RSA_WITH_AES_256_CBC_SHA</span></div>
 </div><!-- fragment --></li>
-<li>Add the following to COMPONENTS in the application Makefile if not present: FREERTOS, LWIP, and MBEDTLS. <div class="fragment"><div class="line">COMPONENTS = FREERTOS LWIP MBEDTLS WCM SECURE_SOCKETS</div>
+<li>When using netxduo + Netxsecure combination, enable SHA1 ciphersuite. To do this add 'CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER' application's Makefile defines. The Makefile entry should look like as follows: <div class="fragment"><div class="line">DEFINES+=CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER</div>
+</div><!-- fragment --> Above define will ensure that 'TLS_RSA_WITH_AES_256_CBC_SHA' and 'TLS_RSA_WITH_AES_128_CBC_SHA' are enabled.</li>
+</ul>
+</li>
+<li>Add the following to COMPONENTS in the application Makefile. When using FREERTOS, LWIP, and MBEDTLS combination <div class="fragment"><div class="line">COMPONENTS = FREERTOS LWIP MBEDTLS SECURE_SOCKETS</div>
+</div><!-- fragment --> When using THREADX, NETXDUO, and NETXSECURE combination <div class="fragment"><div class="line">COMPONENTS = THREADX NETXDUO NETXSECURE SECURE_SOCKETS</div>
 </div><!-- fragment --></li>
 <li>Build the project and program the board. The following command is an example for the CY8CEVAL-062S2-CYW43022CUB board, using GCC_ARM as the toolchain: <div class="fragment"><div class="line">make build TARGET=CY8CEVAL-062S2-CYW43022CUB TOOLCHAIN=GCC_ARM</div>
 <div class="line">make program TARGET=CY8CEVAL-062S2-CYW43022CUB TOOLCHAIN=GCC_ARM</div>
@@ -2609,7 +2638,7 @@ LPA API</h1>
 <div id="nav-path" class="navpath">
     <ul>
         <li class="footer">
-            Generated for <b>Low Power Assistant Middleware Library 5.5.0</b> by <b>Cypress Semiconductor Corporation</b>.
+            Generated for <b>Low Power Assistant Middleware Library 5.6.0</b> by <b>Cypress Semiconductor Corporation</b>.
             All rights reserved.
         </li>
     </ul>

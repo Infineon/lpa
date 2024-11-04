@@ -62,7 +62,7 @@ extern "C" {
 /** User uses configurator to set these */
 typedef struct cy_lpa_nko_cfg
 {
-    uint16_t interval;                                  /**< NAT KeepAlive interval in milliseconds     */
+    uint32_t interval;                                  /**< NAT KeepAlive interval in milliseconds     */
     char     server[CYLPA_NAT_SERVER_NAME_LEN+1];       /**< Server Name / IP address                   */
     uint16_t d_port;                                    /**< UDP Destination Port                       */
     uint16_t s_port;                                    /**< UDP Source Port                            */

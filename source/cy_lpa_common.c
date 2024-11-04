@@ -47,8 +47,6 @@ extern "C" {
 *  Macros
 *
 ********************************************************************/
-#define OFFSETOF(type, member)  ( (uintptr_t)&( (type *)0 )->member )
-
 #define CYLPA_COMMON_ERR        0xffed
 
 /*******************************************************************************
@@ -155,11 +153,11 @@ uint16_t cylpa_ipv4_hdr_cksum(uint8_t *ip, int ip_len)
     }
 
     /* partial cksum skipping the hdr_chksum field */
-    sum = ip_cksum_partial(sum, ptr, OFFSETOF(ipv4_hdr_t, hdr_chksum) );
-    ptr += OFFSETOF(ipv4_hdr_t, hdr_chksum) + 2;
+    sum = ip_cksum_partial(sum, ptr, offsetof(ipv4_hdr_t, hdr_chksum) );
+    ptr += offsetof(ipv4_hdr_t, hdr_chksum) + 2;
 
     /* return calculated chksum */
-    return ip_cksum(sum, ptr, ip_len - OFFSETOF(ipv4_hdr_t, src_ip) );
+    return ip_cksum(sum, ptr, ip_len - offsetof(ipv4_hdr_t, src_ip) );
 }
 
 /*******************************************************************************
