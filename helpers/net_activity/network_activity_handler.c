@@ -49,6 +49,7 @@
 #endif
 #include "cyhal.h"
 #ifdef COMPONENT_LWIP
+#include "cy_network_buffer.h"
 /* lwIP header files */
 #include <lwip/tcpip.h>
 #include <lwip/api.h>
@@ -80,6 +81,28 @@
 /* TCP user data buffer to send to server */
 static uint8_t cy_tcp_databuf[PACKET_PAYLOAD];
 #define HARDCODED_STR   "Some random stuff"
+
+#if defined(COMPONENT_LWIP)
+#define RX_PKT_Q_LENGTH            (20)
+#endif
+/******************************************************
+ *                     Variable Definitions
+ ******************************************************/
+#if defined(COMPONENT_LWIP)
+static bool is_rx_pkt_queue_created = false;
+static cy_queue_t rx_pkt_q_handle;
+#endif
+
+/******************************************************
+ *                     Structures
+ ******************************************************/
+#if defined(COMPONENT_LWIP)
+typedef struct cylpa_rx_queue
+{
+    void *iface;
+    void* buf;
+}cylpa_rx_queue_t;
+#endif
 
 extern whd_interface_t cy_olm_get_whd_interface ( void );
 
@@ -283,6 +306,53 @@ void cylpa_on_emac_activity(bool is_tx_activity)
             (uint32_t)(is_tx_activity ? CY_LPA_TX_EVENT_FLAG : CY_LPA_RX_EVENT_FLAG), true);
     }
 }
+
+#if defined(COMPONENT_LWIP)
+
+static void cylpa_rx_activity(void *iface, void* buf)
+{
+    /* Push the incoming packet to the RX queue maintained by LPA during the wake up sequence
+     * until the network stack is ready to process the incoming packets.
+     * This will unblock the WHD thread which is providing the RX packets. */
+    cylpa_rx_queue_t queue_item;
+    cy_rslt_t result;
+
+    queue_item.iface = iface;
+    queue_item.buf = buf;
+    result = cy_rtos_queue_put(&rx_pkt_q_handle, &queue_item, 0);
+    if(result != CY_RSLT_SUCCESS)
+    {
+        NW_INFO(("Release the buffer as we are unable to push to the queue. This packet is lost\n"));
+        cy_buffer_release(buf, WHD_NETWORK_RX) ;
+    }
+    return;
+}
+
+static void cylpa_rx_queue_pkt_input()
+{
+    /* This function pushes all the packets queued by the WHD thread during the wake up sequence.
+     * Packets will be pushed to the lwip queue before resuming the network stack.
+     */
+    size_t remaining_items_in_queue = 0;
+    cylpa_rx_queue_t queue_item;
+    cy_rslt_t result;
+
+    cy_rtos_queue_count(&rx_pkt_q_handle, &remaining_items_in_queue);
+    while(remaining_items_in_queue)
+    {
+        result = cy_rtos_queue_get(&rx_pkt_q_handle, &queue_item, 0);
+        if(result == CY_RSLT_SUCCESS)
+        {
+            if (((struct netif*)(queue_item.iface))->input == NULL || ((struct netif*)(queue_item.iface))->input(queue_item.buf, (struct netif*)queue_item.iface) != ERR_OK)
+            {
+                NW_INFO(("Drop packet as the lwip function call returned failure\n"));
+                cy_buffer_release(queue_item.buf, WHD_NETWORK_RX);
+            }
+        }
+        cy_rtos_queue_count(&rx_pkt_q_handle, &remaining_items_in_queue);
+    }
+}
+#endif
 
 static cy_rslt_t cylpa_register_network_activity_callback(void)
 {
@@ -601,6 +671,15 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
         emac_activity_callback_registered = true;
     }
 
+#if defined(COMPONENT_LWIP)
+    if(is_rx_pkt_queue_created == false)
+    {
+        /* Create a queue to handle incoming packets from WHD when the network stack is not yet resumed */
+        cy_rtos_queue_init(&rx_pkt_q_handle, RX_PKT_Q_LENGTH, sizeof(cylpa_rx_queue_t));
+        is_rx_pkt_queue_created = true;
+    }
+#endif
+
     cyhal_syspm_lock_deepsleep();
     state = cylpa_wait_net_inactivity(network_inactive_interval_ms, network_inactive_window_ms);
 
@@ -610,6 +689,11 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
          * State data (e.g. caches) may be adjusted here so that the stack resumes properly.
          */
         state = cylpa_suspend_ns();
+#if defined(COMPONENT_LWIP)
+        /* Register the rx packet queue callback to queue the incoming packets
+         * while the network stack is in suspended state. */
+        cy_network_register_rx_queue_cb(cylpa_rx_activity);
+#endif
         if (ST_SUCCESS == state)
         {
             /* Notify application about the network stack suspend */
@@ -676,6 +760,12 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
             cylpa_network_state_handler(state);
             /* Call OLM API to reset back the configurations */
             cylpa_olm_dispatch_pm_notification(cy_get_olm_instance(), OL_PM_ST_AWAKE);
+#if defined(COMPONENT_LWIP)
+            /* De-register the rx packet queue callback by passing NULL so that the packets from WHD
+             * will be posted to lwip queue directly in cy_network_process_ethernet_data */
+            cy_network_register_rx_queue_cb(NULL);
+            cylpa_rx_queue_pkt_input();
+#endif
             cylpa_resume_ns();
             cy_rtos_set_mutex(&cy_lp_mutex);
         }

@@ -38,7 +38,7 @@
 
 /**
  *******************************************************************************
- * \mainpage Low Power Assistant Middleware Library 5.6.0
+ * \mainpage Low Power Assistant Middleware Library 5.7.0
  *******************************************************************************
  * \section section_lpa_overview Overview
  *******************************************************************************
@@ -1961,11 +1961,9 @@
  *******************************************************************************
  * This quick start guide demonstrates how to use the DLTRO feature in the RTOS environment and its impact on the system power consumption.
  *
- * DLTRO is supported on CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices. Follow below steps for DLTRO testing on CYW43022CUB device.
+ * DLTRO is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices.
  *
- * <u>CY8CEVAL-062S2-CYW43022CUB:</u> \n 
- *
- * Follow the below steps for application creation and offload verification.
+ * Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:
  *
  * 1. Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.
  * 2. Open design.modus file and do the following configuration settings in the ModusToolbox&trade; Device Configurator.
@@ -2039,12 +2037,10 @@
  * the ICMP offload feature in the FreeRTOS environment and its impact
  * on the system power consumption.
  *
- * ICMP offload is supported on CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices. Follow below steps
+ * ICMP offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices. Follow below steps
  * for ICMP offload testing on CYW43022CUB device.
  *
- * <u>CY8CEVAL-062S2-CYW43022CUB:</u> \n
- *
- * Follow the below steps for application creation and offload verification.
+ * Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:
  *
  * 1. Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.
  * 2. Open design.modus file and do the following configuration settings in the ModusToolbox&trade; Device Configurator.
@@ -2135,11 +2131,9 @@
  * This quick start guide demonstrates how to use
  * the Neighbor Discovery offload feature in the FreeRTOS environment and its impact on the system power consumption.
  *
- * Neighbor Discovery offload is supported on CY8CEVAL-062S2-CYW43022CU and CYW955913EVK-01 devices. Follow below steps for Neighbor Discovery offload testing on CYW43022CUB device.
+ * Neighbor Discovery offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices.
  *
- * <u>CY8CEVAL-062S2-CYW43022CUB:</u> \n
- *
- * Follow the below steps for application creation and offload verification.
+ * Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:
  *
  * 1. Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.
  * 2. Open design.modus file and do the following configuration settings in the ModusToolbox&trade; Device Configurator.
@@ -2215,11 +2209,9 @@
  * the NULL keepalive offload feature in the FreeRTOS environment and its impact
  * on the system power consumption.
  *
- * NULL keep-alive offload is supported only on CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices. Follow below steps for NULL keep-alive offload testing on CYW43022CUB device.
+ * NULL keep-alive offload is supported only on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices.
  *
- * <u>CY8CEVAL-062S2-CYW43022CUB:</u> \n
- *
- * Follow the below steps for application creation and offload verification.
+ * Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:
  *
  * 1. Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.
  * 2. Open design.modus file and do the following configuration settings in the ModusToolbox&trade; Device Configurator.
@@ -2288,11 +2280,9 @@
  * the NAT keepalive offload feature in the FreeRTOS environment and its impact
  * on the system power consumption.
  *
- * NAT keep-alive offload is supported on CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices. Follow below steps for NAT keep-alive offload testing on CYW43022CUB device.
+ * NAT keep-alive offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices.
  *
- * <u>CY8CEVAL-062S2-CYW43022CUB:</u> \n
- *
- * Follow the below steps for application creation and offload verification.
+ * Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:
  *
  * 1. Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.
  * 2. Open design.modus file and do the following configuration settings in the ModusToolbox&trade; Device Configurator.
@@ -2371,11 +2361,9 @@
  * the WOWLPF feature in the FreeRTOS environment and its impact
  * on the system power consumption.
  *
- * WOWLPF offload is supported on CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices. Follow below steps for WOWLPF offload testing on CYW43022CUB device.
+ * WOWLPF offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices.
  *
- * <u>CY8CEVAL-062S2-CYW43022CUB:</u> \n
- *
- * Follow the below steps for application creation and offload verification.
+ * Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:
  *
  * 1. Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.
  * 2. Open design.modus file and do the following configuration settings in the ModusToolbox&trade; Device Configurator.
@@ -2435,9 +2423,9 @@
  * This quick start guide demonstrates how to configure and use
  * the MQTT keepalive offload feature in the RTOS environment.
  *
- * MQTT keep-alive offload is supported on CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices. Following are the steps for MQTT keep-alive offload testing on CYW43022CUB device.
+ * MQTT keep-alive offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices. Following are the steps for MQTT keep-alive offload testing on CYW43022CUB device.
  *
- * <u>CY8CEVAL-062S2-CYW43022CUB:</u> \n
+ * Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:
  *
  * 1. Create existing Code Example WLAN_LOW_POWER present in ModusToolbox&trade; environment.
  * 2. Open library manager and add MQTT middleware into this application.
@@ -3038,6 +3026,10 @@
  *   </tr>
  *   <tr>
  *     <td align="center">CY8CEVAL-062S2-CYW43022CUB</td>
+ *     <td align="center">P4[1]</td>
+ *   </tr>
+ *   <tr>
+ *     <td align="center">CY8CEVAL-062S2-CYW955513SDM2WLIPA</td>
  *     <td align="center">P4[1]</td>
  *   </tr>
  *   <tr>

@@ -10,6 +10,7 @@ The revision history of the LPA middleware is also available on the [Low Power A
 
 |  Version         | Description of change                                                  | Comments                                                 |
 | ---------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 5.7.0            | Added support for DLTRO offload, ICMP offload, NDOE offload, NULL KA offload, NAT KA offload, WOWLPF, MQTT Keepalive offload for CY8CEVAL-062S2-CYW955513SDM2WLIPA Kit | |
 | 5.6.0            | Added support for DLTRO offload, ICMP offload, NDOE offload, NULL KA offload, NAT KA offload, WOWLPF, MQTT Keepalive offload for CYW955913EVK-01 Kit        | |
 | 5.5.0            | Added support for CY8CEVAL-062S2-CYW955513SDM2WLIPA kit        | |
 | 5.4.0            | Added support for WOWLPF Net-pattern offload for CY8CEVAL-062S2-CYW43022CUB         | |
@@ -36,13 +37,11 @@ This version of the LPA middleware was validated for compatibility with the foll
 
 | Software and tools                                                                  | Version   |
 | :---                                                                                | :------:  |
-| ModusToolbox&trade; software environment                                            |   3.2     |
-| - ModusToolbox&trade; Device Configurator                                           |   4.20    |
-| - ModusToolbox&trade; MCU personality in Device Configurator                        |   4.20    |
-| - ModusToolbox&trade; Wi-Fi and Bluetooth&reg; personalities in Device Configurator |   4.10    |
+| ModusToolbox&trade; software environment                                            |   3.3     |
+| - ModusToolbox&trade; Device Configurator                                           |   5.10    |
 | GCC compiler for ModusToolbox&trade;                                                |   11.3.1  |
-| IAR Compiler                                                                        |   9.40.2  |
-| Arm&reg; Compiler 6                                                                 |   6.16    |
+| IAR Compiler                                                                        |   9.50.2  |
+| Arm&reg; Compiler 6                                                                 |   6.22    |
 
 ### More information
 '

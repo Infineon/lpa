@@ -91,6 +91,9 @@ extern void vApplicationSleep( uint32_t xExpectedIdleTime );
 #define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   CY_CFG_PWR_DEEPSLEEP_LATENCY
 #endif
 ```
+
+**Note:** Currently LPA only supports wifi-core-freertos-lwip-mbedtls version latest-v1.X.
+
 ### ThreadX
 
 Currently ThreadX is supported only on CYW955913EVK-01.
