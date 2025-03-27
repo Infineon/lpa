@@ -74,7 +74,7 @@ The LPA could be configured using the ModusToolbox&trade; MCU, Wi-Fi, and Blueto
 
 ### FreeRTOS
 
-See [wifi-core-freertos-lwip-mbedtls README](https://github.com/Infineon/wifi-core-freertos-lwip-mbedtls/blob/master/README.md#quick-start) Quick start section for basic Makefile changes required .
+See [wifi-core-freertos-lwip-mbedtls README](https://github.com/Infineon/wifi-core-freertos-lwip-mbedtls/blob/master/README.md#quick-start) Quick start section for basic Makefile changes required.
 
 MCU Deep Sleep Functionality is enabled by default in *FreeRTOSConfig.h* as follows:
 

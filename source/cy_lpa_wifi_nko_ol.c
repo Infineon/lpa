@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
+ * Copyright 2025, Cypress Semiconductor Corporation (an Infineon company) or
  * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
  *
  * This software, including source code, documentation and related
@@ -150,6 +150,7 @@ static int32_t cylpa_nko_get_details(nko_ol_t *ctxt,  nat_keepalive_t *pkt, cy_l
     cy_rslt_t res;
     cy_wcm_ip_address_t ipaddr;
     cy_socket_ip_address_t dest_addr;
+    cy_wcm_mac_t mac_addr;
 
     /* src ip */
     res = cy_wcm_get_ip_addr(CY_WCM_INTERFACE_TYPE_STA,  &ipaddr);
@@ -186,12 +187,13 @@ static int32_t cylpa_nko_get_details(nko_ol_t *ctxt,  nat_keepalive_t *pkt, cy_l
     }
 
     /* Remote mac address */
-    result = whd_wifi_get_bssid(ctxt->whd, &pkt->dst_mac);
-    if ( result != WHD_SUCCESS )
+    result = cy_wcm_get_gateway_mac_address(&mac_addr);
+    if(result != CY_RSLT_SUCCESS)
     {
-        NKO_ERROR_PRINTF( ("NKO: Get_bssid failed\n") );
-        return RESULT_ERROR;
+        NKO_ERROR_PRINTF( ("NKO: Unable to get gateway mac address\n") );
+        return WHD_BADARG;
     }
+    memcpy(pkt->dst_mac.octet, mac_addr, sizeof(pkt->dst_mac.octet));
 
     NKO_DEBUG_PRINTF( ("Local Mac Addr: %02X:%02X:%02X:%02X:%02X:%02X\n",
             pkt->src_mac.octet[0], pkt->src_mac.octet[1], pkt->src_mac.octet[2],

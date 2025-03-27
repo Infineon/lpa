@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
+ * Copyright 2025, Cypress Semiconductor Corporation (an Infineon company) or
  * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
  *
  * This software, including source code, documentation and related
@@ -49,6 +49,7 @@
 #include "whd_buffer_api.h"
 #include "cy_nw_helper.h"
 #include "whd_wlioctl.h"
+#include "cy_wcm.h"
 #ifdef COMPONENT_LWIP
 #include "lwip/tcp.h"
 #endif
@@ -233,6 +234,8 @@ whd_tko_activate(whd_t *whd, uint8_t index, uint16_t local_port, uint16_t remote
     sock_seq_t seq;
     int tko_len;
     whd_buffer_t buffer;
+    cy_wcm_mac_t mac_addr;
+    cy_rslt_t ret;
 #if defined(COMPONENT_LWIP)
     const ip4_addr_t *ip_ret;
     wl_ether_addr_t *eth_ret;
@@ -283,13 +286,15 @@ whd_tko_activate(whd_t *whd, uint8_t index, uint16_t local_port, uint16_t remote
     else
 #endif
     {
-        TKO_DEBUG_PRINTF( ("%s: Remote mac addr not found, using bssid\n", __func__) );
-        result = whd_wifi_get_bssid(whd, &seq.dst_mac);
-        if (result != WHD_SUCCESS)
+        /* Get Gateway mac address */
+        TKO_DEBUG_PRINTF( ("%s: Remote mac addr not found, using Gatway mac address\n", __func__) );
+        ret = cy_wcm_get_gateway_mac_address(&mac_addr);
+        if(ret != CY_RSLT_SUCCESS)
         {
-            TKO_ERROR_PRINTF( ("%s: get_bssid failed\n", __func__) );
+            TKO_ERROR_PRINTF( ("%s: Unable to get gateway mac address\n", __func__) );
             return WHD_BADARG;
         }
+        memcpy(seq.dst_mac.octet, mac_addr, sizeof(seq.dst_mac.octet));
     }
 
     TKO_DEBUG_PRINTF( ("Local Mac Addr: %02X:%02X:%02X:%02X:%02X:%02X\n",

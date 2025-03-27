@@ -81,7 +81,8 @@ var NAVTREE =
         [ "Quick start guide", "index.html#group_lpa_p2_mqtt_keepalive_qsg", null ]
       ] ],
       [ "Wi-Fi low power configuration considerations", "index.html#group_lpa_p2_cc", [
-        [ "Host Wake Configuration Notes", "index.html#group_lpa_p2_cc_host_wake", null ],
+        [ "Wi-Fi host wake configuration", "index.html#group_lpa_p2_cc_hostwake", null ],
+        [ "CY8CKIT_062S2_43012", "index.html#group_lpa_p2_cc_CY8CKIT_062S2_43012", null ],
         [ "Limitations", "index.html#group_lpa_p2_cc_limitations", null ],
         [ "IPv6 Packet Filter for MCU Deep Sleep", "index.html#group_lpa_p2_ipv6_filter", null ],
         [ "WLAN low power configuration", "index.html#group_lpa_p2_wlan_lowpower", null ],
@@ -89,16 +90,13 @@ var NAVTREE =
       ] ]
     ] ],
     [ "Part 3. Bluetooth® Low Power", "index.html#group_lpa_p3", [
-      [ "BT Low Power Configuration considerations", "index.html#group_lpa_p3_cc", null ],
-      [ "Configuration parameters", "index.html#group_lpa_p3_cc_parameters", null ]
+      [ "BT Low Power Configuration considerations", "index.html#group_lpa_p3_cc", [
+        [ "BT Wake Configuration", "index.html#group_lpa_p3_cc_btwakeconfig", null ],
+        [ "CY8CKIT_062S2_43012", "index.html#group_lpa_p3_cc_btwakeconfig_CY8CKIT_062S2_43012", null ],
+        [ "Configuration parameters", "index.html#group_lpa_p3_cc_parameters", null ]
+      ] ]
     ] ],
     [ "How to measure power consumption", "index.html#section_lpa_measurement", null ],
-    [ "Wi-Fi host wake configuration", "index.html#section_lpa_hostwake", [
-      [ "CY8CKIT_062S2_43012", "index.html#section_lpa_hostwake_CY8CKIT_062S2_43012", null ]
-    ] ],
-    [ "BT Wake Configuration", "index.html#section_lpa_bt_wakeconfig", [
-      [ "CY8CKIT_062S2_43012", "index.html#section_lpa_bt_wakeconfig_CY8CKIT_062S2_43012", null ]
-    ] ],
     [ "MISRA-C Compliance", "index.html#group_lpa_misra", null ],
     [ "Errata", "index.html#group_lpa_errata", null ],
     [ "More information", "index.html#section_lpa_more_information", null ],

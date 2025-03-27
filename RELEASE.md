@@ -10,6 +10,7 @@ The revision history of the LPA middleware is also available on the [Low Power A
 
 |  Version         | Description of change                                                  | Comments                                                 |
 | ---------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 5.7.1            | Minor Bug fixes         | |
 | 5.7.0            | Added support for DLTRO offload, ICMP offload, NDOE offload, NULL KA offload, NAT KA offload, WOWLPF, MQTT Keepalive offload for CY8CEVAL-062S2-CYW955513SDM2WLIPA Kit | |
 | 5.6.0            | Added support for DLTRO offload, ICMP offload, NDOE offload, NULL KA offload, NAT KA offload, WOWLPF, MQTT Keepalive offload for CYW955913EVK-01 Kit        | |
 | 5.5.0            | Added support for CY8CEVAL-062S2-CYW955513SDM2WLIPA kit        | |
@@ -37,8 +38,8 @@ This version of the LPA middleware was validated for compatibility with the foll
 
 | Software and tools                                                                  | Version   |
 | :---                                                                                | :------:  |
-| ModusToolbox&trade; software environment                                            |   3.3     |
-| - ModusToolbox&trade; Device Configurator                                           |   5.10    |
+| ModusToolbox&trade; software environment                                            |   3.4     |
+| - ModusToolbox&trade; Device Configurator                                           |   5.20    |
 | GCC compiler for ModusToolbox&trade;                                                |   11.3.1  |
 | IAR Compiler                                                                        |   9.50.2  |
 | Arm&reg; Compiler 6                                                                 |   6.22    |

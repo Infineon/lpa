@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, Cypress Semiconductor Corporation (an Infineon company) or
+ * Copyright 2025, Cypress Semiconductor Corporation (an Infineon company) or
  * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
  *
  * This software, including source code, documentation and related
@@ -47,6 +47,7 @@
 #include "whd_buffer_api.h"
 #include "cy_nw_helper.h"
 #include "whd_wlioctl.h"
+#include "cy_wcm.h"
 #ifdef COMPONENT_LWIP
 #include "lwip/tcp.h"
 #endif
@@ -316,7 +317,7 @@ whd_wowl_set_pattern( whd_t *whd, uint8_t* patt, uint16_t pattern_size, uint16_t
 {
     whd_result_t result = WHD_SUCCESS;
 #ifdef CYCFG_WIFI_MQTT_OL_SUPPORT
-    uint8_t mask_size = (pattern_size + 7) / 8; 
+    uint8_t mask_size = (pattern_size + 7) / 8;
     uint8_t mask[64];
     char *mode;
     if( set_pattern )
@@ -327,12 +328,12 @@ whd_wowl_set_pattern( whd_t *whd, uint8_t* patt, uint16_t pattern_size, uint16_t
     {
         mode = "del";
     }
-    
+
     for( int i  = 0; i < mask_size; i++ )
     {
         mask[i] = 0xff;
-    }  
-    
+    }
+
     result = whd_set_wowl_pattern( whd, mode , pattern_offset, mask_size, mask, pattern_size, patt, pattern_type );
     if ( result !=  WHD_SUCCESS)
     {
@@ -349,7 +350,7 @@ whd_tlsoe_set_wowl_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_len, 
 #ifdef CYCFG_WIFI_MQTT_OL_SUPPORT
     uint32_t wowl;
     whd_get_wowl_cap( whd, &wowl );
-    
+
     if( pattern_len > 0 )
     {
         wowl &= ( WL_WOWL_SECURE | WL_WOWL_NET );
@@ -491,6 +492,7 @@ whd_result_t
 whd_tlsoe_activate( whd_t *whd, uint16_t local_port, uint16_t remote_port, const char *remote_ip, uint32_t interval, uint8_t* pkt, uint32_t pkt_len, void* socket )
 {
     whd_result_t result = WHD_SUCCESS;
+    cy_wcm_mac_t mac_addr;
 #if defined(COMPONENT_NETXDUO)
     uint32_t ip_ret = 0;
     wl_ether_addr_t eth_ret;
@@ -546,13 +548,14 @@ whd_tlsoe_activate( whd_t *whd, uint16_t local_port, uint16_t remote_port, const
     else
 #endif
     {
-        TLSOE_DEBUG_PRINTF( ( "%s: Remote mac addr not found, using bssid\n", __func__ ) );
-        result = whd_wifi_get_bssid( whd, &seq.dst_mac );
-        if ( result != WHD_SUCCESS )
+        TLSOE_DEBUG_PRINTF( ("%s: Remote mac addr not found, using Gatway mac address\n", __func__) );
+        result = cy_wcm_get_gateway_mac_address(&mac_addr);
+        if(result != CY_RSLT_SUCCESS)
         {
-            TLSOE_ERROR_PRINTF( ( "%s: get_bssid failed\n", __func__ ) );
+            TLSOE_ERROR_PRINTF( ("%s: Unable to get gateway mac address\n", __func__) );
             return WHD_BADARG;
         }
+        memcpy(seq.dst_mac.octet, mac_addr, sizeof(seq.dst_mac.octet));
     }
 
     TLSOE_DEBUG_PRINTF( ( "Local Mac Addr: %02X:%02X:%02X:%02X:%02X:%02X\n",
@@ -621,7 +624,7 @@ whd_tlsoe_activate( whd_t *whd, uint16_t local_port, uint16_t remote_port, const
         TLSOE_ERROR_PRINTF( ("whd_tlsoe_conn_add failed\n") );
         return WHD_BADARG;
     }
-    
+
     /* Enable WLE_E_KTO Event */
     tcp_reset = 0;
     whd_management_set_event_handler(whd, tlsoe_events, tlsoe_callback_handler, (void *)whd, &tlsoe_offload_update_entry);

@@ -200,10 +200,7 @@ ModusToolbox™ Device Configurator flow</h1>
 <p ><b>Note</b> If you modify the output of the ModusToolbox&trade; Device Configurator, you cannot import it back into the tool.</p>
 <p ><b>PSoC&trade; 6 </b></p>
 <ul>
-<li>Navigate to the ModusToolbox&trade; installation folder and launch the ModusToolbox&trade; Device Configurator (&lt;install_dir&gt;/tools_3.2/device-configurator).</li>
-<li>Select File-&gt;Open, navigate to the board's design.modus file, and open it: <br  />
- <em>&lt;code_example&gt;/bsps/TARGET_CY8CKIT_062S2_43012/config/design.modus</em> <br  />
-</li>
+<li>Open ModusToolbox&trade; Device Configurator by executing the command "make device-configurator" or by right clicking on the application in the project workspace. Select ModusToolbox&trade; -&gt; Device Configurator.</li>
 <li>If the design.modus file does not open and pops with an error message <em>No device support library path provided </em>, For ModusToolbox&trade; v3.0 and later, point to the mtb-pdl-cat1 folder inside the mtb_shared/mtb-pdl-cat1/&lt;&gt;/props.json and .modustoolbox/global/device-db/release-v4.6.0/props.json files in the window popup. For ModusToolbox&trade; below v3.0, point to the psoc6pdl folder inside the mtb-example-anycloud-wlan-lowpower/libs/psoc6pdl/devicesupport.xml (For ModusToolbox&trade; v2.2, point to mtb_shared/mtb-pdl-cat1/&lt;&gt;/devicesupport.xml) file in the window popup. This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.</li>
 <li>Select the host device tab, and then select the System tab for that device.</li>
 <li>Enable the Power personality (if disabled) and go to the Power Parameters pane to configure the LPA Middleware.</li>
@@ -247,8 +244,8 @@ Part 1. MCU Low Power</h1>
 <p >The MCU low-power feature allows you to take advantage of the power saving features of a PSoC&trade; MCU simply by configuring a few parameters. Using the MCU low-power feature, you can configure the system to achieve maximum power savings during system idling or to establish maximum performance by operating only in Active power mode. This feature works in conjunction with FreeRTOS.</p>
 <p >There are two parameters available: System Idle Power Mode and Deep Sleep Latency.</p>
 <p >The System Idle Power Mode parameter defines the power state that the MCU needs to enter automatically any time the system is idle. Setting it to Active power mode disables power saving and allows the system to perform tasks with less intervention because there are no transitions to/from CPU Sleep/System Deep Sleep states.</p>
-<p >The Deep Sleep Latency parameter controls if the desired deep sleep time is larger than needed to perform a transition from System Deep Sleep to Active power mode to perform tasks.</p>
-<p >For more information, refer the SysPm (System Power Management) documentation <a href="https://infineon.github.io/mtb-pdl-cat1/pdl_api_reference_manual/html/group__group__syspm.html">https://infineon.github.io/mtb-pdl-cat1/pdl_api_reference_manual/html/group__group__syspm.html</a></p>
+<p >The Deep Sleep Latency parameter controls the time the system should remain in IDLE state before entering into sleep state.</p>
+<p >For more information, refer the SysPm (System Power Management) <a href="https://infineon.github.io/mtb-pdl-cat1/pdl_api_reference_manual/html/group__group__syspm.html"><b>documentation</b></a></p>
 <p >The LPA library provides features for MCU Low Power, Wi-Fi Low Power and Bluetooth&reg; Low Power; however, the LPA library only needs to be included in applications that use Wi-Fi low power.</p>
 <h2><a class="anchor" id="group_lpa_p1_mcu_qsg"></a>
 Quick start guide</h2>
@@ -256,22 +253,13 @@ Quick start guide</h2>
 <p >This quick start guide demonstrates how to configure and use the WLAN_HOST_WAKE pin for the MCU Low Power feature in the FreeRTOS environment. This guide also shows the feature's impact on the system's low power.</p>
 <ol type="1">
 <li>Create existing Code Example <a href="https://github.com/Infineon/mtb-example-psoc6-empty-app.git"><b>mtb-example-psoc6-empty-app</b></a> available in the ModusToolbox&trade; environment for <a href="https://www.infineon.com/dgdl/Infineon-CY8CKIT-062S2-43012_PSoC_62S2_Wi-Fi_BT_Pioneer_Kit_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f01c8f11927"><b>CY8CKIT-062S2-43012</b></a> device.</li>
-<li>Add FreeRTOS library into the application. Create following file in the deps folder for CY8CKIT_062S2_43012: <div class="fragment"><div class="line">echo https:<span class="comment">//github.com/Infineon/freertos/#latest-v10.X#\$\$ASSET_REPO\$\$/freertos/latest-v10.X &gt; deps/freertos.mtb</span></div>
-</div><!-- fragment --></li>
-<li><p class="startli">Copy the latest <a href="https://github.com/Infineon/freertos/tree/master/Source/portable"><b> FreeRTOSConfig.h</b></a> and update with the below changes</p>
-<p class="startli">configUSE_TICKLESS_IDLE : This change to support Tickless Deep Sleep mode </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cycfg_system.h&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><span class="preprocessor">#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_SLEEP) || (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)</span></div>
-<div class="line"><span class="keyword">extern</span> <span class="keywordtype">void</span> vApplicationSleep( uint32_t xExpectedIdleTime );</div>
-<div class="line"><span class="preprocessor">#define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )</span></div>
-<div class="line"><span class="preprocessor">#define configUSE_TICKLESS_IDLE  2</span></div>
-<div class="line"><span class="preprocessor">#endif</span></div>
-<div class="line"> </div>
-<div class="line"><span class="preprocessor">#if CY_CFG_PWR_DEEPSLEEP_LATENCY &gt; 0</span></div>
-<div class="line"><span class="preprocessor">#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   CY_CFG_PWR_DEEPSLEEP_LATENCY</span></div>
-<div class="line"><span class="preprocessor">#endif</span></div>
-</div><!-- fragment --></li>
-<li>Refer the <a class="el" href="index.html#section_lpa_hostwake">Wi-Fi host wake configuration</a> section to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.</li>
+<li>Add FreeRTOS library into the application using Library Manager. Follow below steps for adding library.<ul>
+<li>Right click on the application in the project workspace. Select ModusToolbox&trade; -&gt; Library Manager.</li>
+<li>Click on "Add Library".</li>
+<li>Search "freertos" library and select update.</li>
+</ul>
+</li>
+<li>Copy the latest <a href="https://github.com/Infineon/freertos/tree/master/Source/portable"><b> FreeRTOSConfig.h</b></a> to the application root directory.</li>
 <li>Set the desired System Idle Power mode (DeepSleep, Sleep or Active). In FreeRTOS, the System Idle Power mode is set to Deep Sleep by default to achieve the best power saving. This step can be done by using the ModusToolbox&trade; Device Configurator <b>MCU Low power using the ModusToolbox&trade; Device Configurator</b> Refer to <a class="el" href="index.html#group_device_configurator_flow">ModusToolbox&trade; Device Configurator flow</a></li>
 <li>Upate main.c file with the following code. FreeRTOS-based application is needed for the system to enter low-power during system idling. LED ON/OFF state is used to measure the power when system is in active and sleep state. <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cy_pdl.h&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;cyhal.h&quot;</span></div>
@@ -291,7 +279,7 @@ Quick start guide</h2>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">//Turn ON LED</span></div>
 <div class="line">        cyhal_gpio_write((cyhal_gpio_t)CYBSP_USER_LED, <span class="keyword">false</span>);</div>
-<div class="line">        <span class="comment">//Add Delay for 5 seconds so that MCU doesnot go to Deep Sleep</span></div>
+<div class="line">        <span class="comment">//Add Delay for 5 seconds so that MCU does not go to Deep Sleep</span></div>
 <div class="line">        cyhal_system_delay_ms(BLINKING_RATE_MS);</div>
 <div class="line">        <span class="comment">//Turn OFF LED</span></div>
 <div class="line">        cyhal_gpio_write((cyhal_gpio_t)CYBSP_USER_LED, <span class="keyword">true</span>);</div>
@@ -315,8 +303,7 @@ Quick start guide</h2>
 <div class="line">    vTaskStartScheduler();</div>
 <div class="line">}</div>
 </div><!-- fragment --></li>
-<li>Execute the following commands to build and program the application. Below is an example for the CY8CKIT_062S2_43012 Board, using GCC_ARM as the toolchain: <div class="fragment"><div class="line">make getlibs</div>
-<div class="line">make build TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div>
+<li>Execute the following commands to build and program the application. Below is an example for the CY8CKIT_062S2_43012 Board, using GCC_ARM as the toolchain: <div class="fragment"><div class="line">make build TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div>
 <div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div>
 </div><!-- fragment --></li>
 <li>Check the board operation. Refer to the <a class="el" href="index.html#section_lpa_measurement">How to measure power consumption</a> section for corresponding instructions. Observe the power consumption in different states of the main thread (Active and Idle). The illuminated user LED indicates the Active state. The non-illuminated LED indicates the Idle state. The duration of Active/Idle states can be adjusted by changing the BLINKING_RATE_MS value in the blinky function. Refer to the following picture for an example of the DC Power Analyzer output:</li>
@@ -422,7 +409,7 @@ Quick start guide</h3>
 <p >This quick start guide demonstrates how to configure and use the WLAN_HOST_WAKE pin for the MCU low power feature in the FreeRTOS environment. This guide also shows the feature's impact on the system's low power.</p>
 <ol type="1">
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
-<li>Refer section <a class="el" href="index.html#section_lpa_hostwake">Wi-Fi host wake configuration</a> to verify WLAN_HOST_WAKE pin configurations using device configurator.</li>
+<li>Refer section <a class="el" href="index.html#group_lpa_p2_cc_hostwake">Wi-Fi host wake configuration</a> to verify WLAN_HOST_WAKE pin configurations using device configurator.</li>
 <li><p class="startli">Execute the following command to build and program the application. Below is an example for the CY8CKIT_062S2_43012 Board, using GCC_ARM as the toolchain: </p><div class="fragment"><div class="line">make build TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div>
 <div class="line">make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM</div>
 </div><!-- fragment --><p class="startli">When the application starts, the console output shows that it connects to the specified Wi-Fi Access Point, and then the PSoC&trade; 6 MCU goes to System Deep Sleep mode. </p><div class="fragment"><div class="line">=======================================================</div>
@@ -611,7 +598,7 @@ Quick start guide</h3>
 </li>
 <li><u>Configuring ARP offload on all other kits:</u> <br  />
 <ul>
-<li>Refer section <a class="el" href="index.html#section_lpa_hostwake">Wi-Fi host wake configuration</a> to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.</li>
+<li>Refer section <a class="el" href="index.html#group_lpa_p2_cc_hostwake">Wi-Fi host wake configuration</a> to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.</li>
 <li>In design.modus, switch to the connectivity device "CYW943012WKWBG" tab (if the CY8CKIT_062S2_43012 Board is used).</li>
 <li>Enable Power-&gt;Wi-Fi.</li>
 <li>In "Wi-Fi - Parameters" pane enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
@@ -915,7 +902,7 @@ Quick start guide</h3>
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
 <li>Configure Packet Filters. The easiest way to configure Packet Filters is to use the ModusToolbox&trade; Device Configurator. <br  />
 <ul>
-<li>Refer section <a class="el" href="index.html#section_lpa_hostwake">Wi-Fi host wake configuration</a> to verify WLAN_HOST_WAKE pin configurations using device configurator.</li>
+<li>Refer section <a class="el" href="index.html#group_lpa_p2_cc_hostwake">Wi-Fi host wake configuration</a> to verify WLAN_HOST_WAKE pin configurations using device configurator.</li>
 <li>In design.modus, switch to the connectivity device "CYW943012WKWBG" tab (in case the CY8CKIT_062S2_43012 board is used).</li>
 <li>Enable Power-&gt;Wi-Fi.</li>
 <li>In "Wi-Fi - Parameters" pane, enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
@@ -1011,7 +998,7 @@ Quick start guide</h3>
 <div class="image">
 <img src="FreeRTOS_PF_ARP_ping.png" alt="" height="500px"/>
 </div>
-<p >ii. Ping : This doesnot wakeup the host as ICMP packet is not configured as packet filter type. </p><div class="image">
+<p >ii. Ping : This does not wakeup the host as ICMP packet is not configured as packet filter type. </p><div class="image">
 <img src="FreeRTOS_PF_ping_nowake.png" alt="" height="500px"/>
 </div>
 <p ><b>CYW955913EVK-01</b></p>
@@ -1152,7 +1139,7 @@ Quick start guide</h3>
 </li>
 <li><u>Configuring TCP keepalive offload on all other kits:</u> <br  />
 <ul>
-<li>Refer section <a class="el" href="index.html#section_lpa_hostwake">Wi-Fi host wake configuration</a> to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.</li>
+<li>Refer section <a class="el" href="index.html#group_lpa_p2_cc_hostwake">Wi-Fi host wake configuration</a> to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.</li>
 <li>In design.modus, switch to the connectivity device "CYW943012WKWBG" tab (in case the CY8CKIT_062S2_43012 board is used).</li>
 <li>Enable Power-&gt;Wi-Fi.</li>
 <li>In "Wi-Fi - Parameters" pane, enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
@@ -1220,8 +1207,7 @@ Quick start guide</h3>
 </div><!-- fragment --></li>
 <li><p class="startli">When the application starts, the console output shows a list of options. Press '2' to connect to the pre-defined Access Point.</p>
 <dl class="section note"><dt>Note</dt><dd>As part of Wi-Fi connection, the offload gets initialized.</dd></dl>
-</li>
-<li><ul>
+<p>7.</p><ul>
 <li>Use a PC to connect to the same Wi-Fi Access Point as the board. Run <a href="tcp_echo_server.py" rel="stylesheet" type="text/css"><b>tcp_echo_server.py</b></a> in that PC to act as TCP Server <div class="fragment"><div class="line">python tcp_echo_server.py --port 3360</div>
 </div><!-- fragment --></li>
 <li>Press 't' option to connect to the pre-configured TCP server.</li>
@@ -1405,7 +1391,7 @@ Quick start guide</h3>
 <div class="line">Network is active. Resuming network stack</div>
 <div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
-<li>Verify in wireshark the ping response is sent from WLAN firmware without waking up the host. Send a "ping" command to the board and observe MCU doesnot wake up for ping. <div class="fragment"><div class="line">C:\&gt;ping -n 3 10.0.0.201</div>
+<li>Verify in wireshark the ping response is sent from WLAN firmware without waking up the host. Send a "ping" command to the board and observe MCU does not wake up for ping. <div class="fragment"><div class="line">C:\&gt;ping -n 3 10.0.0.201</div>
 <div class="line">Pinging 10.0.0.201 with 32 bytes of data:</div>
 <div class="line">Reply from 10.0.0.201: bytes=32 time=274ms TTL=255</div>
 <div class="line">Reply from 10.0.0.201: bytes=32 time=393ms TTL=255</div>
@@ -1416,7 +1402,7 @@ Quick start guide</h3>
 <div class="line">Approximate round trip times in milli-seconds:</div>
 <div class="line">    Minimum = 274ms, Maximum = 396ms, Average = 354ms</div>
 <div class="line"> </div>
-<div class="line">&lt;Terminal logs &gt;    </div>
+<div class="line">&lt;Terminal logs &gt;</div>
 <div class="line">Network Stack Suspended, MCU will enter Deep sleep power mode.</div>
 </div><!-- fragment --> <div class="image">
 <img src="ICMP_wireshark.JPG" alt="" height="250px"/>
@@ -1480,7 +1466,7 @@ Quick start guide</h3>
 <div class="line">Network is active. Resuming network stack</div>
 <div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
-<li>Send a "ndisc6" command to the board from peer linux machine and observe MCU doesnot wake up. <div class="fragment"><div class="line">[root@cy-blr-au115]# ndisc6 fe80::0290:4cff:fec5:1238 wlan0</div>
+<li>Send a "ndisc6" command to the board from peer linux machine and observe MCU does not wake up. <div class="fragment"><div class="line">[root@cy-blr-au115]# ndisc6 fe80::0290:4cff:fec5:1238 wlan0</div>
 <div class="line">Soliciting fe80::290:4cff:fe30:1001 (fe80::290:4cff:fe30:1001) on wlan0...</div>
 <div class="line">Target link-layer address: 00:90:4C:30:10:01</div>
 <div class="line">from fe80::290:4cff:fe30:1001</div>
@@ -1666,7 +1652,7 @@ Quick start guide</h3>
 <li>To configure MQTT offload client configurations refer <a href="https://github.com/Infineon/mtb-example-wifi-mqtt-client/blob/master/README.md#operation"><b>readme</b></a>. Make sure keep-alive interval (MQTT_KEEP_ALIVE_SECONDS) in mqtt_client_config.h should be greater than 10 seconds.</li>
 <li>Configure MQTT keepalive offload. The easiest way to configure MQTT keepalive offload is to use the ModusToolbox&trade; Device Configurator. <br  />
 <ul>
-<li>Refer section <a class="el" href="index.html#section_lpa_hostwake">Wi-Fi host wake configuration</a> to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.</li>
+<li>Refer section <a class="el" href="index.html#group_lpa_p2_cc_hostwake">Wi-Fi host wake configuration</a> to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.</li>
 <li>In design.modus, switch to the connectivity device "CYW43022CUB" tab.</li>
 <li>Enable Power-&gt;Wi-Fi.</li>
 <li>In "Wi-Fi - Parameters" pane, enable "Host Wake Configuration" and set "Host Device Interrupt Pin" to "CYBSP_WIFI_HOST_WAKE".</li>
@@ -1681,13 +1667,18 @@ Quick start guide</h3>
 </li>
 <li>In the application, subscribe for the topic which is used to publish the wake pattern from the server.</li>
 <li>Intergate LPA API's needed for MQTT offload into the application. Refer <a class="el" href="index.html#subsection_lpa_snippet_7">Code Snippet 7: MQTT offload configuration.</a> which proivdes information about the APIs to be called from application.</li>
-<li>When using lwip + mbedtls combination, comment the below macro to enable support for key export in mbedtls_user_config.h <div class="fragment"><div class="line"><span class="preprocessor">#undef MBEDTLS_SSL_EXPORT_KEYS</span></div>
+<li>lwIP + Mbedtls :<ul>
+<li>The following are the prerequisite when using lwip + mbedtls combination 8.1 Comment the below macro to enable support for key export in mbedtls_user_config.h <div class="fragment"><div class="line"><span class="preprocessor">#undef MBEDTLS_SSL_EXPORT_KEYS</span></div>
+</div><!-- fragment --> 8.2 MQTT offload supports only TLS_RSA_WITH_AES_128_CBC_SHA and TLS_RSA_WITH_AES_256_CBC_SHA TLS1.2 cipher-suites. Make sure SHA1 is enabled in security stack configuration and the cipher-suite negotiated with the broker is one of the offload supported cipher-suite. <div class="fragment"><div class="line"><span class="preprocessor">#define MBEDTLS_SSL_CIPHERSUITES  MBEDTLS_TLS_RSA_WITH_AES_128_CBC_SHA, MBEDTLS_TLS_RSA_WITH_AES_256_CBC_SHA</span></div>
+</div><!-- fragment --> 8.3 MQTT offload supports cipher suites TLS_AES_128_GCM_SHA256 and TLS_AES_256_GCM_SHA384 with TLS1.3 when connecting to MQTT broker. These cipher suites shall be enabled in mbedtls_user_config.h. <div class="fragment"><div class="line"><span class="preprocessor">#define MBEDTLS_SSL_CIPHERSUITES  MBEDTLS_TLS1_3_AES_128_GCM_SHA256, MBEDTLS_TLS1_3_AES_256_GCM_SHA384</span></div>
+</div><!-- fragment --> Note : MQTT offload with TLS1.3 is currently supported only for CY8CEVAL-062S2-CYW43022CUB device.</li>
+</ul>
+</li>
+<li>NetXDuo + NetXSecure :<ul>
+<li>MQTT offload supports cipher suites TLS_RSA_WITH_AES_128_CBC_SHA and TLS_RSA_WITH_AES_256_CBC_SHA with TLS1.2 when connecting to MQTT broker.</li>
+<li>By default SHA1 cipher suites are disabled. To enable MQTT offload supported cipher suites, add 'CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER' application's Makefile defines. The Makefile entry should look like as follows: <div class="fragment"><div class="line">DEFINES+=CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER</div>
 </div><!-- fragment --></li>
-<li>MQTT offload supports only SHA1 hash algorithm. Make sure SHA1 is enabled in security stack configuration and the ciphersuite negotiated with the server is SHA1 ciphersuite.<ul>
-<li>When using lwip + mbedtls combination, enable ciphersuites which supports only SHA1 in mbedtls_user_config.h. Below is an example to enable SHA1 ciphersuites. <div class="fragment"><div class="line"><span class="preprocessor">#define MBEDTLS_SSL_CIPHERSUITES  MBEDTLS_TLS_RSA_WITH_AES_128_CBC_SHA, MBEDTLS_TLS_RSA_WITH_AES_256_CBC_SHA</span></div>
-</div><!-- fragment --></li>
-<li>When using netxduo + Netxsecure combination, enable SHA1 ciphersuite. To do this add 'CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER' application's Makefile defines. The Makefile entry should look like as follows: <div class="fragment"><div class="line">DEFINES+=CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER</div>
-</div><!-- fragment --> Above define will ensure that 'TLS_RSA_WITH_AES_256_CBC_SHA' and 'TLS_RSA_WITH_AES_128_CBC_SHA' are enabled.</li>
+<li>Copy cy_tls_ciphersuites.h from secure-sockets to application folder and ensure that only these cipher suite entries are present in tlsv12 and tlsv13 lookup tables. This will ensure that the device will negotitate the offload supported cipher suite with the broker.</li>
 </ul>
 </li>
 <li>Add the following to COMPONENTS in the application Makefile. When using FREERTOS, LWIP, and MBEDTLS combination <div class="fragment"><div class="line">COMPONENTS = FREERTOS LWIP MBEDTLS SECURE_SOCKETS</div>
@@ -1767,12 +1758,54 @@ Wi-Fi low power configuration considerations</h2>
 <li>C Data File: /GeneratedSource/cycfg_connectivity_wifi.c</li>
 <li>C Header File: /GeneratedSource/cycfg_connectivity_wifi.h</li>
 </ul>
-<h3><a class="anchor" id="group_lpa_p2_cc_host_wake"></a>
-Host Wake Configuration Notes</h3>
-<p >By Default, WLAN host wake is configured properly and below device configurator support allows user to modify it to different GPIOs. But if user selects <b><em>Host Wake Configuration Enable</em></b> checkbox and doesnot select any pin for <b><em>Host Device Interrupt Pin</em></b>, System will Hang and this should be avoided by the user</p>
+<h3><a class="anchor" id="group_lpa_p2_cc_hostwake"></a>
+Wi-Fi host wake configuration</h3>
+<p >This section explains how to enable the Wi-Fi host wake configuration using the Device Configurator tool. <br  />
+ <br  />
+ By Default, WLAN host wake is configured properly and below device configurator support allows user to modify it to different GPIOs. The correct pins won’t show up in the list unless that pin is enabled from the Pins tab. If user selects <b><em>Host Wake Configuration Enable</em></b> checkbox and does not select any pin for <b><em>Host Device Interrupt Pin</em></b>, System will Hang and this should be avoided by the user</p>
 <div class="image">
 <img src="hostwake_MTConfigure.png" alt="" height="150px"/>
 </div>
+<p >The following table lists the Device name and its corresponding Wi-Fi wost wake pin. </p><table class="doxtable">
+<tr>
+<th>Infineon platform </th><th>Wi-Fi Host wake pin  </th></tr>
+<tr>
+<td align="center">CY8CKIT_062_WIFI_BT </td><td align="center">P2[7]  </td></tr>
+<tr>
+<td align="center">CY8CKIT_062S2_43012 </td><td align="center">P4[1]  </td></tr>
+<tr>
+<td align="center">CY8CEVAL-062S2-CYW43022CUB </td><td align="center">P4[1]  </td></tr>
+<tr>
+<td align="center">CY8CEVAL-062S2-CYW955513SDM2WLIPA </td><td align="center">P4[1]  </td></tr>
+<tr>
+<td align="center">CY8CPROTO_062_4343W </td><td align="center">P0[4]  </td></tr>
+<tr>
+<td align="center">CY8CEVAL_062S2_LAI_4373M2 </td><td align="center">P4[1]  </td></tr>
+<tr>
+<td align="center">CY8CEVAL_062S2_MUR_43439M2 </td><td align="center">P4[1]  </td></tr>
+<tr>
+<td align="center">CYW955913EVK-01 </td><td align="center">Wi-Fi Subsystem Doorbell Wake Interrupt(Enabled by default)  </td></tr>
+</table>
+<p><br  />
+ The following is an example of the CY8CKIT_062S2_43012 device to how to enable the Wi-Fi host wake configuration:</p>
+<h3><a class="anchor" id="group_lpa_p2_cc_CY8CKIT_062S2_43012"></a>
+CY8CKIT_062S2_43012</h3>
+<ul>
+<li>On the PSoC&trade; 6 MCU Pins tab of the Device Configurator tool , Enable the Host wake pin P4[1] and name it CYBSP_WIFI_HOST_WAKE.</li>
+<li>In the Parameters pane, change the following:<ul>
+<li>Drive Mode: Analog High-Z. Input buffer off.</li>
+<li>Initial Drive State: High(1).</li>
+<li>Interrupt Trigger Type: Rising Edge.</li>
+</ul>
+</li>
+<li>Go to WiFi tab, set Host Device Interrupt Pin to CYBSP_WIFI_HOST_WAKE.</li>
+</ul>
+<div class="image">
+<img src="hostwake_config_43012_062S2_kit.png" alt="" height="400px"/>
+</div>
+<dl class="section note"><dt>Note</dt><dd>For CYW955913EVK-01, host wake pin configuration does not apply as the Doorbell wake interrupt is enabled by default. </dd>
+<dd>
+For CY8CEVAL-062S2-CYW955513SDM2WLIPA, <b><em>Drive Mode</em></b> should be set to <b><em>Resistive Pull UP, Input Buffer ON</em></b></dd></dl>
 <h3><a class="anchor" id="group_lpa_p2_cc_limitations"></a>
 Limitations</h3>
 <ol type="1">
@@ -2047,7 +2080,8 @@ Configuration parameters</h3>
 </table>
 <h1><a class="anchor" id="group_lpa_p3"></a>
 Part 3. Bluetooth® Low Power</h1>
-<p >The Bluetooth low-power feature enables the host to achieve its lowest power consumption with enabled Bluetooth. The BT Low Power personality helps configure the pin connections between the MCU host and BT device.</p>
+<p >The Bluetooth low-power feature enables the host to achieve its lowest power consumption with enabled Bluetooth. The BT Low Power personality helps configure the pin connections between the MCU host and BT device. <br  />
+ The LPA library provides configurations for MCU Low Power, Wi-Fi Low Power and Bluetooth® Low Power; however, the LPA library only needs to be included in applications that use Wi-Fi low power.</p>
 <h2><a class="anchor" id="group_lpa_p3_cc"></a>
 BT Low Power Configuration considerations</h2>
 <p >Follow the below steps for BT Low Power Configuration considerations.</p><ol type="1">
@@ -2057,17 +2091,75 @@ BT Low Power Configuration considerations</h2>
 <li>Enable Bluetooth&reg; Wake Configuration.</li>
 <li>Choose a pin for Host-wake-up signal. Refer to the kit datasheet to find out which pin is routed on board PCB.</li>
 <li>Choose a pin for Device-wake-up signal and Device-wake-up trigger interrupt type. Refer to the kit datasheet to find out which pin is routed on board PCB.</li>
-<li>Select File-&gt;Save to generate initialization code.</li>
-</ol>
-<div class="image">
+<li>Select File-&gt;Save to generate initialization code. <br  />
+ <b>Note:</b> If the pins for Host-wake-up signal and Device-wake-up signal are not unselected. The BSP uses the default pins with the standard names of CYBSP_BT_HOST_WAKE and CYBSP_BT_DEVICE_WAKE respectively. <br  />
+ <div class="image">
 <img src="BT_Personality.png" alt="" height="250px"/>
 </div>
+</li>
+</ol>
 <p >After saving the configuration file, the generated code is available under the GeneratedSource folder, located next to the design.modus file in the BSP:</p><ul>
 <li>C Data File: /GeneratedSource/cycfg_connectivity_bt.c</li>
 <li>C Header File: /GeneratedSource/cycfg_connectivity_bt.h</li>
 </ul>
-<h2><a class="anchor" id="group_lpa_p3_cc_parameters"></a>
-Configuration parameters</h2>
+<h3><a class="anchor" id="group_lpa_p3_cc_btwakeconfig"></a>
+BT Wake Configuration</h3>
+<p >This section explains how to enable the Bluetooth&reg; wake configuration using the device configurator tool. <br  />
+ <br  />
+ The following table lists the device name and its corresponding Bluetooth&reg; host wake pin and Bluetooth&reg; device wake pin: </p><table class="doxtable">
+<tr>
+<th>Infineon platform </th><th>BT Host wake pin </th><th>BT Device wake pin  </th></tr>
+<tr>
+<td align="center">CY8CKIT_062_WIFI_BT </td><td align="center">P3[5] </td><td align="center">P4[0]  </td></tr>
+<tr>
+<td align="center">CY8CKIT_062S2_43012 </td><td align="center">P3[5] </td><td align="center">P4[0]  </td></tr>
+<tr>
+<td align="center">CY8CPROTO_062_4343W </td><td align="center">P3[5] </td><td align="center">P4[0]  </td></tr>
+<tr>
+<td align="center">CY8CEVAL_062S2_LAI_4373M2 </td><td align="center">P2[7] </td><td align="center">P4[0]  </td></tr>
+<tr>
+<td align="center">CY8CEVAL_062S2_MUR_43439M2 </td><td align="center">P3[5] </td><td align="center">P4[0]  </td></tr>
+<tr>
+<td align="center">CYW955913EVK-01 </td><td align="center">Bluetooth activity </td><td align="center">Bluetooth activity  </td></tr>
+</table>
+<p><br  />
+ The following table lists the Device name and its corresponding Bluetooth&reg; host wake pin and Bluetooth&reg; device wake pin:</p>
+<h3><a class="anchor" id="group_lpa_p3_cc_btwakeconfig_CY8CKIT_062S2_43012"></a>
+CY8CKIT_062S2_43012</h3>
+<ul>
+<li>On the PSoC&trade; 6 MCU Pins tab of the Device Configurator tool<ul>
+<li>Enable the Bluetooth&reg; device wake pin P3[5] and name it CYBSP_BT_DEVICE_WAKE.<ul>
+<li>In the Parameters pane, change the following.<ul>
+<li>Drive Mode: Strong Drive. Input buffer off.</li>
+<li>Initial Drive State: Low(0).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Enable the Bluetooth&reg; Host wake pin P4[0] and name it CYBSP_BT_HOST_WAKE.<ul>
+<li>In the Parameters pane, change the following.<ul>
+<li>Drive Mode: Analog High-Z. Input buffer off.</li>
+<li>Initial Drive State: Low(0).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Go to Bluetooth&reg; tab in CYW43012C0WKWBG and change the following.<ul>
+<li>Enable Bluetooth&reg; wake up configurations checkbox</li>
+<li>Host Wake-Up Signal : CYBSP_BT_HOST_WAKE</li>
+<li>Host Wake-Up IRQ event: Failing Edge</li>
+<li>Device Wake-Up Signal : CYBSP_BT_DEVICE_WAKE</li>
+<li>Device Wake-up Polarity : Active low</li>
+</ul>
+</li>
+</ul>
+<div class="image">
+<img src="btwake_config_43012_062S2_kit.png" alt="" height="400px"/>
+</div>
+<h3><a class="anchor" id="group_lpa_p3_cc_parameters"></a>
+Configuration parameters</h3>
 <p >The following parameters and their mapping to macros are available:</p>
 <table class="doxtable">
 <tr>
@@ -2103,106 +2195,6 @@ How to measure power consumption</h1>
  <b>For Example:</b></p>
 <p >To measure the power consumption for the CY8CKIT-062S2-43012 Kit, refer to section <em>3.2.5 Power Supply System</em> in the kit guide <a href="https://www.infineon.com/dgdl/Infineon-CY8CKIT-062S2-43012_PSoC_62S2_Wi-Fi_BT_Pioneer_Kit_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f01c8f11927"><b>User manual</b></a>.</p>
 <p >To measure the power consumption for the CYW955913EVK-01 Kit, refer to section <em>Power measurement using CYW955913EVK-01</em> in the kit guide <a href="https://www.infineon.com/CYW55913"><b>User manual</b></a>.</p>
-<h1><a class="anchor" id="section_lpa_hostwake"></a>
-Wi-Fi host wake configuration</h1>
-<p >This section explains how to enable the Wi-Fi host wake configuration using the Device Configurator tool. <br  />
- <br  />
- The following table lists the Device name and its corresponding Wi-Fi wost wake pin. </p><table class="doxtable">
-<tr>
-<th>Infineon platform </th><th>Wi-Fi Host wake pin  </th></tr>
-<tr>
-<td align="center">CY8CKIT_062_WIFI_BT </td><td align="center">P2[7]  </td></tr>
-<tr>
-<td align="center">CY8CKIT_062S2_43012 </td><td align="center">P4[1]  </td></tr>
-<tr>
-<td align="center">CY8CEVAL-062S2-CYW43022CUB </td><td align="center">P4[1]  </td></tr>
-<tr>
-<td align="center">CY8CEVAL-062S2-CYW955513SDM2WLIPA </td><td align="center">P4[1]  </td></tr>
-<tr>
-<td align="center">CY8CPROTO_062_4343W </td><td align="center">P0[4]  </td></tr>
-<tr>
-<td align="center">CY8CEVAL_062S2_LAI_4373M2 </td><td align="center">P4[1]  </td></tr>
-<tr>
-<td align="center">CY8CEVAL_062S2_MUR_43439M2 </td><td align="center">P4[1]  </td></tr>
-<tr>
-<td align="center">CYW955913EVK-01 </td><td align="center">Wi-Fi Subsystem Doorbell Wake Interrupt(Enabled by default)  </td></tr>
-</table>
-<p><br  />
- The following is an example of the CY8CKIT_062S2_43012 device to how to enable the Wi-Fi host wake configuration:</p>
-<h2><a class="anchor" id="section_lpa_hostwake_CY8CKIT_062S2_43012"></a>
-CY8CKIT_062S2_43012</h2>
-<ul>
-<li>On the PSoC&trade; 6 MCU Pins tab of the Device Configurator tool , Enable the Host wake pin P4[1] and name it CYBSP_WIFI_HOST_WAKE.</li>
-<li>In the Parameters pane, change the following:<ul>
-<li>Drive Mode: Analog High-Z. Input buffer off.</li>
-<li>Initial Drive State: High(1).</li>
-<li>Interrupt Trigger Type: Rising Edge.</li>
-</ul>
-</li>
-<li>Go to WiFi tab, set Host Device Interrupt Pin to CYBSP_WIFI_HOST_WAKE.</li>
-</ul>
-<div class="image">
-<img src="hostwake_config_43012_062S2_kit.png" alt="" height="400px"/>
-</div>
-<dl class="section note"><dt>Note</dt><dd>For CYW955913EVK-01, host wake pin configuration does not apply as the Doorbell wake interrupt is enabled by default. </dd>
-<dd>
-For CY8CEVAL-062S2-CYW955513SDM2WLIPA, <b><em>Drive Mode</em></b> should be set to <b><em>Resistive Pull UP, Input Buffer ON</em></b></dd></dl>
-<h1><a class="anchor" id="section_lpa_bt_wakeconfig"></a>
-BT Wake Configuration</h1>
-<p >This section explains how to enable the Bluetooth&reg; wake configuration using the device configurator tool. <br  />
- <br  />
- The following table lists the device name and its corresponding Bluetooth&reg; host wake pin and Bluetooth&reg; device wake pin: </p><table class="doxtable">
-<tr>
-<th>Infineon platform </th><th>BT Host wake pin </th><th>BT Device wake pin  </th></tr>
-<tr>
-<td align="center">CY8CKIT_062_WIFI_BT </td><td align="center">P3[5] </td><td align="center">P4[0]  </td></tr>
-<tr>
-<td align="center">CY8CKIT_062S2_43012 </td><td align="center">P3[5] </td><td align="center">P4[0]  </td></tr>
-<tr>
-<td align="center">CY8CPROTO_062_4343W </td><td align="center">P3[5] </td><td align="center">P4[0]  </td></tr>
-<tr>
-<td align="center">CY8CEVAL_062S2_LAI_4373M2 </td><td align="center">P2[7] </td><td align="center">P4[0]  </td></tr>
-<tr>
-<td align="center">CY8CEVAL_062S2_MUR_43439M2 </td><td align="center">P3[5] </td><td align="center">P4[0]  </td></tr>
-<tr>
-<td align="center">CYW955913EVK-01 </td><td align="center">Bluetooth activity </td><td align="center">Bluetooth activity  </td></tr>
-</table>
-<p><br  />
- The following table lists the Device name and its corresponding Bluetooth&reg; host wake pin and Bluetooth&reg; device wake pin:</p>
-<h2><a class="anchor" id="section_lpa_bt_wakeconfig_CY8CKIT_062S2_43012"></a>
-CY8CKIT_062S2_43012</h2>
-<ul>
-<li>On the PSoC&trade; 6 MCU Pins tab of the Device Configurator tool<ul>
-<li>Enable the Bluetooth&reg; device wake pin P3[5] and name it CYBSP_BT_DEVICE_WAKE.<ul>
-<li>In the Parameters pane, change the following.<ul>
-<li>Drive Mode: Strong Drive. Input buffer off.</li>
-<li>Initial Drive State: Low(0).</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Enable the Bluetooth&reg; Host wake pin P4[0] and name it CYBSP_BT_HOST_WAKE.<ul>
-<li>In the Parameters pane, change the following.<ul>
-<li>Drive Mode: Analog High-Z. Input buffer off.</li>
-<li>Initial Drive State: Low(0).</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Go to Bluetooth&reg; tab in CYW43012C0WKWBG and change the following.<ul>
-<li>Enable Bluetooth&reg; wake up configurations checkbox</li>
-<li>Host Wake-Up Signal : CYBSP_BT_HOST_WAKE</li>
-<li>Host Wake-Up IRQ event: Failing Edge</li>
-<li>Device Wake-Up Signal : CYBSP_BT_DEVICE_WAKE</li>
-<li>Device Wake-up Polarity : Active low</li>
-</ul>
-</li>
-</ul>
-<div class="image">
-<img src="btwake_config_43012_062S2_kit.png" alt="" height="400px"/>
-</div>
 <h1><a class="anchor" id="group_lpa_misra"></a>
 MISRA-C Compliance</h1>
 <p >If you need a MISRA compliance report for this library, create a ticket at <a href="https://www.infineon.com/cms/en/about-infineon/company/contacts/support/"><b>Infineon support</b></a></p>
