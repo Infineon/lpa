@@ -43,11 +43,15 @@
 
 #include "cy_OlmInterface.h"
 #include "whd_int.h"
-#ifndef COMPONENT_CAT5
+#ifndef COMPONENT_55900
 #include <cycfg_system.h>
 #include "cycfg.h"
 #endif
+#if defined (COMPONENT_MTB_HAL)
+#include "mtb_hal.h"
+#else
 #include "cyhal.h"
+#endif
 #ifdef COMPONENT_LWIP
 #include "cy_network_buffer.h"
 /* lwIP header files */
@@ -113,23 +117,6 @@ extern whd_interface_t cy_olm_get_whd_interface ( void );
 /******************************************************
  *               Static Function Declarations
  ******************************************************/
-
-/*******************************************************************************
-* Function Name: cylpa_get_idle_power_mode
-********************************************************************************
-*
-* Summary: This function is used to get the currently configured MCU low power
-* mode, and copy it as a string into the first argument.
-*
-* Parameters:
-* char *str: Pointer to character array where idle power mode string should be copied
-* uint32_t length of character array passed in argument 1.
-*
-* Return:
-* void.
-*
-*******************************************************************************/
-static void cylpa_get_idle_power_mode(char *str, uint32_t length);
 
 /*******************************************************************************
 * Function Name: cylpa_print_whd_bus_stats
@@ -232,34 +219,6 @@ void cylpa_network_act_handler_init(void)
     /* Register for network activity callback */
     cylpa_register_network_activity_callback();
 }
-
-static void cylpa_get_idle_power_mode(char *str, uint32_t length)
-{
-    switch (CY_CFG_PWR_SYS_IDLE_MODE)
-    {
-#ifndef COMPONENT_CAT5
-        case CY_CFG_PWR_MODE_LP:
-            strncpy(str, "LP", length);
-            break;
-        case CY_CFG_PWR_MODE_ULP:
-            strncpy(str, "ULP", length);
-            break;
-#endif
-        case CY_CFG_PWR_MODE_ACTIVE:
-            strncpy(str, "Active", length);
-            break;
-        case CY_CFG_PWR_MODE_SLEEP:
-            strncpy(str, "Sleep", length);
-            break;
-        case CY_CFG_PWR_MODE_DEEPSLEEP:
-            strncpy(str, "DeepSleep", length);
-            break;
-        default:
-            strncpy(str, "Active", length);
-            break;
-    }
-}
-
 
 static void cylpa_print_whd_bus_stats(void *iface)
 {
@@ -650,7 +609,6 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
 {
     int32_t state;
     uint32_t result, flags;
-    char idle_power_mode[IDLE_POWER_MODE_STRING_LEN];
     static bool emac_activity_callback_registered = false;
     cy_time_t lp_start_time;
     cy_time_t lp_end_time;
@@ -680,7 +638,12 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
     }
 #endif
 
+#ifdef COMPONENT_MTB_HAL
+    mtb_hal_syspm_lock_deepsleep();
+#else
     cyhal_syspm_lock_deepsleep();
+#endif
+
     state = cylpa_wait_net_inactivity(network_inactive_interval_ms, network_inactive_window_ms);
 
     if (ST_SUCCESS == state)
@@ -704,10 +667,14 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
 
             cy_rtos_clearbits_event(&cy_lp_wait_net_event, (uint32_t)(CY_LPA_TX_EVENT_FLAG | CY_LPA_RX_EVENT_FLAG), false);
 
-            cylpa_get_idle_power_mode(idle_power_mode, sizeof(idle_power_mode));
             cylpa_olm_dispatch_pm_notification(cy_get_olm_instance(), OL_PM_ST_GOING_TO_SLEEP);
-            NW_INFO(("\nNetwork Stack Suspended, MCU will enter %s power mode\n", idle_power_mode));
+            NW_INFO(("\nNetwork Stack Suspended, MCU can enter DeepSleep power mode\n"));
+
+#ifdef COMPONENT_MTB_HAL
+            mtb_hal_syspm_unlock_deepsleep();
+#else
             cyhal_syspm_unlock_deepsleep();
+#endif
             flags = (CY_LPA_RX_EVENT_FLAG | CY_LPA_TX_EVENT_FLAG);
 
             cy_rtos_get_time( &lp_start_time);
@@ -736,7 +703,12 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
 
             cy_rtos_get_mutex(&cy_lp_mutex, wait_ms);
 
+#ifdef COMPONENT_MTB_HAL
+            mtb_hal_syspm_lock_deepsleep();
+#else
             cyhal_syspm_lock_deepsleep();
+#endif
+
             /* Resume the network stack.
              * State data (e.g. caches) may be adjusted here so that the stack resumes properly.
             */
@@ -770,8 +742,11 @@ int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inac
             cy_rtos_set_mutex(&cy_lp_mutex);
         }
     }
-
+#ifdef COMPONENT_MTB_HAL
+    mtb_hal_syspm_unlock_deepsleep();
+#else
     cyhal_syspm_unlock_deepsleep();
+#endif
     return state;
 }
 

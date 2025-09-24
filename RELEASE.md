@@ -10,6 +10,7 @@ The revision history of the LPA middleware is also available on the [Low Power A
 
 |  Version         | Description of change                                                  | Comments                                                 |
 | ---------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 5.8.0            | Added support for PSOC&trade; Edge E84 (PSE84) platform, Enabled LLVM_ARM toolchain support, Updated to use MTB_HAL apis.        | |
 | 5.7.1            | Minor Bug fixes         | |
 | 5.7.0            | Added support for DLTRO offload, ICMP offload, NDOE offload, NULL KA offload, NAT KA offload, WOWLPF, MQTT Keepalive offload for CY8CEVAL-062S2-CYW955513SDM2WLIPA Kit | |
 | 5.6.0            | Added support for DLTRO offload, ICMP offload, NDOE offload, NULL KA offload, NAT KA offload, WOWLPF, MQTT Keepalive offload for CYW955913EVK-01 Kit        | |
@@ -36,13 +37,14 @@ The revision history of the LPA middleware is also available on the [Low Power A
 
 This version of the LPA middleware was validated for compatibility with the following software and tools:
 
-| Software and tools                                                                  | Version   |
-| :---                                                                                | :------:  |
-| ModusToolbox&trade; software environment                                            |   3.4     |
-| - ModusToolbox&trade; Device Configurator                                           |   5.20    |
-| GCC compiler for ModusToolbox&trade;                                                |   11.3.1  |
-| IAR Compiler                                                                        |   9.50.2  |
-| Arm&reg; Compiler 6                                                                 |   6.22    |
+| Software and tools                                              | Version |
+| :---                                                            | :----:  |
+| ModusToolbox&trade; software environment                        | 3.6     |
+| ModusToolbox&trade; Device Configurator                         | 5.50    |
+| GCC Compiler                                                    | 14.2.1  |
+| IAR Compiler                                                    | 9.50.2  |
+| Arm&reg; Compiler 6                                             | 6.22    |
+| LLVM compiler                                                   | 19.1.5  |
 
 ### More information
 '

@@ -57,6 +57,8 @@ This library and its features are supported on the following Infineon platforms:
 
 - [PSoC&trade; 62S2 evaluation kit (CY8CEVAL-062S2-CYW955513SDM2WLIPA)](https://www.infineon.com/cms/en/product/evaluation-boards/cy8ceval-062s2/)
 
+- PSOC&trade; Edge E84 Evaluation Kit
+
 ## Limitations
 
 See the [Low Power Assistant Middleware Library Limitations](https://infineon.github.io/lpa/api_reference_manual/html/index.html).

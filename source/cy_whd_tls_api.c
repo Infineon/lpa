@@ -55,6 +55,7 @@
 #include "nx_ipv4.h"
 #include "nx_api.h"
 #include "cy_network_mw_core.h"
+#include "nx_secure_tls.h"
 #endif
 #include "ip4string.h"
 #include "cy_secure_sockets.h"
@@ -408,6 +409,10 @@ whd_tlsoe_disable( whd_t *whd, uint16_t local_port, uint16_t remote_port, const 
             }
         }
     }
+#if defined(COMPONENT_NETXDUO)
+    /* Release the TLS protection */
+    tx_mutex_put(&_nx_secure_tls_protection);
+#endif
     ret = whd_wowl_clear( whd );
 
     whd_wifi_deregister_event_handler( whd, tlsoe_offload_update_entry );
@@ -538,11 +543,6 @@ whd_tlsoe_activate( whd_t *whd, uint16_t local_port, uint16_t remote_port, const
     dst_ip = ntohl(seq.dstip);
     if (find_mac_addr(&dst_ip, &eth_ret, &ip_ret) >= 0)
     {
-        /* Note: The IP address should be in little-endian(host byte order) format for netxduo */
-        if (ip_ret != ntohl(seq.dstip))
-        {
-            TLSOE_ERROR_PRINTF( ("%s: Hey orig IP and Netxduo IP don't match!\n", __func__) );
-        }
         memcpy(seq.dst_mac.octet, &eth_ret, sizeof(seq.dst_mac.octet) );
     }
     else
@@ -624,6 +624,11 @@ whd_tlsoe_activate( whd_t *whd, uint16_t local_port, uint16_t remote_port, const
         TLSOE_ERROR_PRINTF( ("whd_tlsoe_conn_add failed\n") );
         return WHD_BADARG;
     }
+
+#if defined(COMPONENT_NETXDUO)
+    /* Get TLS protection */
+    tx_mutex_get(&_nx_secure_tls_protection, TX_WAIT_FOREVER);
+#endif
 
     /* Enable WLE_E_KTO Event */
     tcp_reset = 0;

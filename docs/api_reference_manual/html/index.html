@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Low Power Assistant Middleware Library 5.7.0: Low Power Assistant Middleware Library 5.7.0</title>
+<title>Low Power Assistant Middleware Library 5.8.0: Low Power Assistant Middleware Library 5.8.0</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,7 +27,7 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><a href="http://www.cypress.com/"><img alt="Logo" src="infineon_logo.png"/></a></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Low Power Assistant Middleware Library 5.7.0</div>
+   <div id="projectname">Low Power Assistant Middleware Library 5.8.0</div>
   </td>
  </tr>
  </tbody>
@@ -83,7 +83,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Low Power Assistant Middleware Library 5.7.0 </div></div>
+  <div class="headertitle"><div class="title">Low Power Assistant Middleware Library 5.8.0 </div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="section_lpa_overview"></a>
@@ -200,8 +200,7 @@ ModusToolbox™ Device Configurator flow</h1>
 <p ><b>Note</b> If you modify the output of the ModusToolbox&trade; Device Configurator, you cannot import it back into the tool.</p>
 <p ><b>PSoC&trade; 6 </b></p>
 <ul>
-<li>Open ModusToolbox&trade; Device Configurator by executing the command "make device-configurator" or by right clicking on the application in the project workspace. Select ModusToolbox&trade; -&gt; Device Configurator.</li>
-<li>If the design.modus file does not open and pops with an error message <em>No device support library path provided </em>, For ModusToolbox&trade; v3.0 and later, point to the mtb-pdl-cat1 folder inside the mtb_shared/mtb-pdl-cat1/&lt;&gt;/props.json and .modustoolbox/global/device-db/release-v4.6.0/props.json files in the window popup. For ModusToolbox&trade; below v3.0, point to the psoc6pdl folder inside the mtb-example-anycloud-wlan-lowpower/libs/psoc6pdl/devicesupport.xml (For ModusToolbox&trade; v2.2, point to mtb_shared/mtb-pdl-cat1/&lt;&gt;/devicesupport.xml) file in the window popup. This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.</li>
+<li>Open ModusToolbox&trade; Device Configurator by executing the command "make device-configurator" or by right clicking on the application in the project workspace. Select ModusToolbox&trade; -&gt; Device Configurator. For more details refer to <a href="https://www.infineon.com/dgdl/Infineon-infineon-device-configurator-user-guide-UserManual-v13_00-EN.pdf?fileId=8ac78c8c92416ca5019277a000152389&amp;redirId=180683">Infineon Device Configurator user guide</a></li>
 <li>Select the host device tab, and then select the System tab for that device.</li>
 <li>Enable the Power personality (if disabled) and go to the Power Parameters pane to configure the LPA Middleware.</li>
 <li>Configure RTOS related parameters:<ol type="1">
@@ -245,7 +244,7 @@ Part 1. MCU Low Power</h1>
 <p >There are two parameters available: System Idle Power Mode and Deep Sleep Latency.</p>
 <p >The System Idle Power Mode parameter defines the power state that the MCU needs to enter automatically any time the system is idle. Setting it to Active power mode disables power saving and allows the system to perform tasks with less intervention because there are no transitions to/from CPU Sleep/System Deep Sleep states.</p>
 <p >The Deep Sleep Latency parameter controls the time the system should remain in IDLE state before entering into sleep state.</p>
-<p >For more information, refer the SysPm (System Power Management) <a href="https://infineon.github.io/mtb-pdl-cat1/pdl_api_reference_manual/html/group__group__syspm.html"><b>documentation</b></a></p>
+<p >For more information, refer the SysPm (System Power Management) from the <a href="https://www.infineon.com/assets/row/public/documents/30/68/infineon-modustoolbox-tools-package-user-guide-gettingstarted-en.pdf"><b>PDL section of ModusToolbox&trade; tools package user guide</b></a>.</p>
 <p >The LPA library provides features for MCU Low Power, Wi-Fi Low Power and Bluetooth&reg; Low Power; however, the LPA library only needs to be included in applications that use Wi-Fi low power.</p>
 <h2><a class="anchor" id="group_lpa_p1_mcu_qsg"></a>
 Quick start guide</h2>
@@ -425,7 +424,7 @@ Quick start guide</h3>
 <div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div>
 <div class="line">Info:Beacon period = 100, DTIM period = 3</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div>
 <div class="line"> </div>
 <div class="line">=====================================================</div>
@@ -438,7 +437,7 @@ Quick start guide</h3>
 <div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 <li><p class="startli">PSoC&trade; 6 MCU is in System Deep Sleep mode. Only WLAN OOB can wake up the host in this situation. Check the board operation. Use a PC to connect to the same Wi-Fi AP as the PSoC&trade; 6 board.</p>
 <p class="startli">Send a "ping" command to the board and observe in the serial terminal that the PSoC&trade; 6 MCU wakes up each command: </p><div class="fragment"><div class="line">C:\&gt;ping -n 3 10.0.0.201</div>
@@ -519,13 +518,13 @@ Quick start guide</h3>
 <div class="line">IP Address: 192.168.39.170</div>
 <div class="line">Connected AP details Channel: 6, Channel width: 20, Signal strength(dBm): -13</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter Active power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line">Received character 7</div>
 <div class="line">Sleep unlocked</div>
 </div><!-- fragment --></li>
 <li><p class="startli">Use a PC to connect to the same Wi-Fi AP as the device under test.</p>
 <p class="startli">Send a "ping" command to the board and observe in the serial. Device wakes-up for the ping packets. </p><div class="fragment"><div class="line">&lt;Terminal logs when device wakes-up&gt;</div>
-<div class="line">Network Stack Suspended, MCU will enter Active power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 24750ms</div>
 <div class="line"> </div>
 <div class="line">=====================================================</div>
@@ -538,7 +537,7 @@ Quick start guide</h3>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter Active power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 </ol>
 <h2><a class="anchor" id="group_lpa_p2_arp_offload"></a>
@@ -591,9 +590,10 @@ Quick start guide</h3>
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
 <li>Configure the ARP offload. The easiest way to configure ARP offload is to use the ModusToolbox&trade; Device Configurator. <br  />
 <ul>
-<li><u>Configuring ARP offload on CY8CEVAL-062S2-CYW43022CUB and CY8CEVAL-062S2-CYW955513SDM2WLIPA</u> <br  />
+<li><u>Configuring ARP offload on CY8CEVAL-062S2-CYW43022CUB, CYW955913EVK-01, CY8CEVAL-062S2-CYW955513SDM2WLIPA and KIT_PSE84_EVAL_EPC2</u> <br  />
 <ul>
-<li>ARP offload is enabled by default in the WLAN firmware with configuration set to <a class="el" href="index.html#group_lpa_p2_hostpeerautoreply">Host and Peer Auto Reply</a>. Hence user is not required to do any configuration settings in ModusToolbox&trade; Device Configurator.</li>
+<li>ARP offload is enabled by default in the WLAN firmware with configuration set to <a class="el" href="index.html#group_lpa_p2_hostpeerautoreply">Host and Peer Auto Reply</a>. Hence user is not required to do any configuration settings in ModusToolbox&trade; Device Configurator. <dl class="section note"><dt>Note</dt><dd>ARP Ageout time set by the firmware is 20 minutes.</dd></dl>
+</li>
 </ul>
 </li>
 <li><u>Configuring ARP offload on all other kits:</u> <br  />
@@ -629,7 +629,7 @@ Quick start guide</h3>
 <div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div>
 <div class="line">Info:Beacon period = 100, DTIM period = 3</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div>
 <div class="line"> </div>
 <div class="line">=====================================================</div>
@@ -642,7 +642,7 @@ Quick start guide</h3>
 <div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 <li>Check the board operation. Use a PC to connect to the same Wi-Fi AP as the PSoC&trade; 6 board.<ul>
 <li>Send a "ping" command to the board and observe in the serial terminal that the PSoC&trade; 6 MCU wakes up for each command: <div class="fragment"><div class="line">C:\&gt;ping -n 3 10.0.0.201</div>
@@ -671,7 +671,7 @@ Quick start guide</h3>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 <li><p class="startli">Send an "arping" command as follows and observe that the PSoC&trade; 6 MCU is in Deep Sleep mode. </p><div class="fragment"><div class="line">C:\&gt;arp-ping.exe -n 3 10.0.0.201</div>
 <div class="line">Reply that D4:4D:A4:A0:02:A4 is 10.0.0.201 in 113.078ms</div>
@@ -763,7 +763,7 @@ Quick start guide</h3>
 <div class="line">IP Address: 192.168.39.170</div>
 <div class="line">Connected AP details Channel: 6, Channel width: 20, Signal strength(dBm): -13</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter Active power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line">Received character 7</div>
 <div class="line">Sleep unlocked</div>
 </div><!-- fragment --></li>
@@ -794,7 +794,7 @@ Quick start guide</h3>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 <li><p class="startli">Send an "arping" command as follows and observe that the CYW955913EVK-01 is in Deep Sleep mode. </p><div class="fragment"><div class="line">C:\&gt;arp-ping.exe -n 3 192.168.39.170</div>
 <div class="line">Reply that D4:4D:A4:A0:02:A4 is 192.168.39.170 in 113.078ms</div>
@@ -933,7 +933,7 @@ Quick start guide</h3>
 <div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div>
 <div class="line">Info:Beacon period = 100, DTIM period = 3</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div>
 <div class="line"> </div>
 <div class="line">=====================================================</div>
@@ -946,7 +946,7 @@ Quick start guide</h3>
 <div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 <li>Check the board operation. Use a PC to connect to the same Wi-Fi AP as the PSoC&trade; 6 board.<ul>
 <li>Send "ping" command to the board and observe in serial terminal that it does not wake up the PSoC&trade; 6 MCU because there is no "keep" packet filter for ICMP pings, there is no response for the pings: <div class="fragment"><div class="line">C:\&gt;ping -n 3 10.0.0.201</div>
@@ -987,7 +987,7 @@ Quick start guide</h3>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 </ul>
 </li>
@@ -1067,7 +1067,7 @@ Quick start guide</h3>
 <div class="line">IP Address: 192.168.39.170</div>
 <div class="line">Connected AP details Channel: 6, Channel width: 20, Signal strength(dBm): -13</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter Active power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line">Received character 7</div>
 <div class="line">Sleep unlocked</div>
 </div><!-- fragment --></li>
@@ -1110,7 +1110,7 @@ Quick start guide</h3>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 </ul>
 </li>
@@ -1185,7 +1185,7 @@ Quick start guide</h3>
 <div class="line">Low power task created</div>
 <div class="line">whd_tko_toggle: Successfully enabled</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 <li>Verify that the TCP keepalive offload is working as desired. Refer to the <a class="el" href="index.html#section_lpa_measurement">How to measure power consumption</a> section for corresponding instructions. The following oscilloscope screen capture shows current measurement with</li>
 </ol>
@@ -1254,7 +1254,7 @@ Quick start guide</h3>
 <div class="line">IP Address: 192.168.39.170</div>
 <div class="line">Connected AP details Channel: 6, Channel width: 20, Signal strength(dBm): -13</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter Active power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line"> </div>
 <div class="line">Received character t</div>
 <div class="line">Taking TCP Keepalive configuration from the Generated sources.</div>
@@ -1266,7 +1266,7 @@ Quick start guide</h3>
 <div class="line">Skipped TCP socket connection for socket id[3]. Check the TCP Keepalive configuration.</div>
 <div class="line">whd_tko_toggle: Successfully enabled</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line"> </div>
 <div class="line">Received character 7</div>
 <div class="line">Sleep unlocked</div>
@@ -1284,7 +1284,7 @@ DHCP Lease Time Renew offload</h2>
 <h3><a class="anchor" id="group_lpa_p2_dltro_qsg"></a>
 Quick start guide</h3>
 <p >This quick start guide demonstrates how to use the DLTRO feature in the RTOS environment and its impact on the system power consumption.</p>
-<p >DLTRO is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices.</p>
+<p >DLTRO is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA, CYW955913EVK-01 and KIT_PSE84_EVAL_EPC2 devices.</p>
 <p >Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:</p>
 <ol type="1">
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
@@ -1315,7 +1315,7 @@ Quick start guide</h3>
 <div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div>
 <div class="line">Info:Beacon period = 100, DTIM period = 3</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div>
 <div class="line"> </div>
 <div class="line">=====================================================</div>
@@ -1328,7 +1328,7 @@ Quick start guide</h3>
 <div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 <li>Verify in wireshark the DHCP request is sent periodically from WLAN firmware without waking up the host. <div class="image">
 <img src="DLTRO_Wireshark.jpg" alt="" height="250px"/>
@@ -1346,7 +1346,7 @@ ICMP offload</h2>
 <h3><a class="anchor" id="group_lpa_p2_icmp_qsg"></a>
 Quick start guide</h3>
 <p >This quick start guide demonstrates how to use the ICMP offload feature in the FreeRTOS environment and its impact on the system power consumption.</p>
-<p >ICMP offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices. Follow below steps for ICMP offload testing on CYW43022CUB device.</p>
+<p >ICMP offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA, CYW955913EVK-01 and KIT_PSE84_EVAL_EPC2 devices. Follow below steps for ICMP offload testing on CYW43022CUB device.</p>
 <p >Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:</p>
 <ol type="1">
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
@@ -1376,7 +1376,7 @@ Quick start guide</h3>
 <div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div>
 <div class="line">Info:Beacon period = 100, DTIM period = 3</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div>
 <div class="line"> </div>
 <div class="line">=====================================================</div>
@@ -1389,7 +1389,7 @@ Quick start guide</h3>
 <div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 <li>Verify in wireshark the ping response is sent from WLAN firmware without waking up the host. Send a "ping" command to the board and observe MCU does not wake up for ping. <div class="fragment"><div class="line">C:\&gt;ping -n 3 10.0.0.201</div>
 <div class="line">Pinging 10.0.0.201 with 32 bytes of data:</div>
@@ -1421,7 +1421,7 @@ Neighbor Discovery offload</h2>
 <h3><a class="anchor" id="group_lpa_p2_ndoe_qsg"></a>
 Quick start guide</h3>
 <p >This quick start guide demonstrates how to use the Neighbor Discovery offload feature in the FreeRTOS environment and its impact on the system power consumption.</p>
-<p >Neighbor Discovery offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices.</p>
+<p >Neighbor Discovery offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA, CYW955913EVK-01 and KIT_PSE84_EVAL_EPC2 devices.</p>
 <p >Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:</p>
 <ol type="1">
 <li>Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.</li>
@@ -1451,7 +1451,7 @@ Quick start guide</h3>
 <div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div>
 <div class="line">Info:Beacon period = 100, DTIM period = 3</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div>
 <div class="line"> </div>
 <div class="line">=====================================================</div>
@@ -1464,7 +1464,7 @@ Quick start guide</h3>
 <div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 <li>Send a "ndisc6" command to the board from peer linux machine and observe MCU does not wake up. <div class="fragment"><div class="line">[root@cy-blr-au115]# ndisc6 fe80::0290:4cff:fec5:1238 wlan0</div>
 <div class="line">Soliciting fe80::290:4cff:fe30:1001 (fe80::290:4cff:fe30:1001) on wlan0...</div>
@@ -1513,7 +1513,7 @@ Quick start guide</h3>
 <div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div>
 <div class="line">Info:Beacon period = 100, DTIM period = 3</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div>
 <div class="line"> </div>
 <div class="line">=====================================================</div>
@@ -1526,7 +1526,7 @@ Quick start guide</h3>
 <div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 <li>Verify in wireshark the NULL keepalive is sent periodically from WLAN firmware for the configured intervals.</li>
 </ol>
@@ -1575,7 +1575,7 @@ Quick start guide</h3>
 <div class="line">Info:Successfully joined Wi-Fi network <span class="stringliteral">&#39;SSID&#39;</span>.</div>
 <div class="line">Info:Beacon period = 100, DTIM period = 3</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 <div class="line">Resuming Network Stack, Network stack was suspended <span class="keywordflow">for</span> 15253ms</div>
 <div class="line"> </div>
 <div class="line">=====================================================</div>
@@ -1588,16 +1588,17 @@ Quick start guide</h3>
 <div class="line">oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0</div>
 <div class="line">=====================================================</div>
 <div class="line">Network is active. Resuming network stack</div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 <li>Verify in wireshark the NAT keepalive is sent periodically from WLAN firmware for the configured intervals. i.e. this will be send in both sleep state and wake state.</li>
 </ol>
 <h2><a class="anchor" id="group_lpa_p2_wowlpf"></a>
 Wake on WirelessLAN</h2>
-<p >Wake on wireless LAN(WOWL) as the name suggests allows a host to be turned on or awakened when a WLAN FW receives a special network message from the AP. It is enabled in the case where host is in sleep state. The intention of wowl is to allow the host to go to sleep mode and device wakes it up on a specific packet is received. WOWL is supported only on non secure mode.</p>
+<p >Wake on wireless LAN(WOWL) as the name suggests allows a host to be turned on or awakened when a WLAN FW receives a special network message from the AP. It is enabled in the case where host is in sleep state. The intention of wowl is to allow the host to go to sleep mode and device wakes it up on a specific packet is received.</p>
 <p >Wake on Magic pattern: Wake on Magic Packet causes the WLAN to wake-up the host when it receives a magic packet. The magic packet is a broadcast packet that contains payload of 6 bytes of all 255 (FF FF FF FF FF FF in hexadecimal), followed by sixteen repetitions of the target 48-bit MAC address. With magic pattern configured, when WLAN firmware recevies network packet, it checks if it is a magic packet. If it is a magic packet, WLAN firmware will wake up the host.</p>
 <p >Wake on net pattern: Wake on net pattern wake up the host when the packet recevied in the WLAN matches with the net pattern, mask and offset configured by the user.</p>
 <p >Wake on pattern configuration puts the host to sleep state for longer duration without waking up for any incoming packets.</p>
+<dl class="section note"><dt>Note</dt><dd>WOWL is supported only on non secure mode.</dd></dl>
 <h3><a class="anchor" id="group_lpa_p2_wowlpf_qsg"></a>
 Quick start guide</h3>
 <p >This quick start guide demonstrates how to configure and use the WOWLPF feature in the FreeRTOS environment and its impact on the system power consumption.</p>
@@ -1640,6 +1641,14 @@ MQTT keepalive offload</h2>
 <div class="image">
 <img src="MQTT_Keepalive_basic_graph.png" alt="" height="350px"/>
 </div>
+<p >MQTT keepalive offload supports cipher suites having CBC encryption and SHA1 hash function with TLS1.2 when connecting to MQTT broker. Examples for supported cipher suites are </p><div class="fragment"><div class="line">TLS1.2: TLS_RSA_WITH_AES_128_CBC_SHA</div>
+<div class="line">        TLS_RSA_WITH_AES_256_CBC_SHA</div>
+<div class="line">        TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA</div>
+<div class="line">        TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA</div>
+</div><!-- fragment --><p >MQTT keepalive offload supports cipher suites TLS_AES_128_GCM_SHA256 and TLS_AES_256_GCM_SHA384 with TLS1.3 when connecting to MQTT broker. </p><div class="fragment"><div class="line">TLS1.3: TLS_AES_128_GCM_SHA256</div>
+<div class="line">        TLS_AES_256_GCM_SHA384</div>
+</div><!-- fragment --><p ><b>Note1 : MQTT keepalive offload only supports secure MQTT connections.</b></p>
+<p ><b>Note2 : MQTT keepalive offload with TLS1.3 is currently supported only for CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices.</b></p>
 <h3><a class="anchor" id="group_lpa_p2_mqtt_keepalive_qsg"></a>
 Quick start guide</h3>
 <p >This quick start guide demonstrates how to configure and use the MQTT keepalive offload feature in the RTOS environment.</p>
@@ -1659,7 +1668,10 @@ Quick start guide</h3>
 <li>Enable "MQTT Offload Configuration".</li>
 <li>Configure "MQTT wake pattern" if user needs device to wake up for specific wake pattern. Else, MCU will wake up for any packet targetted to this device.<ul>
 <li>MQTT wake pattern should be of the following format: <div class="fragment"><div class="line">&lt;topic_name&gt;&lt;message&gt;</div>
-</div><!-- fragment --> Eg: topic="ledstatus" and message="TURN_ON". Wake pattern to be set to ensure that device wakes on only this particular pattern is "ledstatusTURN_ON"</li>
+</div><!-- fragment --> Eg: topic="ledstatus" and message="TURN_ON". Wake pattern to be set to ensure that device wakes on only this particular pattern is "ledstatusTURN_ON" <div class="image">
+<img src="mqtt_offload_configurator.png" alt=""/>
+</div>
+</li>
 </ul>
 </li>
 <li>Save the configuration to generate the necessary code.</li>
@@ -1667,18 +1679,16 @@ Quick start guide</h3>
 </li>
 <li>In the application, subscribe for the topic which is used to publish the wake pattern from the server.</li>
 <li>Intergate LPA API's needed for MQTT offload into the application. Refer <a class="el" href="index.html#subsection_lpa_snippet_7">Code Snippet 7: MQTT offload configuration.</a> which proivdes information about the APIs to be called from application.</li>
-<li>lwIP + Mbedtls :<ul>
-<li>The following are the prerequisite when using lwip + mbedtls combination 8.1 Comment the below macro to enable support for key export in mbedtls_user_config.h <div class="fragment"><div class="line"><span class="preprocessor">#undef MBEDTLS_SSL_EXPORT_KEYS</span></div>
-</div><!-- fragment --> 8.2 MQTT offload supports only TLS_RSA_WITH_AES_128_CBC_SHA and TLS_RSA_WITH_AES_256_CBC_SHA TLS1.2 cipher-suites. Make sure SHA1 is enabled in security stack configuration and the cipher-suite negotiated with the broker is one of the offload supported cipher-suite. <div class="fragment"><div class="line"><span class="preprocessor">#define MBEDTLS_SSL_CIPHERSUITES  MBEDTLS_TLS_RSA_WITH_AES_128_CBC_SHA, MBEDTLS_TLS_RSA_WITH_AES_256_CBC_SHA</span></div>
-</div><!-- fragment --> 8.3 MQTT offload supports cipher suites TLS_AES_128_GCM_SHA256 and TLS_AES_256_GCM_SHA384 with TLS1.3 when connecting to MQTT broker. These cipher suites shall be enabled in mbedtls_user_config.h. <div class="fragment"><div class="line"><span class="preprocessor">#define MBEDTLS_SSL_CIPHERSUITES  MBEDTLS_TLS1_3_AES_128_GCM_SHA256, MBEDTLS_TLS1_3_AES_256_GCM_SHA384</span></div>
-</div><!-- fragment --> Note : MQTT offload with TLS1.3 is currently supported only for CY8CEVAL-062S2-CYW43022CUB device.</li>
-</ul>
+<li><p class="startli">lwIP + Mbedtls : The following are the prerequisite when using lwip + mbedtls combination.</p>
+<p class="startli">8.1. Comment the below macro to enable support for key export in mbedtls_user_config.h </p><div class="fragment"><div class="line"><span class="preprocessor">#undef MBEDTLS_SSL_EXPORT_KEYS</span></div>
+</div><!-- fragment --><p> 8.2. TLS1.2: Make sure SHA1 is enabled in security stack configuration and the cipher-suite negotiated with the broker is one of the offload supported cipher-suite. </p><div class="fragment"><div class="line"><span class="preprocessor">#define MBEDTLS_SSL_CIPHERSUITES  MBEDTLS_TLS_RSA_WITH_AES_128_CBC_SHA, MBEDTLS_TLS_RSA_WITH_AES_256_CBC_SHA</span></div>
+</div><!-- fragment --><p> 8.3. TLS1.3: TLS1.3 cipher suites shall be enabled in mbedtls_user_config.h. </p><div class="fragment"><div class="line"><span class="preprocessor">#define MBEDTLS_SSL_CIPHERSUITES  MBEDTLS_TLS1_3_AES_128_GCM_SHA256, MBEDTLS_TLS1_3_AES_256_GCM_SHA384</span></div>
+</div><!-- fragment --> <dl class="section note"><dt>Note</dt><dd>PSOC&trade; Edge E84 Evaluation Kit supports MQTT connections using TLS1.3, but its MQTT offload feature is limited to TLS1.2, requiring the user to disable TLS1.3. To use MQTT offload, disable TLS1.3 by undefining the "MBEDTLS_SSL_PROTO_TLS1_3" parameter to ensure compatibility.</dd></dl>
 </li>
 <li>NetXDuo + NetXSecure :<ul>
-<li>MQTT offload supports cipher suites TLS_RSA_WITH_AES_128_CBC_SHA and TLS_RSA_WITH_AES_256_CBC_SHA with TLS1.2 when connecting to MQTT broker.</li>
-<li>By default SHA1 cipher suites are disabled. To enable MQTT offload supported cipher suites, add 'CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER' application's Makefile defines. The Makefile entry should look like as follows: <div class="fragment"><div class="line">DEFINES+=CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER</div>
+<li>By default SHA1 cipher suites are disabled. To enable MQTT keepalive offload supported cipher suites, add 'CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER' application's Makefile defines. The Makefile entry should look like as follows: <div class="fragment"><div class="line">DEFINES+=CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER</div>
 </div><!-- fragment --></li>
-<li>Copy cy_tls_ciphersuites.h from secure-sockets to application folder and ensure that only these cipher suite entries are present in tlsv12 and tlsv13 lookup tables. This will ensure that the device will negotitate the offload supported cipher suite with the broker.</li>
+<li>Copy <code>cy_tls_ciphersuites.h</code> from secure-sockets to application folder and ensure that only these cipher suite entries are present in tlsv12 and tlsv13 lookup tables. This will ensure that the device will negotitate the offload supported cipher suite with the broker.</li>
 </ul>
 </li>
 <li>Add the following to COMPONENTS in the application Makefile. When using FREERTOS, LWIP, and MBEDTLS combination <div class="fragment"><div class="line">COMPONENTS = FREERTOS LWIP MBEDTLS SECURE_SOCKETS</div>
@@ -1724,7 +1734,7 @@ Quick start guide</h3>
 <div class="line">network_idle_func   timeout 0 8005f60 8005f60</div>
 <div class="line">network stack suspend notify callback. notify_type:0</div>
 <div class="line"> </div>
-<div class="line">Network Stack Suspended, MCU will enter DeepSleep power mode</div>
+<div class="line">Network Stack Suspended, MCU can enter DeepSleep power mode</div>
 </div><!-- fragment --></li>
 <li>Verify in Wireshark that TLS Keepalive request is send from the device periodically and Keepalive response is received from the server.</li>
 </ol>
@@ -2249,7 +2259,7 @@ Code Snippet 1: Using wait_net_suspend for suspend/resume network stack</h2>
 <div class="line">        ...</div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__lpautilities_html_ga8fe3dbb6666cb69c052385ce9ff9405f"><div class="ttname"><a href="group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f">wait_net_suspend</a></div><div class="ttdeci">int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inactive_interval_ms, uint32_t network_inactive_window_ms)</div><div class="ttdoc">Network Monitor Function.</div><div class="ttdef"><b>Definition:</b> network_activity_handler.c:619</div></div>
+<div class="ttc" id="agroup__lpautilities_html_ga8fe3dbb6666cb69c052385ce9ff9405f"><div class="ttname"><a href="group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f">wait_net_suspend</a></div><div class="ttdeci">int32_t wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inactive_interval_ms, uint32_t network_inactive_window_ms)</div><div class="ttdoc">Network Monitor Function.</div><div class="ttdef"><b>Definition:</b> network_activity_handler.c:578</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="subsection_lpa_snippet_2"></a>
 Code Snippet 2: Read OLM configuration from device configurator.</h2>
 <p >The following code snippet demonstrates an example for reading OLM configuration from device configurator and makes a local copy of the list. </p><div class="fragment"><div class="line">        ...</div>
@@ -2289,7 +2299,7 @@ Code Snippet 3: Search for TCP KA offload in the device configurator list.</h2>
 <div class="line">           dev_cfg_list[i].ol    = &amp;tko_ctxt;</div>
 <div class="line">        }</div>
 <div class="line">        ...</div>
-<div class="ttc" id="agroup__lpautilities_html_gabdd78072ac977129c8202559f39f70a4"><div class="ttname"><a href="group__lpautilities.html#gabdd78072ac977129c8202559f39f70a4">cylpa_find_my_descriptor</a></div><div class="ttdeci">ol_desc_t * cylpa_find_my_descriptor(const char *name, ol_desc_t *offload_list)</div><div class="ttdoc">Finds OLM descriptor for a given name.</div><div class="ttdef"><b>Definition:</b> network_activity_handler.c:937</div></div>
+<div class="ttc" id="agroup__lpautilities_html_gabdd78072ac977129c8202559f39f70a4"><div class="ttname"><a href="group__lpautilities.html#gabdd78072ac977129c8202559f39f70a4">cylpa_find_my_descriptor</a></div><div class="ttdeci">ol_desc_t * cylpa_find_my_descriptor(const char *name, ol_desc_t *offload_list)</div><div class="ttdoc">Finds OLM descriptor for a given name.</div><div class="ttdef"><b>Definition:</b> network_activity_handler.c:912</div></div>
 <div class="ttc" id="astructcy__tko__ol__cfg__t_html"><div class="ttname"><a href="structcy__tko__ol__cfg__t.html">cy_tko_ol_cfg_t</a></div><div class="ttdoc">User uses configurator to set these.</div><div class="ttdef"><b>Definition:</b> cy_lpa_wifi_tko_ol.h:35</div></div>
 <div class="ttc" id="astructol__desc__t_html_ae2465ecd5a2e0acd0dc6977405542194"><div class="ttname"><a href="structol__desc__t.html#ae2465ecd5a2e0acd0dc6977405542194">ol_desc_t::cfg</a></div><div class="ttdeci">const void * cfg</div><div class="ttdoc">Offload-specific configuration.</div><div class="ttdef"><b>Definition:</b> cy_lpa_wifi_ol.h:34</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="subsection_lpa_snippet_5"></a>
@@ -2301,7 +2311,7 @@ Code Snippet 5: Use cy_tcp_create_socket_connection to offload TCP Keep-alive to
 <div class="line">            response =  <a class="code hl_function" href="group__lpautilities.html#gab1bdee5b863d063b2cfb1dc693f8b685">cy_tcp_create_socket_connection</a>(netwk_intf, (<span class="keywordtype">void</span> **)&amp;glob_socket[index], remote_ip[index],</div>
 <div class="line">                                                        remote_port[index], local_port[index], tko_new_cfgs, tcp_keealive_flag);</div>
 <div class="line">            ....</div>
-<div class="ttc" id="agroup__lpautilities_html_gab1bdee5b863d063b2cfb1dc693f8b685"><div class="ttname"><a href="group__lpautilities.html#gab1bdee5b863d063b2cfb1dc693f8b685">cy_tcp_create_socket_connection</a></div><div class="ttdeci">int cy_tcp_create_socket_connection(void *net_intf, void **global_socket_ptr, const char *remote_ip, uint16_t remote_port, uint16_t local_port, cy_tko_ol_cfg_t *downloaded, int socket_keepalive_enable)</div><div class="ttdoc">Creates TCP Socket connection.</div><div class="ttdef"><b>Definition:</b> network_activity_handler.c:777</div></div>
+<div class="ttc" id="agroup__lpautilities_html_gab1bdee5b863d063b2cfb1dc693f8b685"><div class="ttname"><a href="group__lpautilities.html#gab1bdee5b863d063b2cfb1dc693f8b685">cy_tcp_create_socket_connection</a></div><div class="ttdeci">int cy_tcp_create_socket_connection(void *net_intf, void **global_socket_ptr, const char *remote_ip, uint16_t remote_port, uint16_t local_port, cy_tko_ol_cfg_t *downloaded, int socket_keepalive_enable)</div><div class="ttdoc">Creates TCP Socket connection.</div><div class="ttdef"><b>Definition:</b> network_activity_handler.c:752</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="subsection_lpa_snippet_6"></a>
 Code Snippet 6: Read OLM configuration from device configurator.</h2>
 <p >The following code snippet demonstrates an example for reading OLM configuration from device configurator and makes a local copy of the list. </p><div class="fragment"><div class="line">        ...</div>
@@ -2456,6 +2466,7 @@ Code Snippet 7: MQTT offload configuration.</h2>
 <div class="line">    <span class="keyword">const</span> <a class="code hl_struct" href="structcy__tlsoe__ol__cfg__t.html">cy_tlsoe_ol_cfg_t</a>* downloaded;</div>
 <div class="line">    cy_socket_t sock_handle;</div>
 <div class="line">    <span class="keyword">struct </span>netif *wifi;</div>
+<div class="line">    uint32_t sockopt_len;</div>
 <div class="line">    </div>
 <div class="line">    (void)TestRes;</div>
 <div class="line"> </div>
@@ -2568,16 +2579,18 @@ Code Snippet 7: MQTT offload configuration.</h2>
 <div class="line">        <span class="keywordflow">return</span>;</div>
 <div class="line">    }</div>
 <div class="line"> </div>
+<div class="line">    sockopt_len = <span class="keyword">sizeof</span>(cy_socket_sockaddr_t);</div>
 <div class="line">    <span class="comment">/* Get the local port and IP address associated with the socket */</span>  </div>
-<div class="line">    TestRes = cy_socket_getsockopt(sock_handle, CY_SOCKET_SOL_SOCKET, CY_SOCKET_SO_LOCALADDR, &amp;local_address, <span class="keyword">sizeof</span>(cy_socket_sockaddr_t));</div>
+<div class="line">    TestRes = cy_socket_getsockopt(sock_handle, CY_SOCKET_SOL_SOCKET, CY_SOCKET_SO_LOCALADDR, &amp;local_address, &amp;sockopt_len);</div>
 <div class="line">    <span class="keywordflow">if</span>( TestRes != CY_RSLT_SUCCESS )</div>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* Failure path. */</span></div>
 <div class="line">        <span class="keywordflow">return</span>;</div>
 <div class="line">    }</div>
 <div class="line"> </div>
+<div class="line">    sockopt_len = <span class="keyword">sizeof</span>(cy_socket_sockaddr_t);</div>
 <div class="line">    <span class="comment">/* Get the remote port and IP address associated with the socket */</span> </div>
-<div class="line">    TestRes = cy_socket_getsockopt(sock_handle, CY_SOCKET_SOL_SOCKET, CY_SOCKET_SO_PEERADDR, &amp;peer_address, <span class="keyword">sizeof</span>(cy_socket_sockaddr_t));</div>
+<div class="line">    TestRes = cy_socket_getsockopt(sock_handle, CY_SOCKET_SOL_SOCKET, CY_SOCKET_SO_PEERADDR, &amp;peer_address, &amp;sockopt_len);</div>
 <div class="line">    <span class="keywordflow">if</span>( TestRes != CY_RSLT_SUCCESS )</div>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* Failure path. */</span></div>
@@ -2625,7 +2638,7 @@ LPA API</h1>
 <div id="nav-path" class="navpath">
     <ul>
         <li class="footer">
-            Generated for <b>Low Power Assistant Middleware Library 5.7.0</b> by <b>Cypress Semiconductor Corporation</b>.
+            Generated for <b>Low Power Assistant Middleware Library 5.8.0</b> by <b>Cypress Semiconductor Corporation</b>.
             All rights reserved.
         </li>
     </ul>

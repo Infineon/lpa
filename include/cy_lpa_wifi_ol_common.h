@@ -38,7 +38,7 @@
 
 /**
  *******************************************************************************
- * \mainpage Low Power Assistant Middleware Library 5.7.0
+ * \mainpage Low Power Assistant Middleware Library 5.8.0
  *******************************************************************************
  * \section section_lpa_overview Overview
  *******************************************************************************
@@ -272,10 +272,7 @@
  *
  * * Open ModusToolbox&trade; Device Configurator by executing the command "make device-configurator" or by
  *    right clicking on the application in the project workspace. Select ModusToolbox&trade; -> Device Configurator.
- * * If the design.modus file does not open and pops with an error message <i>No device support library path provided </i>,
- *    For ModusToolbox&trade; v3.0 and later, point to the mtb-pdl-cat1 folder inside the mtb_shared/mtb-pdl-cat1/<>/props.json and  .modustoolbox/global/device-db/release-v4.6.0/props.json files in the window popup.
- *    For ModusToolbox&trade; below v3.0, point to the psoc6pdl folder inside the mtb-example-anycloud-wlan-lowpower/libs/psoc6pdl/devicesupport.xml (For ModusToolbox&trade; v2.2, point to mtb_shared/mtb-pdl-cat1/<>/devicesupport.xml) file in the window popup.
- *   This is because the design.modus file will update its path to the PDL directory when it is opened for the first time.
+ *   For more details refer to [Infineon Device Configurator user guide](https://www.infineon.com/dgdl/Infineon-infineon-device-configurator-user-guide-UserManual-v13_00-EN.pdf?fileId=8ac78c8c92416ca5019277a000152389&redirId=180683)
  * * Select the host device tab, and then select the System tab for
  *    that device.
  * * Enable the Power personality (if disabled) and go to the Power Parameters
@@ -350,8 +347,7 @@
  * The Deep Sleep Latency parameter controls the time the system should remain in IDLE state
  * before entering into sleep state.
  *
- * For more information, refer the SysPm (System Power Management)
- * <a href="https://infineon.github.io/mtb-pdl-cat1/pdl_api_reference_manual/html/group__group__syspm.html"><b>documentation</b></a> 
+ * For more information, refer the SysPm (System Power Management) from the <a href="https://www.infineon.com/assets/row/public/documents/30/68/infineon-modustoolbox-tools-package-user-guide-gettingstarted-en.pdf"><b>PDL section of ModusToolbox&trade; tools package user guide</b></a>.
  *
  * The LPA library provides features for MCU Low Power, Wi-Fi Low Power and Bluetooth&reg; Low Power; however, the LPA library only needs to be included in applications that use Wi-Fi low power.
  *
@@ -368,11 +364,11 @@
  *
  * 1. Create existing Code Example <a href="https://github.com/Infineon/mtb-example-psoc6-empty-app.git"><b>mtb-example-psoc6-empty-app</b></a> available in the ModusToolbox&trade; environment for <a href="https://www.infineon.com/dgdl/Infineon-CY8CKIT-062S2-43012_PSoC_62S2_Wi-Fi_BT_Pioneer_Kit_Guide-UserManual-v01_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f01c8f11927"><b>CY8CKIT-062S2-43012</b></a> device.
  *
- * 2. Add FreeRTOS library into the application using Library Manager. Follow below steps for adding library. 
+ * 2. Add FreeRTOS library into the application using Library Manager. Follow below steps for adding library.
  *    * Right click on the application in the project workspace. Select ModusToolbox&trade; -> Library Manager.
  *    * Click on "Add Library".
- *    * Search "freertos" library and select update. 
- * 3. Copy the latest <a href="https://github.com/Infineon/freertos/tree/master/Source/portable"><b> FreeRTOSConfig.h</b></a> 
+ *    * Search "freertos" library and select update.
+ * 3. Copy the latest <a href="https://github.com/Infineon/freertos/tree/master/Source/portable"><b> FreeRTOSConfig.h</b></a>
  * to the application root directory.
  * 4. Set the desired System Idle Power mode (DeepSleep, Sleep or Active).
  * In FreeRTOS, the System Idle Power mode is set to Deep Sleep by default
@@ -650,7 +646,7 @@
  *    Info:Successfully joined Wi-Fi network 'SSID'.
  *    Info:Beacon period = 100, DTIM period = 3
  *
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    Resuming Network Stack, Network stack was suspended for 15253ms
  *
  *    =====================================================
@@ -663,7 +659,7 @@
  *    oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0
  *    =====================================================
  *    Network is active. Resuming network stack
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    \endcode
  *
  * 4. PSoC&trade; 6 MCU is in System Deep Sleep mode. Only WLAN OOB can wake up the host
@@ -762,7 +758,7 @@
  *    IP Address: 192.168.39.170
  *    Connected AP details Channel: 6, Channel width: 20, Signal strength(dBm): -13
  *
- *    Network Stack Suspended, MCU will enter Active power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    Received character 7
  *    Sleep unlocked
  *    \endcode
@@ -772,7 +768,7 @@
  *    Send a "ping" command to the board and observe in the serial. Device wakes-up for the ping packets.
  *    \code
  *    <Terminal logs when device wakes-up>
- *    Network Stack Suspended, MCU will enter Active power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    Resuming Network Stack, Network stack was suspended for 24750ms
  *
  *    =====================================================
@@ -785,7 +781,7 @@
  *    =====================================================
  *    Network is active. Resuming network stack
  *
- *    Network Stack Suspended, MCU will enter Active power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    \endcode
  *
  *******************************************************************************
@@ -916,8 +912,9 @@
  * 1. Create existing Code Example WLAN_Low_Power present in ModusToolbox&trade; environment.
  * 2. Configure the ARP offload. The easiest way to configure ARP offload
  *    is to use the ModusToolbox&trade; Device Configurator. \n
- *    * <u>Configuring ARP offload on CY8CEVAL-062S2-CYW43022CUB and CY8CEVAL-062S2-CYW955513SDM2WLIPA</u> \n
+ *    * <u>Configuring ARP offload on CY8CEVAL-062S2-CYW43022CUB, CYW955913EVK-01, CY8CEVAL-062S2-CYW955513SDM2WLIPA and KIT_PSE84_EVAL_EPC2</u> \n
  *        * ARP offload is enabled by default in the WLAN firmware with configuration set to \ref group_lpa_p2_hostpeerautoreply. Hence user is not required to do any configuration settings in ModusToolbox&trade; Device Configurator.
+ *          \note ARP Ageout time set by the firmware is 20 minutes.
  *    * <u>Configuring ARP offload on all other kits:</u> \n
  *        * Refer section \ref group_lpa_p2_cc_hostwake to verify WLAN_HOST_WAKE pin configurations using the Device Configurator.
  *        * In design.modus, switch to the connectivity device "CYW943012WKWBG" tab
@@ -959,7 +956,7 @@
  *    Info:Successfully joined Wi-Fi network 'SSID'.
  *    Info:Beacon period = 100, DTIM period = 3
  *
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    Resuming Network Stack, Network stack was suspended for 15253ms
  *
  *    =====================================================
@@ -972,7 +969,7 @@
  *    oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0
  *    =====================================================
  *    Network is active. Resuming network stack
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    \endcode
  *
  * 6. Check the board operation. Use a PC to connect to the same
@@ -1007,7 +1004,7 @@
  *      =====================================================
  *      Network is active. Resuming network stack
  *
- *      Network Stack Suspended, MCU will enter DeepSleep power mode
+ *      Network Stack Suspended, MCU can enter DeepSleep power mode
  *      \endcode
  *
  *    * Send an "arping" command as follows and observe that the PSoC&trade; 6 MCU
@@ -1127,7 +1124,7 @@
  *    IP Address: 192.168.39.170
  *    Connected AP details Channel: 6, Channel width: 20, Signal strength(dBm): -13
  *
- *    Network Stack Suspended, MCU will enter Active power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    Received character 7
  *    Sleep unlocked
  *    \endcode
@@ -1162,7 +1159,7 @@
  *      =====================================================
  *      Network is active. Resuming network stack
  *
- *      Network Stack Suspended, MCU will enter DeepSleep power mode
+ *      Network Stack Suspended, MCU can enter DeepSleep power mode
  *      \endcode
  *
  *    * Send an "arping" command as follows and observe that the CYW955913EVK-01
@@ -1485,7 +1482,7 @@
  *    Info:Successfully joined Wi-Fi network 'SSID'.
  *    Info:Beacon period = 100, DTIM period = 3
  *
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    Resuming Network Stack, Network stack was suspended for 15253ms
  *
  *    =====================================================
@@ -1498,7 +1495,7 @@
  *    oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0
  *    =====================================================
  *    Network is active. Resuming network stack
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    \endcode
  *
  * 6. Check the board operation. Use a PC to connect to the same
@@ -1557,7 +1554,7 @@
  *        =====================================================
  *        Network is active. Resuming network stack
  *
- *        Network Stack Suspended, MCU will enter DeepSleep power mode
+ *        Network Stack Suspended, MCU can enter DeepSleep power mode
  *        \endcode
  *
  * 7.  Verify that the packet Filter is working as desired. Refer to the \ref section_lpa_measurement section for corresponding instructions.
@@ -1646,7 +1643,7 @@
  *    IP Address: 192.168.39.170
  *    Connected AP details Channel: 6, Channel width: 20, Signal strength(dBm): -13
  *
- *    Network Stack Suspended, MCU will enter Active power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    Received character 7
  *    Sleep unlocked
  *    \endcode
@@ -1707,7 +1704,7 @@
  *        =====================================================
  *        Network is active. Resuming network stack
  *
- *        Network Stack Suspended, MCU will enter DeepSleep power mode
+ *        Network Stack Suspended, MCU can enter DeepSleep power mode
  *        \endcode
  *
  * 9.  Verify that the packet Filter is working as desired. Refer to <a href="https://github.com/Infineon/mtb-example-threadx-cyw5591x-low-power/blob/master/README.md"><b>README.md</b></a> of mtb-example-threadx-cyw5591x-low-power application
@@ -1814,7 +1811,7 @@
  *    Low power task created
  *    whd_tko_toggle: Successfully enabled
  *
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    \endcode
  *
  * 6. Verify that the TCP keepalive offload is working as desired. Refer to the \ref section_lpa_measurement section for
@@ -1899,7 +1896,7 @@
  *    IP Address: 192.168.39.170
  *    Connected AP details Channel: 6, Channel width: 20, Signal strength(dBm): -13
  *
- *    Network Stack Suspended, MCU will enter Active power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *
  *    Received character t
  *    Taking TCP Keepalive configuration from the Generated sources.
@@ -1911,7 +1908,7 @@
  *    Skipped TCP socket connection for socket id[3]. Check the TCP Keepalive configuration.
  *    whd_tko_toggle: Successfully enabled
  *
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *
  *    Received character 7
  *    Sleep unlocked
@@ -1940,7 +1937,7 @@
  *******************************************************************************
  * This quick start guide demonstrates how to use the DLTRO feature in the RTOS environment and its impact on the system power consumption.
  *
- * DLTRO is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices.
+ * DLTRO is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA, CYW955913EVK-01 and KIT_PSE84_EVAL_EPC2 devices.
  *
  * Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:
  *
@@ -1980,7 +1977,7 @@
  *    Info:Successfully joined Wi-Fi network 'SSID'.
  *    Info:Beacon period = 100, DTIM period = 3
  *
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    Resuming Network Stack, Network stack was suspended for 15253ms
  *
  *    =====================================================
@@ -1993,7 +1990,7 @@
  *    oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0
  *    =====================================================
  *    Network is active. Resuming network stack
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    \endcode
  * 7. Verify in wireshark the DHCP request is sent periodically from WLAN firmware without waking up the host.
  * \image html DLTRO_Wireshark.jpg height=250px
@@ -2016,7 +2013,7 @@
  * the ICMP offload feature in the FreeRTOS environment and its impact
  * on the system power consumption.
  *
- * ICMP offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices. Follow below steps
+ * ICMP offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA, CYW955913EVK-01 and KIT_PSE84_EVAL_EPC2 devices. Follow below steps
  * for ICMP offload testing on CYW43022CUB device.
  *
  * Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:
@@ -2055,7 +2052,7 @@
  *    Info:Successfully joined Wi-Fi network 'SSID'.
  *    Info:Beacon period = 100, DTIM period = 3
  *
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    Resuming Network Stack, Network stack was suspended for 15253ms
  *
  *    =====================================================
@@ -2068,7 +2065,7 @@
  *    oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0
  *    =====================================================
  *    Network is active. Resuming network stack
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    \endcode
  * 6. Verify in wireshark the ping response is sent from WLAN firmware without waking up the host.
  *    Send a "ping" command to the board and observe MCU does not wake up for ping.
@@ -2110,7 +2107,7 @@
  * This quick start guide demonstrates how to use
  * the Neighbor Discovery offload feature in the FreeRTOS environment and its impact on the system power consumption.
  *
- * Neighbor Discovery offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA and CYW955913EVK-01 devices.
+ * Neighbor Discovery offload is supported on CY8CEVAL-062S2-CYW43022CUB, CY8CEVAL-062S2-CYW955513SDM2WLIPA, CYW955913EVK-01 and KIT_PSE84_EVAL_EPC2 devices.
  *
  * Follow the below steps for application creation and offload verification on CY8CEVAL-062S2-CYW43022CUB:
  *
@@ -2148,7 +2145,7 @@
  *    Info:Successfully joined Wi-Fi network 'SSID'.
  *    Info:Beacon period = 100, DTIM period = 3
  *
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    Resuming Network Stack, Network stack was suspended for 15253ms
  *
  *    =====================================================
@@ -2161,7 +2158,7 @@
  *    oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0
  *    =====================================================
  *    Network is active. Resuming network stack
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    \endcode
  * 6. Send a "ndisc6" command to the board from peer linux machine and observe MCU does not wake up.
  *    \code
@@ -2226,7 +2223,7 @@
  *    Info:Successfully joined Wi-Fi network 'SSID'.
  *    Info:Beacon period = 100, DTIM period = 3
  *
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    Resuming Network Stack, Network stack was suspended for 15253ms
  *
  *    =====================================================
@@ -2239,7 +2236,7 @@
  *    oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0
  *    =====================================================
  *    Network is active. Resuming network stack
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    \endcode
  * 6. Verify in wireshark the NULL keepalive is sent periodically from WLAN firmware for the configured intervals.
  *
@@ -2303,7 +2300,7 @@
  *    Info:Successfully joined Wi-Fi network 'SSID'.
  *    Info:Beacon period = 100, DTIM period = 3
  *
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    Resuming Network Stack, Network stack was suspended for 15253ms
  *
  *    =====================================================
@@ -2316,7 +2313,7 @@
  *    oob_intrs:72, sdio_intrs:147, error_intrs:0, read_aborts:0
  *    =====================================================
  *    Network is active. Resuming network stack
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    \endcode
  * 6. Verify in wireshark the NAT keepalive is sent periodically from WLAN firmware for the configured intervals. i.e. this will be send in both sleep state and wake state.
  *
@@ -2324,7 +2321,6 @@
  * \subsection group_lpa_p2_wowlpf Wake on WirelessLAN
  *******************************************************************************
  * Wake on wireless LAN(WOWL) as the name suggests allows a host to be turned on or awakened when a WLAN FW receives a special network message from the AP. It is enabled in the case where host is in sleep state. The intention of wowl is to allow the host to go to sleep mode and device wakes it up on a specific packet is received.
- * WOWL is supported only on non secure mode.
  *
  * Wake on Magic pattern: Wake on Magic Packet causes the WLAN to wake-up the host when it receives a magic packet. The magic packet is a broadcast packet that contains payload of 6 bytes of all 255 (FF FF FF FF FF FF in hexadecimal), followed by sixteen repetitions of the target 48-bit MAC address.
  * With magic pattern configured, when WLAN firmware recevies network packet, it checks if it is a magic packet. If it is a magic packet, WLAN firmware will wake up the host.
@@ -2332,6 +2328,8 @@
  * Wake on net pattern: Wake on net pattern wake up the host when the packet recevied in the WLAN matches with the net pattern, mask and offset configured by the user.
  *
  * Wake on pattern configuration puts the host to sleep state for longer duration without waking up for any incoming packets.
+ *
+ * \note WOWL is supported only on non secure mode.
  *
  *******************************************************************************
  * \subsubsection group_lpa_p2_wowlpf_qsg Quick start guide
@@ -2395,6 +2393,24 @@
  *
  * \image html MQTT_Keepalive_basic_graph.png height=350px
  *
+ * MQTT keepalive offload supports cipher suites having CBC encryption and SHA1 hash function with TLS1.2 when connecting to MQTT broker. Examples for supported cipher suites are
+ * \code
+ * TLS1.2: TLS_RSA_WITH_AES_128_CBC_SHA
+ *         TLS_RSA_WITH_AES_256_CBC_SHA
+ *         TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA
+ *         TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+ * \endcode
+ *
+ * MQTT keepalive offload supports cipher suites TLS_AES_128_GCM_SHA256 and TLS_AES_256_GCM_SHA384 with TLS1.3 when connecting to MQTT broker.
+ * \code
+ * TLS1.3: TLS_AES_128_GCM_SHA256
+ *         TLS_AES_256_GCM_SHA384
+ * \endcode
+ *
+ * **Note1 : MQTT keepalive offload only supports secure MQTT connections.**
+ *
+ * **Note2 : MQTT keepalive offload with TLS1.3 is currently supported only for CY8CEVAL-062S2-CYW43022CUB and CYW955913EVK-01 devices.**
+ *
  *******************************************************************************
  * \subsubsection group_lpa_p2_mqtt_keepalive_qsg Quick start guide
  *******************************************************************************
@@ -2426,32 +2442,33 @@
  *        <topic_name><message>
  *        \endcode
  *        Eg: topic="ledstatus" and message="TURN_ON". Wake pattern to be set to ensure that device wakes on only this particular pattern is "ledstatusTURN_ON"
+ * \image html mqtt_offload_configurator.png
  *    * Save the configuration to generate the necessary code.
  * 6. In the application, subscribe for the topic which is used to publish the wake pattern from the server.
  * 7. Intergate LPA API's needed for MQTT offload into the application. Refer \ref subsection_lpa_snippet_7 which proivdes information about the APIs to be called from application.
  * 8. lwIP + Mbedtls :
- *    * The following are the prerequisite when using lwip + mbedtls combination
- *    8.1 Comment the below macro to enable support for key export in mbedtls_user_config.h
+ *    The following are the prerequisite when using lwip + mbedtls combination.
+ *
+ *    8.1. Comment the below macro to enable support for key export in mbedtls_user_config.h
  *        \code
  *        #undef MBEDTLS_SSL_EXPORT_KEYS
  *        \endcode
- *    8.2 MQTT offload supports only TLS_RSA_WITH_AES_128_CBC_SHA and TLS_RSA_WITH_AES_256_CBC_SHA TLS1.2 cipher-suites. Make sure SHA1 is enabled in security stack configuration and the cipher-suite negotiated with the broker is one of the offload supported cipher-suite.
+ *    8.2. TLS1.2: Make sure SHA1 is enabled in security stack configuration and the cipher-suite negotiated with the broker is one of the offload supported cipher-suite.
  *        \code
  *        #define MBEDTLS_SSL_CIPHERSUITES  MBEDTLS_TLS_RSA_WITH_AES_128_CBC_SHA, MBEDTLS_TLS_RSA_WITH_AES_256_CBC_SHA
  *        \endcode
- *    8.3 MQTT offload supports cipher suites TLS_AES_128_GCM_SHA256 and TLS_AES_256_GCM_SHA384 with TLS1.3 when connecting to MQTT broker. These cipher suites shall be enabled in mbedtls_user_config.h.
+ *    8.3. TLS1.3: TLS1.3 cipher suites shall be enabled in mbedtls_user_config.h.
  *        \code
  *        #define MBEDTLS_SSL_CIPHERSUITES  MBEDTLS_TLS1_3_AES_128_GCM_SHA256, MBEDTLS_TLS1_3_AES_256_GCM_SHA384
  *        \endcode
- *        Note : MQTT offload with TLS1.3 is currently supported only for CY8CEVAL-062S2-CYW43022CUB device.
+ *        \note PSOC&trade; Edge E84 Evaluation Kit supports MQTT connections using TLS1.3, but its MQTT offload feature is limited to TLS1.2, requiring the user to disable TLS1.3. To use MQTT offload, disable TLS1.3 by undefining the "MBEDTLS_SSL_PROTO_TLS1_3" parameter to ensure compatibility.
  * 9. NetXDuo + NetXSecure :
- *    * MQTT offload supports cipher suites TLS_RSA_WITH_AES_128_CBC_SHA and TLS_RSA_WITH_AES_256_CBC_SHA with TLS1.2 when connecting to MQTT broker.
- *    * By default SHA1 cipher suites are disabled. To enable MQTT offload supported cipher suites, add 'CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER' application's Makefile defines. The Makefile entry should look like as follows:
+ *    * By default SHA1 cipher suites are disabled. To enable MQTT keepalive offload supported cipher suites, add 'CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER' application's Makefile defines. The Makefile entry should look like as follows:
  *      \code
  *      DEFINES+=CY_TLS_DEFAULT_ALLOW_SHA1_CIPHER
  *      \endcode
- *    * Copy cy_tls_ciphersuites.h from secure-sockets to application folder and ensure that only these cipher suite entries are present in tlsv12 and tlsv13 lookup tables. This will ensure that the device will negotitate the offload supported cipher suite with the broker.
- * 11. Add the following to COMPONENTS in the application Makefile.
+ *    * Copy `cy_tls_ciphersuites.h` from secure-sockets to application folder and ensure that only these cipher suite entries are present in tlsv12 and tlsv13 lookup tables. This will ensure that the device will negotitate the offload supported cipher suite with the broker.
+ * 10. Add the following to COMPONENTS in the application Makefile.
  *     When using FREERTOS, LWIP, and MBEDTLS combination
  *     \code
  *     COMPONENTS = FREERTOS LWIP MBEDTLS SECURE_SOCKETS
@@ -2460,13 +2477,13 @@
  *     \code
  *     COMPONENTS = THREADX NETXDUO NETXSECURE SECURE_SOCKETS
  *     \endcode
- * 12. Build the project and program the board.
+ * 11. Build the project and program the board.
  *    The following command is an example for the CY8CEVAL-062S2-CYW43022CUB board, using GCC_ARM as the toolchain:
  *    \code
  *    make build TARGET=CY8CEVAL-062S2-CYW43022CUB TOOLCHAIN=GCC_ARM
  *    make program TARGET=CY8CEVAL-062S2-CYW43022CUB TOOLCHAIN=GCC_ARM
  *    \endcode
- * 13. When the application executes, the console output shows that it connected to the specified Wi-Fi AP, MQTT connection successful and network stack is suspended. As part of this MQTT offload will be enabled.
+ * 12. When the application executes, the console output shows that it connected to the specified Wi-Fi AP, MQTT connection successful and network stack is suspended. As part of this MQTT offload will be enabled.
  *    \code
  *    ===============================================================
  *    CE229889 - AnyCloud Example: MQTT Client KEEPALIVE OFFLOAD
@@ -2505,9 +2522,9 @@
  *    network_idle_func   timeout 0 8005f60 8005f60
  *    network stack suspend notify callback. notify_type:0
  *
- *    Network Stack Suspended, MCU will enter DeepSleep power mode
+ *    Network Stack Suspended, MCU can enter DeepSleep power mode
  *    \endcode
- * 14. Verify in Wireshark that TLS Keepalive request is send from the device periodically and Keepalive response is received from the server.
+ * 13. Verify in Wireshark that TLS Keepalive request is send from the device periodically and Keepalive response is received from the server.
  *
  *******************************************************************************
  * \subsection group_lpa_p2_cc Wi-Fi low power configuration considerations
@@ -2561,7 +2578,7 @@
  *
  * This section explains how to enable the Wi-Fi host wake configuration using the Device Configurator tool. \n
  * \n
- * By Default, WLAN host wake is configured properly and below device configurator support allows user to modify it to different GPIOs. 
+ * By Default, WLAN host wake is configured properly and below device configurator support allows user to modify it to different GPIOs.
  * The correct pins won’t show up in the list unless that pin is enabled from the Pins tab.
  * If user selects <b><i>Host Wake Configuration Enable</i></b> checkbox and does not select any pin for <b><i>Host Device Interrupt Pin</i></b>, System will Hang and this should be avoided by the user
  *
@@ -2623,7 +2640,7 @@
  *
  * \note For CYW955913EVK-01, host wake pin configuration does not apply as the Doorbell wake interrupt is enabled by default.
  * \note For CY8CEVAL-062S2-CYW955513SDM2WLIPA, <b><i>Drive Mode</i></b> should be set to <b><i>Resistive Pull UP, Input Buffer ON</i></b>
- * 
+ *
  *******************************************************************************
  * \subsubsection group_lpa_p2_cc_limitations Limitations
  *******************************************************************************
@@ -2967,7 +2984,7 @@
  * The Bluetooth low-power feature enables the host to achieve its lowest power
  * consumption with enabled Bluetooth. The BT Low Power personality helps
  * configure the pin connections between the MCU host and BT device. \n
- * The LPA library provides configurations for MCU Low Power, Wi-Fi Low Power and Bluetooth® Low Power; however, 
+ * The LPA library provides configurations for MCU Low Power, Wi-Fi Low Power and Bluetooth® Low Power; however,
  * the LPA library only needs to be included in applications that use Wi-Fi low power.
  *
  *******************************************************************************
@@ -2987,7 +3004,7 @@
  *    interrupt type. Refer to the kit datasheet to find out which pin is
  *    routed on board PCB.
  * 7. Select File-\>Save to generate initialization code.
- * \n <b>Note:</b> If the pins for Host-wake-up signal and Device-wake-up signal are not unselected. 
+ * \n <b>Note:</b> If the pins for Host-wake-up signal and Device-wake-up signal are not unselected.
  * The BSP uses the default pins with the standard names of CYBSP_BT_HOST_WAKE and CYBSP_BT_DEVICE_WAKE respectively. \n
  *
  * \image html BT_Personality.png height=250px

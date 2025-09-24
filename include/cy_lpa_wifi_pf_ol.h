@@ -161,10 +161,10 @@ typedef struct pf_ol
 extern const ol_fns_t pf_ol_fns;
 
 #define IS_POWER(x) ( (x) && !(x & (x - 1) ) )
-#define ETHER_ADDR_LEN      6
+#define ETHER_ADDRESS_LEN      (6)
 CYPRESS_PACKED(struct) ether_header {
-    uint8_t ether_dhost[ETHER_ADDR_LEN];
-    uint8_t ether_shost[ETHER_ADDR_LEN];
+    uint8_t ether_dhost[ETHER_ADDRESS_LEN];
+    uint8_t ether_shost[ETHER_ADDRESS_LEN];
     uint16_t ether_type;
 };
 
@@ -177,18 +177,18 @@ CYPRESS_PACKED(struct) bcmudp_hdr
     uint16_t chksum;      /* entire datagram checksum with pseudoheader */
 };
 
-#define IPV4_ADDR_LEN       4   /* IPV4 address length */
+#define IPV4_ADDRESS_LEN       (4)      /* IPV4 address length */
 CYPRESS_PACKED(struct) ipv4_hdr {
-    uint8_t version_ihl;      /* Version and Internet Header Length */
-    uint8_t tos;              /* Type Of Service */
-    uint16_t tot_len;         /* Number of bytes in packet (max 65535) */
+    uint8_t version_ihl;                /* Version and Internet Header Length */
+    uint8_t tos;                        /* Type Of Service */
+    uint16_t tot_len;                   /* Number of bytes in packet (max 65535) */
     uint16_t id;
-    uint16_t frag;            /* 3 flag bits and fragment offset */
-    uint8_t ttl;              /* Time To Live */
-    uint8_t prot;             /* Protocol */
-    uint16_t hdr_chksum;      /* IP header checksum */
-    uint8_t src_ip[IPV4_ADDR_LEN];    /* Source IP Address */
-    uint8_t dst_ip[IPV4_ADDR_LEN];    /* Destination IP Address */
+    uint16_t frag;                      /* 3 flag bits and fragment offset */
+    uint8_t ttl;                        /* Time To Live */
+    uint8_t prot;                       /* Protocol */
+    uint16_t hdr_chksum;                /* IP header checksum */
+    uint8_t src_ip[IPV4_ADDRESS_LEN];   /* Source IP Address */
+    uint8_t dst_ip[IPV4_ADDRESS_LEN];   /* Destination IP Address */
 };
 
 #ifdef __cplusplus
