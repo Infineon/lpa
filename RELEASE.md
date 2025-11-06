@@ -10,6 +10,7 @@ The revision history of the LPA middleware is also available on the [Low Power A
 
 |  Version         | Description of change                                                  | Comments                                                 |
 | ---------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 5.8.1            | Fix for 100ms periodic wake observed in CYW5591x devices when operating in Hosted Mode | |
 | 5.8.0            | Added support for PSOC&trade; Edge E84 (PSE84) platform, Enabled LLVM_ARM toolchain support, Updated to use MTB_HAL apis.        | |
 | 5.7.1            | Minor Bug fixes         | |
 | 5.7.0            | Added support for DLTRO offload, ICMP offload, NDOE offload, NULL KA offload, NAT KA offload, WOWLPF, MQTT Keepalive offload for CY8CEVAL-062S2-CYW955513SDM2WLIPA Kit | |
