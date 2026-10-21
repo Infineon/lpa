@@ -7,7 +7,7 @@ var searchData=
   ['payload_4',['payload',['../structcy__lpa__nko__ol__cfg__t.html#a397c249d9a3326518574bcd3e6cef849',1,'cy_lpa_nko_ol_cfg_t']]],
   ['peerage_5',['peerage',['../structarp__ol__cfg__t.html#a9dd6b07a43c9a15596db5c35d9c3cce1',1,'arp_ol_cfg_t']]],
   ['pf_6',['pf',['../structcy__pf__ol__cfg__t.html#aa9802e6b0478279eee94213835fc2173',1,'cy_pf_ol_cfg_t']]],
-  ['portnum_7',['portnum',['../structcy__pf__port__t.html#aaee6c242184bccef5dee844c3e7a61bf',1,'cy_pf_port_t::portnum()'],['../structcy__pf__pn__cfg__t.html#aa1128e070c2c60f21901efe96c1b89c4',1,'cy_pf_pn_cfg_t::portnum()']]],
-  ['ports_8',['ports',['../structcy__tko__ol__cfg__t.html#ad4979c12e1b68e5432f3c806ef2da447',1,'cy_tko_ol_cfg_t::ports()'],['../structcy__tlsoe__ol__cfg__t.html#aa4dca057a82d6a25555c36e3d3a816f0',1,'cy_tlsoe_ol_cfg_t::ports()']]],
+  ['portnum_7',['portnum',['../structcy__pf__port__t.html#aaee6c242184bccef5dee844c3e7a61bf',1,'cy_pf_port_t::portnum'],['../structcy__pf__pn__cfg__t.html#aa1128e070c2c60f21901efe96c1b89c4',1,'cy_pf_pn_cfg_t::portnum']]],
+  ['ports_8',['ports',['../structcy__tko__ol__cfg__t.html#ad4979c12e1b68e5432f3c806ef2da447',1,'cy_tko_ol_cfg_t::ports'],['../structcy__tlsoe__ol__cfg__t.html#aa4dca057a82d6a25555c36e3d3a816f0',1,'cy_tlsoe_ol_cfg_t::ports']]],
   ['proto_9',['proto',['../structcy__pf__pn__cfg__t.html#a81243c2826dd108eedb8b71cf6f29e58',1,'cy_pf_pn_cfg_t']]]
 ];

@@ -1,8 +1,28 @@
 var searchData=
 [
-  ['id_0',['id',['../structcy__pf__ol__cfg__t.html#a5be6ec05952a01857c89018012cf2574',1,'cy_pf_ol_cfg_t::id()'],['../structcy__wowlpf__ol__cfg__t.html#a2637d643c6298e094686cd080464723c',1,'cy_wowlpf_ol_cfg_t::id()']]],
-  ['interval_1',['interval',['../structcy__lpa__nko__ol__cfg__t.html#ae2c50912d055e7a4056678fd73e9ef74',1,'cy_lpa_nko_ol_cfg_t::interval()'],['../structcy__nullko__ol__cfg__t.html#a47955b6d4a0a5aa6e887effdaa07c1c1',1,'cy_nullko_ol_cfg_t::interval()'],['../structcy__tko__ol__cfg__t.html#ac869b5fce49f3fb81b86b0998e40c930',1,'cy_tko_ol_cfg_t::interval()'],['../structcy__tlsoe__ol__connect__t.html#a737c841ff8052f6fe1bc7569a53da914',1,'cy_tlsoe_ol_connect_t::interval()']]],
-  ['ip_2',['ip',['../structol__info__t.html#ad7bf118a31201493e8f5c3dd550981d6',1,'ol_info_t::ip()'],['../structcy__pf__ol__cfg__t.html#a7f55d2ae11f266560d578f9bd8da9731',1,'cy_pf_ol_cfg_t::ip()']]],
-  ['ip_5faddress_3',['ip_address',['../structarp__ol__t.html#a8ade24a1d65f167cd373b8222ebc421b',1,'arp_ol_t']]],
-  ['ip_5ftype_4',['ip_type',['../structcy__pf__ip__cfg__t.html#ad1a118337de3c5303357615d5c1d2505',1,'cy_pf_ip_cfg_t']]]
+  ['acknum_0',['acknum',['../structsock__seq__t.html#a74d598287c7c57706b4f158708282bd6',1,'sock_seq_t::acknum'],['../structcy__tls__sock__seq__t.html#a6eb8a79b7786340700383f7f83af4e81',1,'cy_tls_sock_seq_t::acknum']]],
+  ['action_20keep_20vs_20toss_1',['Action (keep vs toss)',['../group_lpa_datasheet.html#group_lpa_p2_keeptoss',1,'']]],
+  ['active_20sleep_20vs_20wake_2',['When Active (Sleep vs Wake)',['../group_lpa_datasheet.html#group_lpa_p2_sleepwake',1,'']]],
+  ['add_20headers_3',['Add Headers',['../index.html#add-headers',1,'']]],
+  ['add_20required_20libraries_4',['Add Required Libraries',['../index.html#add-required-libraries',1,'']]],
+  ['alive_20to_20wifi_20firmware_5',['Code Snippet 5: Use cy_tcp_create_socket_connection to offload TCP Keep-alive to WiFi Firmware',['../group_lpa_datasheet.html#subsection_lpa_snippet_5',1,'']]],
+  ['and_20changelog_6',['Release Notes and Changelog',['../index.html#release-notes-and-changelog',1,'']]],
+  ['and_20mcu_20low_20power_20configuration_20for_20infineon_20devices_7',['Low Power Assistant (LPA) middleware library - Wi-Fi, Bluetooth&amp;reg;, and MCU low-power configuration for Infineon devices',['../index.html',1,'']]],
+  ['and_20peer_20auto_20reply_8',['Host and Peer Auto Reply',['../group_lpa_datasheet.html#group_lpa_p2_hostpeerautoreply',1,'']]],
+  ['api_9',['api',['../group_lpa_datasheet.html#apis',1,'LPA API'],['../group__lpautilities.html',1,'LPA Utilities API']]],
+  ['applicable_10',['applicable',['../index.html#configure-in-the-tool-if-applicable',1,'Configure in the Tool (if applicable)'],['../index.html#configure-makefile-if-applicable',1,'Configure Makefile (if applicable)']]],
+  ['arp_20offload_11',['Wi-Fi ARP Offload',['../group_lpa_datasheet.html#group_lpa_p2_arp_offload',1,'']]],
+  ['arp_5fid_12',['ARP_ID',['../group__group__lpa__macros__arp.html#gaf672369d7b608356f0b773eeeff31c5c',1,'cy_lpa_wifi_arp_ol.h']]],
+  ['arp_5fol_5fcfg_5ft_13',['arp_ol_cfg_t',['../structarp__ol__cfg__t.html',1,'']]],
+  ['arp_5fol_5fconfig_5fstate_5ft_14',['arp_ol_config_state_t',['../group__group__lpa__enums.html#gacaa1d0b548141e9016a65d6e49f1cc46',1,'cy_lpa_wifi_arp_ol.h']]],
+  ['arp_5fol_5fenable_5fmask_5ft_15',['arp_ol_enable_mask_t',['../group__group__lpa__macros__arp.html#gada8697659aab30a6184c3a470422a97e',1,'cy_lpa_wifi_arp_ol.h']]],
+  ['arp_5fol_5fstate_5fawake_16',['ARP_OL_STATE_AWAKE',['../group__group__lpa__enums.html#ggacaa1d0b548141e9016a65d6e49f1cc46ac8714ff185b1782df0c4742c5fb519f8',1,'cy_lpa_wifi_arp_ol.h']]],
+  ['arp_5fol_5fstate_5fgoing_5fto_5fsleep_17',['ARP_OL_STATE_GOING_TO_SLEEP',['../group__group__lpa__enums.html#ggacaa1d0b548141e9016a65d6e49f1cc46a36492e74f2221d98a341c8f90eb475a3',1,'cy_lpa_wifi_arp_ol.h']]],
+  ['arp_5fol_5fstate_5funinitialized_18',['ARP_OL_STATE_UNINITIALIZED',['../group__group__lpa__enums.html#ggacaa1d0b548141e9016a65d6e49f1cc46a36ec3274393ee46bee7efe3f19b97d50',1,'cy_lpa_wifi_arp_ol.h']]],
+  ['arp_5fol_5ft_19',['arp_ol_t',['../structarp__ol__t.html',1,'']]],
+  ['assistant_20lpa_20datasheet_20',['Low Power Assistant (LPA) Datasheet',['../group_lpa_datasheet.html',1,'']]],
+  ['assistant_20lpa_20middleware_20library_20wi_20fi_20bluetooth_20reg_20and_20mcu_20low_20power_20configuration_20for_20infineon_20devices_21',['Low Power Assistant (LPA) middleware library - Wi-Fi, Bluetooth&amp;reg;, and MCU low-power configuration for Infineon devices',['../index.html',1,'']]],
+  ['auto_20reply_22',['auto reply',['../group_lpa_datasheet.html#group_lpa_p2_hostpeerautoreply',1,'Host and Peer Auto Reply'],['../group_lpa_datasheet.html#group_lpa_p2_hostautoreply',1,'Host Auto Reply'],['../group_lpa_datasheet.html#group_lpa_p2_peerautoreply',1,'Peer Auto Reply']]],
+  ['awake_20vs_20sleeping_23',['Awake vs. Sleeping',['../group_lpa_datasheet.html#group_lpa_p2_awake_sleeping',1,'']]],
+  ['awake_5fenable_5fmask_24',['awake_enable_mask',['../structarp__ol__cfg__t.html#a6e087be3912880808303389ae172ab1d',1,'arp_ol_cfg_t']]]
 ];

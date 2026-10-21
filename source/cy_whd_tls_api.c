@@ -1,5 +1,5 @@
 /*
- * (c) 2025, Infineon Technologies AG, or an affiliate of Infineon
+ * (c) 2026, Infineon Technologies AG, or an affiliate of Infineon
  * Technologies AG. All rights reserved.
  * This software, associated documentation and materials ("Software") is
  * owned by Infineon Technologies AG or one of its affiliates ("Infineon")
@@ -10,7 +10,7 @@
  * agreement applies, then any use, reproduction, modification, translation, or
  * compilation of this Software is prohibited without the express written
  * permission of Infineon.
- * 
+ *
  * Disclaimer: UNLESS OTHERWISE EXPRESSLY AGREED WITH INFINEON, THIS SOFTWARE
  * IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
  * INCLUDING, BUT NOT LIMITED TO, ALL WARRANTIES OF NON-INFRINGEMENT OF
@@ -75,6 +75,10 @@ extern "C" {
 #define TLSOE_ERROR_PRINTF(x)
 #define TLSOE_DEBUG_PRINTF(x)
 #endif
+
+#define MQTT_DEFAULT_WAKE_PAT    ((uint8_t)0x30u)   /* PUBLISH type byte   */
+#define MQTT_DEFAULT_WAKE_MASK   ((uint8_t)0xF0u)   /* upper-nibble mask   */
+#define MQTT_DEFAULT_WAKE_OFFSET (0u)               /* byte 0 of MQTT data */
 
 /********************************************************************
  *
@@ -361,14 +365,37 @@ whd_tlsoe_set_wowl_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_len, 
     }
     else
     {
-        wowl &= WL_WOWL_SECURE;
-        if( wowl != WL_WOWL_SECURE )
+        uint8_t default_pat  = MQTT_DEFAULT_WAKE_PAT;	 /* 0x30 */
+        uint8_t default_mask = MQTT_DEFAULT_WAKE_MASK;   /* 0xF0 */
+
+        wowl &= ( WL_WOWL_SECURE | WL_WOWL_NET );
+        if ( wowl != ( WL_WOWL_SECURE | WL_WOWL_NET ) )
         {
-            wowl |= WL_WOWL_SECURE;
+            wowl |= ( WL_WOWL_SECURE | WL_WOWL_NET );
             result = whd_set_wowl_cap( whd, wowl );
         }
+
+	if ( result == WHD_SUCCESS )
+        {
+            result = whd_set_wowl_pattern( whd,
+	                                   "add",
+                                           MQTT_DEFAULT_WAKE_OFFSET,
+                                           (uint8_t)sizeof( default_mask ),
+                                           &default_mask,
+                                           (uint8_t)sizeof( default_pat ),
+                                           &default_pat,
+                                           (uint8_t)pattern_type );
+        }
+
+        if ( result != WHD_SUCCESS )
+        {
+            TLSOE_ERROR_PRINTF( ( "Failed to install default MQTT PUBLISH "
+                                  "wake pattern (result=0x%x)\n", result ) );
+        }
+
     }
-#endif
+#endif /* CYCFG_WIFI_MQTT_OL_SUPPORT */
+
     return result;
 }
 
@@ -381,8 +408,27 @@ whd_tlsoe_del_wowl_pattern( whd_t *whd, uint8_t* pattern, uint16_t pattern_size,
     {
         result = whd_wowl_set_pattern( whd, pattern, pattern_size, pattern_type, patttern_offset, 0 );
     }
+    else
+    {
+        uint8_t default_pat  = MQTT_DEFAULT_WAKE_PAT;    /* 0x30 */
+        uint8_t default_mask = MQTT_DEFAULT_WAKE_MASK;   /* 0xF0 */
 
-#endif
+        result = whd_set_wowl_pattern( whd,
+                                       "del",
+                                       MQTT_DEFAULT_WAKE_OFFSET,
+                                       (uint8_t)sizeof( default_mask ),
+                                       &default_mask,
+                                       (uint8_t)sizeof( default_pat ),
+                                       &default_pat,
+                                       (uint8_t)pattern_type );
+        if ( result != WHD_SUCCESS )
+        {
+            TLSOE_ERROR_PRINTF( ( "Failed to remove default MQTT PUBLISH "
+                                  "wake pattern (result=0x%x)\n", result ) );
+        }
+    }
+#endif /* CYCFG_WIFI_MQTT_OL_SUPPORT */
+
     return result;
 }
 

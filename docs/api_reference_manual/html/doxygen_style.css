@@ -860,6 +860,36 @@ table.doxtable th {
 	padding-top: 5px;
 }
 
+/* Honor markdown table column alignment in the generated Reference Manual.
+   Without these rules the custom stylesheet lets <th> fall back to the
+   browser default (centered) while <td> stays left, producing the
+   "headers centered, body left" bug. */
+th.markdownTableHeadLeft, td.markdownTableBodyLeft {
+	text-align: left;
+}
+th.markdownTableHeadRight, td.markdownTableBodyRight {
+	text-align: right;
+}
+th.markdownTableHeadCenter, td.markdownTableBodyCenter {
+	text-align: center;
+}
+table.markdownTable {
+	border-collapse: collapse;
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+table.markdownTable td, table.markdownTable th {
+	border: 1px solid #2D4068;
+	padding: 3px 7px 2px;
+}
+table.markdownTableHead th {
+	background-color: #A8A8A8;
+	color: #000;
+	font-size: 110%;
+	padding-bottom: 4px;
+	padding-top: 5px;
+}
+
 table.fieldtable {
         /*width: 100%;*/
         margin-bottom: 10px;

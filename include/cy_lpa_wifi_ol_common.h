@@ -1,5 +1,5 @@
 /*
- * (c) 2025, Infineon Technologies AG, or an affiliate of Infineon
+ * (c) 2026, Infineon Technologies AG, or an affiliate of Infineon
  * Technologies AG. All rights reserved.
  * This software, associated documentation and materials ("Software") is
  * owned by Infineon Technologies AG or one of its affiliates ("Infineon")
@@ -10,7 +10,7 @@
  * agreement applies, then any use, reproduction, modification, translation, or
  * compilation of this Software is prohibited without the express written
  * permission of Infineon.
- * 
+ *
  * Disclaimer: UNLESS OTHERWISE EXPRESSLY AGREED WITH INFINEON, THIS SOFTWARE
  * IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
  * INCLUDING, BUT NOT LIMITED TO, ALL WARRANTIES OF NON-INFRINGEMENT OF
@@ -35,7 +35,7 @@
 
 /**
  *******************************************************************************
- * \mainpage Low Power Assistant Middleware Library 5.8.0
+ * \page group_lpa_datasheet Low Power Assistant (LPA) Datasheet
  *******************************************************************************
  * \section section_lpa_overview Overview
  *******************************************************************************
@@ -2397,6 +2397,8 @@
  *         TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA
  *         TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
  * \endcode
+ *
+ * **Note1 : With bundle repo <a href="https://github.com/Infineon/wifi-core-freertos-lwip-mbedtls"><b>wifi-core-freertos-lwip-mbedtls</b></a> latest-v4.X, TLS_RSA_WITH_AES_128_CBC_SHA and TLS_RSA_WITH_AES_256_CBC_SHA cipher suites are not supported because from mbedtls v4.x these cipher suites are deperecated.**
  *
  * MQTT keepalive offload supports cipher suites TLS_AES_128_GCM_SHA256 and TLS_AES_256_GCM_SHA384 with TLS1.3 when connecting to MQTT broker.
  * \code

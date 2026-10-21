@@ -1,5 +1,5 @@
 /*
- * (c) 2025, Infineon Technologies AG, or an affiliate of Infineon
+ * (c) 2026, Infineon Technologies AG, or an affiliate of Infineon
  * Technologies AG. All rights reserved.
  * This software, associated documentation and materials ("Software") is
  * owned by Infineon Technologies AG or one of its affiliates ("Infineon")
@@ -10,7 +10,7 @@
  * agreement applies, then any use, reproduction, modification, translation, or
  * compilation of this Software is prohibited without the express written
  * permission of Infineon.
- * 
+ *
  * Disclaimer: UNLESS OTHERWISE EXPRESSLY AGREED WITH INFINEON, THIS SOFTWARE
  * IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
  * INCLUDING, BUT NOT LIMITED TO, ALL WARRANTIES OF NON-INFRINGEMENT OF
@@ -527,7 +527,7 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
     static bool is_ulp_configured = false;
 #endif
 
-#ifdef CYCFG_ULP_SUPPORT_ENABLED
+#if defined(CYCFG_ULP_SUPPORT_ENABLED) || defined(PROTO_MSGBUF)
     whd_interface_t ifp = NULL;
 
     ifp = cy_olm_get_whd_interface();
@@ -579,6 +579,15 @@ int32_t cylpa_wait_net_inactivity(uint32_t inactive_interval_ms, uint32_t inacti
             if (CY_RTOS_TIMEOUT == result)
             {
                 /* Inactivity wait condition met. */
+#ifdef PROTO_MSGBUF
+                /* Prevent stack suspension during WHD recovery to keep network timers active.
+                 * This ensures the network stack can release processed buffers and avoid a system deadlock.
+                 */
+                if (ifp->whd_driver->msgbuf->rx_buf_recovery)
+                {
+                    state = ST_BAD_STATE;
+                }
+#endif
                 break;
             }
 

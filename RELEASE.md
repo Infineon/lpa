@@ -9,7 +9,8 @@ The revision history of the LPA middleware is also available on the [Low Power A
 ### Release versions
 
 |  Version         | Description of change                                                  | Comments                                                 |
-| ---------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
+| :--- | :--- | :--- |
+| 5.9.0            | 1. Documentation updates to make documentation AI-friendly, minor fixes for the assets to make them Hobsification-compatible and minor code update <br> 2. Fix to prevent network suspend during RX buffer recovery for H1CP <br> 3. Fix TLS/MQTT offload: the wakeup packet dropped on empty wakeup pattern | |
 | 5.8.1            | Fix for 100ms periodic wake observed in CYW5591x devices when operating in Hosted Mode | |
 | 5.8.0            | Added support for PSOC&trade; Edge E84 (PSE84) platform, Enabled LLVM_ARM toolchain support, Updated to use MTB_HAL apis.        | |
 | 5.7.1            | Minor Bug fixes         | |
@@ -39,7 +40,7 @@ The revision history of the LPA middleware is also available on the [Low Power A
 This version of the LPA middleware was validated for compatibility with the following software and tools:
 
 | Software and tools                                              | Version |
-| :---                                                            | :----:  |
+| :---                                                            | :---  |
 | ModusToolbox&trade; software environment                        | 3.6     |
 | ModusToolbox&trade; Device Configurator                         | 5.50    |
 | GCC Compiler                                                    | 14.2.1  |

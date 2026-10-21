@@ -1,5 +1,5 @@
 /*
- * (c) 2025, Infineon Technologies AG, or an affiliate of Infineon
+ * (c) 2026, Infineon Technologies AG, or an affiliate of Infineon
  * Technologies AG. All rights reserved.
  * This software, associated documentation and materials ("Software") is
  * owned by Infineon Technologies AG or one of its affiliates ("Infineon")
@@ -10,7 +10,7 @@
  * agreement applies, then any use, reproduction, modification, translation, or
  * compilation of this Software is prohibited without the express written
  * permission of Infineon.
- * 
+ *
  * Disclaimer: UNLESS OTHERWISE EXPRESSLY AGREED WITH INFINEON, THIS SOFTWARE
  * IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
  * INCLUDING, BUT NOT LIMITED TO, ALL WARRANTIES OF NON-INFRINGEMENT OF
@@ -26,7 +26,6 @@
  * explicitly approved by Infineon, the Software may not be used in any
  * application where a failure of the Product or any consequences of the use
  * thereof can reasonably be expected to result in personal injury.
- * 
  */
 
 /**

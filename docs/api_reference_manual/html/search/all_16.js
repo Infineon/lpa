@@ -1,0 +1,5 @@
+var searchData=
+[
+  ['quick_20start_0',['Quick Start',['../index.html#quick-start',1,'']]],
+  ['quick_20start_20guide_1',['quick start guide',['../group_lpa_datasheet.html#group_lpa_p1_mcu_qsg',1,'Quick start guide'],['../group_lpa_datasheet.html#group_lpa_p2_host_wake_qsg',1,'Quick start guide'],['../group_lpa_datasheet.html#group_lpa_p2_arp_offload_qsg',1,'Quick start guide'],['../group_lpa_datasheet.html#group_lpa_p2_packet_filter_qsg',1,'Quick start guide'],['../group_lpa_datasheet.html#group_lpa_p2_tcp_keepalive_qsg',1,'Quick start guide'],['../group_lpa_datasheet.html#group_lpa_p2_dltro_qsg',1,'Quick start guide'],['../group_lpa_datasheet.html#group_lpa_p2_icmp_qsg',1,'Quick start guide'],['../group_lpa_datasheet.html#group_lpa_p2_ndoe_qsg',1,'Quick start guide'],['../group_lpa_datasheet.html#group_lpa_p2_null_keepalive_qsg',1,'Quick start guide'],['../group_lpa_datasheet.html#group_lpa_p2_nat_keepalive_qsg',1,'Quick start guide'],['../group_lpa_datasheet.html#group_lpa_p2_wowlpf_qsg',1,'Quick start guide'],['../group_lpa_datasheet.html#group_lpa_p2_mqtt_keepalive_qsg',1,'Quick start guide']]]
+];

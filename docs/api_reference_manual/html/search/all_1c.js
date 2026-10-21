@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['wait_5fnet_5fsuspend_0',['wait_net_suspend',['../group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f',1,'wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t inactive_interval_ms, uint32_t inactive_window_ms):&#160;network_activity_handler.c'],['../group__lpautilities.html#ga8fe3dbb6666cb69c052385ce9ff9405f',1,'wait_net_suspend(void *net_intf, uint32_t wait_ms, uint32_t network_inactive_interval_ms, uint32_t network_inactive_window_ms):&#160;network_activity_handler.c']]],
+  ['wait_5fnet_5fsuspend_20for_20suspend_20resume_20network_20stack_1',['Code Snippet 1: Using wait_net_suspend for suspend/resume network stack',['../group_lpa_datasheet.html#subsection_lpa_snippet_1',1,'']]],
+  ['wake_2',['When Active (Sleep vs Wake)',['../group_lpa_datasheet.html#group_lpa_p2_sleepwake',1,'']]],
+  ['wake_20configuration_3',['wake configuration',['../group_lpa_datasheet.html#group_lpa_p3_cc_btwakeconfig',1,'BT Wake Configuration'],['../group_lpa_datasheet.html#group_lpa_p2_cc_hostwake',1,'Wi-Fi host wake configuration']]],
+  ['wake_20on_20wirelesslan_4',['Wake on WirelessLAN',['../group_lpa_datasheet.html#group_lpa_p2_wowlpf',1,'']]],
+  ['wake_20signal_5',['Wi-Fi host-wake signal',['../group_lpa_datasheet.html#group_lpa_p2_host_wake',1,'']]],
+  ['wakepatt_6',['wakepatt',['../structcy__tlsoe__ol__connect__t.html#a6bd0f4d26159c2187da30a72a3fbdc43',1,'cy_tlsoe_ol_connect_t']]],
+  ['whd_7',['whd',['../structnko__ol__t.html#a6ed8069cdf542e09817194f453d8b917',1,'nko_ol_t::whd'],['../structwowlpf__ol__t.html#a2434049b20db7e4cc08c7ff40641025c',1,'wowlpf_ol_t::whd'],['../structtlsoe__ol__t.html#a33c517b7eaa5c7aa867b97ae928f6c61',1,'tlsoe_ol_t::whd'],['../structnullko__ol__t.html#a94bd0b98371c2ae78c6da3f110fb4f30',1,'nullko_ol_t::whd'],['../structol__info__t.html#a81146b644c5eb9b2c6719976d9ef25d9',1,'ol_info_t::whd'],['../structpf__ol__t.html#a3fa4c35aca34e12f15bf8ab5ac29af2f',1,'pf_ol_t::whd'],['../structtko__ol__t.html#ad3dadda42d16f6f71396c72e2c0f2987',1,'tko_ol_t::whd']]],
+  ['when_20active_20sleep_20vs_20wake_8',['When Active (Sleep vs Wake)',['../group_lpa_datasheet.html#group_lpa_p2_sleepwake',1,'']]],
+  ['when_20to_20use_9',['When to Use',['../index.html#when-to-use',1,'']]],
+  ['wi_20fi_20arp_20offload_10',['Wi-Fi ARP Offload',['../group_lpa_datasheet.html#group_lpa_p2_arp_offload',1,'']]],
+  ['wi_20fi_20bluetooth_20reg_20and_20mcu_20low_20power_20configuration_20for_20infineon_20devices_11',['Low Power Assistant (LPA) middleware library - Wi-Fi, Bluetooth&amp;reg;, and MCU low-power configuration for Infineon devices',['../index.html',1,'']]],
+  ['wi_20fi_20host_20wake_20configuration_12',['Wi-Fi host wake configuration',['../group_lpa_datasheet.html#group_lpa_p2_cc_hostwake',1,'']]],
+  ['wi_20fi_20host_20wake_20signal_13',['Wi-Fi host-wake signal',['../group_lpa_datasheet.html#group_lpa_p2_host_wake',1,'']]],
+  ['wi_20fi_20low_20power_14',['Part 2. Wi-Fi low power',['../group_lpa_datasheet.html#group_lpa_p2',1,'']]],
+  ['wi_20fi_20low_20power_20configuration_20considerations_15',['Wi-Fi low power configuration considerations',['../group_lpa_datasheet.html#group_lpa_p2_cc',1,'']]],
+  ['wi_20fi_20packet_20filter_20offload_16',['Wi-Fi Packet filter offload',['../group_lpa_datasheet.html#group_lpa_p2_packet_filter',1,'']]],
+  ['wi_20fi_20tcp_20keepalive_20offload_17',['Wi-Fi TCP keepalive offload',['../group_lpa_datasheet.html#group_lpa_p2_tcp_keepalive',1,'']]],
+  ['wifi_20firmware_18',['Code Snippet 5: Use cy_tcp_create_socket_connection to offload TCP Keep-alive to WiFi Firmware',['../group_lpa_datasheet.html#subsection_lpa_snippet_5',1,'']]],
+  ['wirelesslan_19',['Wake on WirelessLAN',['../group_lpa_datasheet.html#group_lpa_p2_wowlpf',1,'']]],
+  ['wlan_20low_20power_20configuration_20',['WLAN low power configuration',['../group_lpa_datasheet.html#group_lpa_p2_wlan_lowpower',1,'']]],
+  ['worker_21',['worker',['../structol__info__t.html#ac8e21f872766ab95620106fb4461b8a2',1,'ol_info_t']]],
+  ['worker_5fthread_22',['worker_thread',['../structol__desc__t.html#acf6a73a49e43742e5bb6144cff5230bd',1,'ol_desc_t']]],
+  ['wowlpf_5fol_5ft_23',['wowlpf_ol_t',['../structwowlpf__ol__t.html',1,'']]]
+];

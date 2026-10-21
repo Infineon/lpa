@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['eth_0',['eth',['../structcy__pf__ol__cfg__t.html#ac483ab624a58dd622c849221bd6d2077',1,'cy_pf_ol_cfg_t']]],
-  ['eth_5ftype_1',['eth_type',['../structcy__pf__ethtype__cfg__t.html#a6b8fe67c64577674f6870fa084512df1',1,'cy_pf_ethtype_cfg_t']]]
+  ['5_3a_20use_20cy_5ftcp_5fcreate_5fsocket_5fconnection_20to_20offload_20tcp_20keep_20alive_20to_20wifi_20firmware_0',['Code Snippet 5: Use cy_tcp_create_socket_connection to offload TCP Keep-alive to WiFi Firmware',['../group_lpa_datasheet.html#subsection_lpa_snippet_5',1,'']]]
 ];
